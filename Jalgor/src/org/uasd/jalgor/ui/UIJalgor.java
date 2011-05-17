@@ -21,14 +21,13 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-package jalgor;
+
+package org.uasd.jalgor.ui;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class Jalgor {
+public class UIJalgor {
 
-    public static void main(String[] args) {
-    }
 }

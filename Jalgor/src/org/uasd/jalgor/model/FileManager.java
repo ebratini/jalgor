@@ -67,12 +67,12 @@ public class FileManager {
                 sbInputFile.append(String.format("%s%s", recLine, System.getProperty("line.separator")));
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ioe);
         } finally {
             try {
                 br.close();
             } catch (IOException ioe) {
-                ioe.printStackTrace();
+                Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ioe);
             }
         }
 
@@ -97,7 +97,7 @@ public class FileManager {
                 bw.append(content);
             }
         } catch (IOException ioe) {
-            ioe.printStackTrace();
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ioe);
         } finally {
             try {
                 bw.flush();
