@@ -106,6 +106,5 @@ public class FileManager {
                 Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
     }
 }

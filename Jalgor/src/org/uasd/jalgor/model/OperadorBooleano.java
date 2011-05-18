@@ -27,42 +27,17 @@ package org.uasd.jalgor.model;
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class Expression {
+public class OperadorBooleano extends Operador {
 
-    private Expression exp1;
-    private Expression exp2;
-    private Operador oper;
-
-    public Expression() {
+    public OperadorBooleano(TipoOperador tipoOperador) {
+        super(tipoOperador);
     }
 
-    public Expression(Expression exp1, Expression exp2, Operador oper) {
-        this.exp1 = exp1;
-        this.exp2 = exp2;
-        this.oper = oper;
+    public OperadorBooleano() {
     }
 
-    public Expression getExp1() {
-        return exp1;
-    }
-
-    public void setExp1(Expression exp1) {
-        this.exp1 = exp1;
-    }
-
-    public Expression getExp2() {
-        return exp2;
-    }
-
-    public void setExp2(Expression exp2) {
-        this.exp2 = exp2;
-    }
-
-    public Operador getOper() {
-        return oper;
-    }
-
-    public void setOper(Operador oper) {
-        this.oper = oper;
+    @Override
+    public String getValue() {
+        return null;
     }
 }

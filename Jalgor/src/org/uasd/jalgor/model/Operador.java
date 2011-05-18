@@ -23,61 +23,34 @@
  */
 package org.uasd.jalgor.model;
 
-import java.util.HashMap;
-
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class Statement {
+public abstract class Operador {
 
-    public enum Keyword {
+    public enum TipoOperador {
 
-        PROGRAMA, FIN_PROGRAMA, NUM, ALFA,
-        LEE, ESCRIBE, SI, ENTONCES, SINO,
-        FIN_SI, PARA, FIN_PARA
+        SUMA, RESTA, MULT, DIV,
+        EQ, NE, GT, GE, LT, LE,
+        AND, OR, XOR
     };
-    private Keyword tipoSatement;
-    private HashMap<Keyword, String> cppReps = new HashMap<Keyword, String>() {
+    protected TipoOperador tipoOperador;
 
-        {
-            put(Keyword.NUM, "double");
-            put(Keyword.ALFA, "string");
-            put(Keyword.LEE, "cin>>");
-            put(Keyword.ESCRIBE, "cout<<");
-            put(Keyword.SI, "if");
-            put(Keyword.ENTONCES, "{");
-            put(Keyword.SINO, "else");
-            put(Keyword.FIN_SI, "}");
-            put(Keyword.PARA, "for");
-            put(Keyword.FIN_PARA, "}");
-        }
-    };
-
-    public Statement() {
+    public Operador() {
     }
 
-    public Statement(Keyword tipoSatement) {
-        this.tipoSatement = tipoSatement;
+    public Operador(TipoOperador tipoOperador) {
+        this.tipoOperador = tipoOperador;
     }
 
-    public HashMap<Keyword, String> getCppReps() {
-        return cppReps;
+    public TipoOperador getTipoOperador() {
+        return tipoOperador;
     }
 
-    public void setCppReps(HashMap<Keyword, String> cppReps) {
-        this.cppReps = cppReps;
+    public void setTipoOperador(TipoOperador tipoOperador) {
+        this.tipoOperador = tipoOperador;
     }
 
-    public Keyword getTipoSatement() {
-        return tipoSatement;
-    }
-
-    public void setTipoSatement(Keyword tipoSatement) {
-        this.tipoSatement = tipoSatement;
-    }
-    
-    public String parse(Keyword statement) {
-        return cppReps.get(statement);
-    }
+    public abstract String getValue();
 }
