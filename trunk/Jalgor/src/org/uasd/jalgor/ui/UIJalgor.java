@@ -39,13 +39,17 @@ import org.uasd.jalgor.business.JalgorInterpreter;
  */
 public class UIJalgor {
 
-    private HashMap<String, String> cmdLneArgs = new HashMap<String, String>();
-    private HashMap<String, String> cmdLneArgDesc = new HashMap<String, String>();
-
-    public UIJalgor() {
-        initCmdLineOptions();
-        initCmdLneArgDesc();
-    }
+    private HashMap<String, String> cmdLneArgs = new HashMap<String, String>() {{
+        put("-i", null);
+        put("-o", null);
+        put("-gui", "0");
+    }};
+    
+    private HashMap<String, String> cmdLneArgDesc = new HashMap<String, String>() {{
+        put("-i", "para indicar el path name del archivo fuente");
+        put("-o", "para indicar el path name del archivo .cpp de salida");
+        put("-gui", "para indicar si lanza modo grafico");
+    }};
 
     public static void main(String[] args) {
         UIJalgor uiJalgor = new UIJalgor();
@@ -72,12 +76,6 @@ public class UIJalgor {
         return cmdLneArgs;
     }
 
-    private void initCmdLneArgDesc() {
-        cmdLneArgDesc.put("-i", "para indicar el path name del archivo fuente");
-        cmdLneArgDesc.put("-o", "para indicar el path name del archivo .cpp de salida");
-        cmdLneArgDesc.put("-gui", "para indicar si lanza modo grafico");
-    }
-
     private String getAvailableCmdLneOps() {
         StringBuilder availCmdLneArgs = new StringBuilder();
         for (Map.Entry<String, String> cmdLineArg : cmdLneArgDesc.entrySet()) {
@@ -91,13 +89,7 @@ public class UIJalgor {
         System.out.println("Argumentos de linea de comando disponibles");
         System.out.println(getAvailableCmdLneOps());
     }
-
-    private void initCmdLineOptions() {
-        cmdLneArgs.put("-i", null);
-        cmdLneArgs.put("-o", null);
-        cmdLneArgs.put("-gui", "0");
-    }
-
+    
     private void validarEntrada(String[] args) throws InvalidCommandLineParamException {
         if (args.length < 2) {
             String excMessage = "Una excepcion de tipo InvalidCommandLineParamException ha ocurrido.\n";

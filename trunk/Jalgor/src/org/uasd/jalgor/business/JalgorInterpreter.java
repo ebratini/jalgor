@@ -23,9 +23,11 @@
  */
 package org.uasd.jalgor.business;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.uasd.jalgor.model.FileManager;
 import org.uasd.jalgor.model.Statement;
 import org.uasd.jalgor.model.Variable;
 
@@ -37,9 +39,12 @@ public class JalgorInterpreter {
 
     private String sourceFilePath;
     private String outFilePath;
-    private HashMap<Integer, String> sourceLines = new HashMap<Integer, String>();
+    private StringBuilder sbCodeLines = FileManager.loadFile(new File(sourceFilePath));
+    
+    private HashMap<Integer, String> codeLines = new HashMap<Integer, String>();
     private List<Statement> statements = new ArrayList<Statement>();
     private List<Variable> variables = new ArrayList<Variable>();
+    private List<InterpreterError> errores = new ArrayList<InterpreterError>();
 
     public JalgorInterpreter() {
     }
@@ -49,6 +54,7 @@ public class JalgorInterpreter {
         validateOutFileName(outFilePath);
         this.sourceFilePath = sourceFilePath;
         this.outFilePath = outFilePath;
+        initCodeLines();
     }
 
     public String getOutFilePath() {
@@ -57,6 +63,30 @@ public class JalgorInterpreter {
 
     public String getSourceFilePath() {
         return sourceFilePath;
+    }
+
+    public HashMap<Integer, String> getCodeLines() {
+        return codeLines;
+    }
+
+    public StringBuilder getSbCodeLines() {
+        return sbCodeLines;
+    }
+
+    public List<Statement> getStatements() {
+        return statements;
+    }
+
+    public List<Variable> getVariables() {
+        return variables;
+    }
+    
+    private void initCodeLines() {
+        String[] lines = sbCodeLines.toString().split(System.getProperty("line.separator"));
+        int i = 0;
+        for (String line : lines) {
+            codeLines.put(i++, line);
+        }
     }
 
     private void validateSourceFileName(String sourceFname) throws InvalidFileNameException {
@@ -72,5 +102,10 @@ public class JalgorInterpreter {
     }
 
     public void start() {
+        if (sbCodeLines.length() < 1) {
+            errores.add(new EmptyFileError("El archivo fuente esta vacio"));
+            return;
+        }
+        // TODO: pending implementation
     }
 }

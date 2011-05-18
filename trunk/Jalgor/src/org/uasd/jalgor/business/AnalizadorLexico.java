@@ -21,63 +21,29 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-package org.uasd.jalgor.model;
+package org.uasd.jalgor.business;
 
 import java.util.HashMap;
+import org.uasd.jalgor.model.Token;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class Statement {
+public class AnalizadorLexico {
 
-    public enum Keyword {
-
-        PROGRAMA, FIN_PROGRAMA, NUM, ALFA,
-        LEE, ESCRIBE, SI, ENTONCES, SINO,
-        FIN_SI, PARA, FIN_PARA
-    };
-    private Keyword tipoSatement;
-    private HashMap<Keyword, String> cppReps = new HashMap<Keyword, String>() {
+    private HashMap<String, String> patrones = new HashMap<String, String>() {
 
         {
-            put(Keyword.NUM, "double");
-            put(Keyword.ALFA, "string");
-            put(Keyword.LEE, "cin>>");
-            put(Keyword.ESCRIBE, "cout<<");
-            put(Keyword.SI, "if");
-            put(Keyword.ENTONCES, "{");
-            put(Keyword.SINO, "else");
-            put(Keyword.FIN_SI, "}");
-            put(Keyword.PARA, "for");
-            put(Keyword.FIN_PARA, "}");
+            put("numero", "\\d+");
+            put("identificador", "a-zA-Z0-9");
+            put("constanteAlfa", "\"a-zA-Z0-9\"");
+            put("eol", ";");
         }
     };
 
-    public Statement() {
-    }
+    public static Token getNextToken(String codeLine) {
 
-    public Statement(Keyword tipoSatement) {
-        this.tipoSatement = tipoSatement;
-    }
-
-    public HashMap<Keyword, String> getCppReps() {
-        return cppReps;
-    }
-
-    public void setCppReps(HashMap<Keyword, String> cppReps) {
-        this.cppReps = cppReps;
-    }
-
-    public Keyword getTipoSatement() {
-        return tipoSatement;
-    }
-
-    public void setTipoSatement(Keyword tipoSatement) {
-        this.tipoSatement = tipoSatement;
-    }
-    
-    public String parse(Keyword statement) {
-        return cppReps.get(statement);
+        return null;
     }
 }

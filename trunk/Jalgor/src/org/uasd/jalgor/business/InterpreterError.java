@@ -21,48 +21,28 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-package org.uasd.jalgor.model;
+
+package org.uasd.jalgor.business;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class Expression {
+public class InterpreterError {
+    private String mensaje;
 
-    private Expression exp1;
-    private Expression exp2;
-    private Operador oper;
-
-    public Expression() {
+    public InterpreterError() {
     }
 
-    public Expression(Expression exp1, Expression exp2, Operador oper) {
-        this.exp1 = exp1;
-        this.exp2 = exp2;
-        this.oper = oper;
+    public InterpreterError(String mensaje) {
+        this.mensaje = mensaje;
     }
 
-    public Expression getExp1() {
-        return exp1;
+    public String getMensaje() {
+        return mensaje;
     }
 
-    public void setExp1(Expression exp1) {
-        this.exp1 = exp1;
-    }
-
-    public Expression getExp2() {
-        return exp2;
-    }
-
-    public void setExp2(Expression exp2) {
-        this.exp2 = exp2;
-    }
-
-    public Operador getOper() {
-        return oper;
-    }
-
-    public void setOper(Operador oper) {
-        this.oper = oper;
+    public void setMensaje(String mensaje) {
+        this.mensaje = mensaje;
     }
 }
