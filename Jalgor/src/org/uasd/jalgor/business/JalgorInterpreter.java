@@ -37,22 +37,18 @@ public class JalgorInterpreter {
 
     private String sourceFilePath;
     private String outFilePath;
-
     private HashMap<Integer, String> sourceLines = new HashMap<Integer, String>();
-
     private List<Statement> statements = new ArrayList<Statement>();
     private List<Variable> variables = new ArrayList<Variable>();
 
     public JalgorInterpreter() {
     }
 
-    public JalgorInterpreter(String sourceFilePath, String outFilePath) throws InvalidSourceFileNameException {
-        if (validateSourceFileName(sourceFilePath, outFilePath)) {
-            this.sourceFilePath = sourceFilePath;
-            this.outFilePath = outFilePath;
-        } else {
-            throw new InvalidSourceFileNameException("El nombre del archivo fuente/salida esta mal formado");
-        }
+    public JalgorInterpreter(String sourceFilePath, String outFilePath) throws InvalidFileNameException {
+        validateSourceFileName(sourceFilePath);
+        validateOutFileName(outFilePath);
+        this.sourceFilePath = sourceFilePath;
+        this.outFilePath = outFilePath;
     }
 
     public String getOutFilePath() {
@@ -63,11 +59,16 @@ public class JalgorInterpreter {
         return sourceFilePath;
     }
 
-    private boolean validateSourceFileName(String sourceFname, String outFName) {
-        if (!sourceFname.endsWith(".algor") || !sourceFname.endsWith(".cpp")) {
-            return false;
+    private void validateSourceFileName(String sourceFname) throws InvalidFileNameException {
+        if (!sourceFname.endsWith(".algor")) {
+            throw new InvalidSourceFileNameException("El nombre del archivo fuente esta mal formado");
         }
-        return true;
+    }
+
+    private void validateOutFileName(String outFName) throws InvalidFileNameException {
+        if (!outFName.endsWith(".cpp")) {
+            throw new InvalidOutFileNameException("El nombre del archivo salida esta mal formado");
+        }
     }
 
     public void start() {

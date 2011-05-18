@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.uasd.jalgor.business.InvalidCommandLineParamException;
-import org.uasd.jalgor.business.InvalidSourceFileNameException;
+import org.uasd.jalgor.business.InvalidFileNameException;
 import org.uasd.jalgor.business.JalgorInterpreter;
 
 /**
@@ -56,7 +56,7 @@ public class UIJalgor {
             }*/
             try {
                 new JalgorInterpreter(args[0], args[1]).start();
-            } catch (InvalidSourceFileNameException ex) {
+            } catch (InvalidFileNameException ex) {
                 Logger.getLogger(UIJalgor.class.getName()).log(Level.SEVERE, null, ex);
             }
         } catch (InvalidCommandLineParamException ex) {

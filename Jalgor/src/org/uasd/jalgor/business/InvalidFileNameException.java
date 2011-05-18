@@ -21,18 +21,19 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+
 package org.uasd.jalgor.business;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class InvalidSourceFileNameException extends InvalidFileNameException {
+public class InvalidFileNameException extends Exception {
 
-    public InvalidSourceFileNameException(String message) {
+    public InvalidFileNameException(String message) {
         super(message);
     }
 
-    public InvalidSourceFileNameException() {
+    public InvalidFileNameException() {
     }
 }

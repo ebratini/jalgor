@@ -27,12 +27,12 @@ package org.uasd.jalgor.business;
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class InvalidSourceFileNameException extends InvalidFileNameException {
+public class InvalidOutFileNameException extends InvalidFileNameException {
 
-    public InvalidSourceFileNameException(String message) {
-        super(message);
+    public InvalidOutFileNameException() {
     }
 
-    public InvalidSourceFileNameException() {
+    public InvalidOutFileNameException(String message) {
+        super(message);
     }
 }
