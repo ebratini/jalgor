@@ -29,7 +29,7 @@ import java.util.HashMap;
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class Statement {
+public class Statement extends Token {
 
     public enum Keyword {
 

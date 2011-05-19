@@ -27,11 +27,18 @@ package org.uasd.jalgor.model;
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class Variable {
-    enum Tipo {
+public class Variable extends Token {
+
+    public enum TipoVariable {
+
         NUM, ALFA
-    }
+    };
+    private TipoVariable tipoVariable;
 
     public Variable() {
+    }
+
+    public Variable(TipoVariable tipoVariable) {
+        this.tipoVariable = tipoVariable;
     }
 }

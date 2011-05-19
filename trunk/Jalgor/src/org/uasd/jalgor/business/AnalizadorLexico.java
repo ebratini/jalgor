@@ -23,7 +23,9 @@
  */
 package org.uasd.jalgor.business;
 
-import java.util.HashMap;
+import org.uasd.jalgor.model.Operador;
+import org.uasd.jalgor.model.OperadorAritmetico;
+import org.uasd.jalgor.model.OperadorBooleano;
 import org.uasd.jalgor.model.Token;
 
 /**
@@ -32,18 +34,91 @@ import org.uasd.jalgor.model.Token;
  */
 public class AnalizadorLexico {
 
-    private HashMap<String, String> patrones = new HashMap<String, String>() {
+    private int currPos;
+    private char[] codeLine;
 
-        {
-            put("numero", "\\d+");
-            put("identificador", "a-zA-Z0-9");
-            put("constanteAlfa", "\"a-zA-Z0-9\"");
-            put("eol", ";");
+    public Token getNextToken() {
+        Token token = null;
+        if (currPos == (codeLine.length - 1)) {
+            return null;
         }
-    };
+        switch (codeLine[currPos]) {
+            case '-':
+            case '+':
+            case '*':
+            case '/':
+                token = new OperadorAritmetico();
+                ((Operador) token).setTipoOperador(((Operador) token).getOpNames().get(String.valueOf(codeLine[currPos])));
+                currPos++;
+                break;
+            case '&':
+            case '|':
+            case '^':
+                token = new OperadorBooleano();
+                ((Operador) token).setTipoOperador(((Operador) token).getOpNames().get(String.valueOf(codeLine[currPos])));
+                currPos++;
+                break;
+            case '<':
+            case '>':
+            case '!':
+            case '=':
+                if (codeLine[currPos + 1] == '=') {
+                    token = new OperadorBooleano();
+                    ((Operador) token).setTipoOperador(((Operador) token).getOpNames().get(String.valueOf(codeLine[currPos] + codeLine[currPos + 1])));
+                    currPos += 2;
+                } else {
+                    // TODO: lo que deberia devolver es un token indicando que es de asignacion
+                    token = new OperadorBooleano();
+                    ((Operador) token).setTipoOperador(((Operador) token).getOpNames().get(String.valueOf(codeLine[currPos])));
+                    currPos++;
+                }
+                break;
+            case ';':
+                // TODO: pending token construct
+                currPos++;
+                break;
+            case '(':
+                break;
+            case ')':
+                break;
+            case '.':
+            case '0':
+            case '1':
+            case '2':
+            case '3':
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                StringBuilder num = new StringBuilder();
+                while (Character.isDigit(codeLine[currPos++])) {
+                    num.append(codeLine[currPos]);
+                }
+                break;
+            // TODO: construir el token ConstanteNumerica
+            case '"':
+                StringBuilder str = new StringBuilder();
+                while (codeLine[currPos++] != '"') {
+                    str.append(codeLine[currPos]);
+                }
+                break;
+            // TODO: construir el token ConstanteCadena
+            default:
+                StringBuilder var = new StringBuilder();
+                while (Character.isLetterOrDigit(codeLine[currPos++]) || codeLine[currPos++] == '_') {
+                    var.append(codeLine[currPos]);
+                }
+                break;
+            // TODO: construir el token VariableID | KeywordStatement
+        }
 
-    public static Token getNextToken(String codeLine) {
+        return token;
+    }
 
-        return null;
+    public void resetAnalizador(char[] codeLine) {
+        this.codeLine = codeLine;
+        this.currPos = 0;
     }
 }
