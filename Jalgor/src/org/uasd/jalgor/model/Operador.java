@@ -23,11 +23,13 @@
  */
 package org.uasd.jalgor.model;
 
+import java.util.HashMap;
+
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public abstract class Operador {
+public abstract class Operador extends Token {
 
     public enum TipoOperador {
 
@@ -36,20 +38,43 @@ public abstract class Operador {
         AND, OR, XOR
     };
     protected TipoOperador tipoOperador;
+    protected HashMap<String, TipoOperador> opNames = new HashMap<String, TipoOperador>() {{
+        put("-", TipoOperador.RESTA);
+        put("+", TipoOperador.SUMA);
+        put("*", TipoOperador.MULT);
+        put("/", TipoOperador.DIV);
+
+        put("==", TipoOperador.EQ);
+        put("!=", TipoOperador.NE);
+        put(">", TipoOperador.GT);
+        put("<", TipoOperador.LT);
+        put(">=", TipoOperador.GE);
+        put("<=", TipoOperador.LE);
+
+        put("&", TipoOperador.AND);
+        put("|", TipoOperador.OR);
+        put("^", TipoOperador.XOR);
+    }};
 
     public Operador() {
+        super(Token.TipoToken.OPERADOR);
     }
 
     public Operador(TipoOperador tipoOperador) {
+        super(Token.TipoToken.OPERADOR);
         this.tipoOperador = tipoOperador;
     }
-
+    
     public TipoOperador getTipoOperador() {
         return tipoOperador;
     }
 
     public void setTipoOperador(TipoOperador tipoOperador) {
         this.tipoOperador = tipoOperador;
+    }
+
+    public HashMap<String, TipoOperador> getOpNames() {
+        return opNames;
     }
 
     public abstract String getValue();

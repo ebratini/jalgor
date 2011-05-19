@@ -21,13 +21,41 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.uasd.jalgor.model;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class Token {
+public abstract class Token {
 
+    public enum TipoToken {
+
+        SIMBOLO, CONSTANTE, OPERADOR, VARIABLEID
+    };
+    protected TipoToken tipoToken;
+    protected Token siblingToken;
+
+    public Token() {
+    }
+
+    public Token(TipoToken tipoToken) {
+        this.tipoToken = tipoToken;
+    }
+
+    public TipoToken getTipoToken() {
+        return tipoToken;
+    }
+
+    public void setTipoToken(TipoToken tipoToken) {
+        this.tipoToken = tipoToken;
+    }
+
+    public Token getSiblingToken() {
+        return siblingToken;
+    }
+
+    public void setSiblingToken(Token siblingToken) {
+        this.siblingToken = siblingToken;
+    }
 }
