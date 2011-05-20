@@ -23,17 +23,21 @@
  */
 package org.uasd.jalgor.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import org.uasd.jalgor.business.AnalizadorLexico;
+import org.uasd.jalgor.business.InterpreterError;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class Statement extends Token {
+public class Statement {
 
     public enum Keyword {
 
-        PROGRAMA, FIN_PROGRAMA, NUM, ALFA,
+        COMENTARIO, ASIGNACION, PROGRAMA, FIN_PROGRAMA, NUM, ALFA,
         LEE, ESCRIBE, SI, ENTONCES, SINO,
         FIN_SI, MIENTRAS, FIN_MIENTRAS
     };
@@ -57,16 +61,29 @@ public class Statement extends Token {
 
         {
             for (Keyword k : Keyword.values()) {
+                if (k.name().equalsIgnoreCase("comentario") || k.name().equalsIgnoreCase("asignacion")) {
+                    continue;
+                }
                 put(k.name(), k);
             }
         }
     };
+    private AnalizadorLexico al;
+    private String originalValue;
+    private String parsedValue;
+    private boolean correcta;
+    private List<InterpreterError> statementErrors = new ArrayList<InterpreterError>();
 
     public Statement() {
     }
 
     public Statement(Keyword tipoSatement) {
         this.tipoSatement = tipoSatement;
+    }
+
+    public Statement(Keyword tipoSatement, AnalizadorLexico al) {
+        this.tipoSatement = tipoSatement;
+        this.al = al;
     }
 
     public HashMap<Keyword, String> getCppReps() {
@@ -83,6 +100,46 @@ public class Statement extends Token {
 
     public void setTipoSatement(Keyword tipoSatement) {
         this.tipoSatement = tipoSatement;
+    }
+
+    public AnalizadorLexico getAl() {
+        return al;
+    }
+
+    public void setAl(AnalizadorLexico al) {
+        this.al = al;
+    }
+
+    public static HashMap<String, Keyword> getKeywordMatcher() {
+        return keywordMatcher;
+    }
+
+    public boolean isCorrecta() {
+        return correcta;
+    }
+
+    public void setCorrecta(boolean correcta) {
+        this.correcta = correcta;
+    }
+
+    public String getOriginalValue() {
+        return originalValue;
+    }
+
+    public void setOriginalValue(String originalValue) {
+        this.originalValue = originalValue;
+    }
+
+    public String getParsedValue() {
+        return parsedValue;
+    }
+
+    public void setParsedValue(String parsedValue) {
+        this.parsedValue = parsedValue;
+    }
+
+    public List<InterpreterError> getStatementErrors() {
+        return statementErrors;
     }
 
     public String parse(Keyword statement) {

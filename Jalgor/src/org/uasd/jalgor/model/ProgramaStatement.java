@@ -21,13 +21,20 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.uasd.jalgor.model;
+
+import org.uasd.jalgor.business.AnalizadorLexico;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class Lexema {
+public class ProgramaStatement extends Statement {
 
+    public ProgramaStatement() {
+    }
+
+    public ProgramaStatement(Keyword tipoSatement, AnalizadorLexico al) {
+        super(tipoSatement, al);
+    }
 }

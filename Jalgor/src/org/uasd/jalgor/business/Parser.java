@@ -21,52 +21,39 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-package org.uasd.jalgor.model;
+package org.uasd.jalgor.business;
 
-import java.util.Comparator;
+import java.util.Collections;
+import java.util.List;
+import org.uasd.jalgor.model.ComentarioStatement;
+import org.uasd.jalgor.model.OperadorAsignacion;
+import org.uasd.jalgor.model.Statement;
+import org.uasd.jalgor.model.Statement.Keyword;
+import org.uasd.jalgor.model.Token;
+import org.uasd.jalgor.model.Variable;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class Variable extends Token implements Comparable<Variable> {
+public class Parser {
 
-    public enum TipoVariable {
+    public static Statement makeStatement(Keyword tipoSatement, AnalizadorLexico al, JalgorInterpreter ji, Token token) {
+        Statement statement = null;
+        switch (tipoSatement) {
+            case COMENTARIO:
+                statement = new ComentarioStatement(tipoSatement, al);
+                break;
+            case ASIGNACION:
+                Token nxtToken = al.getNextToken();
+                if (nxtToken instanceof OperadorAsignacion) {
+                    nxtToken = al.getNextToken();
+                    List<Variable> variables = ji.getVariables();
+                    Collections.sort(variables);
+                    //int idxVar = Collections.binarySearch(variables, token.getValue());
+                }
+        }
 
-        NUM, ALFA
-    };
-    private TipoVariable tipoVariable;
-    private String id;
-
-    public Variable() {
-    }
-
-    public Variable(String id) {
-        this.id = id;
-    }
-
-    public Variable(TipoVariable tipoVariable) {
-        this.tipoVariable = tipoVariable;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public TipoVariable getTipoVariable() {
-        return tipoVariable;
-    }
-
-    public void setTipoVariable(TipoVariable tipoVariable) {
-        this.tipoVariable = tipoVariable;
-    }
-
-    @Override
-    public int compareTo(Variable o) {
-        return this.id.compareTo(o.getId());
+        return null;
     }
 }
