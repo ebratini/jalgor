@@ -21,41 +21,25 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+
 package org.uasd.jalgor.model;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public abstract class Token {
+public class OperadorAsignacion extends Operador {
 
-    public enum TipoToken {
-
-        SIMBOLO, CONSTANTE, OPERADOR, VARIABLEID, SIGNOPUNTUACION
-    };
-    private TipoToken tipoToken;
-    private Token siblingToken;
-
-    public Token() {
+    public OperadorAsignacion() {
     }
 
-    public Token(TipoToken tipoToken) {
-        this.tipoToken = tipoToken;
+    public OperadorAsignacion(TipoOperador tipoOperador) {
+        super(tipoOperador);
+    }
+    
+    @Override
+    public String getValue() {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public TipoToken getTipoToken() {
-        return tipoToken;
-    }
-
-    public void setTipoToken(TipoToken tipoToken) {
-        this.tipoToken = tipoToken;
-    }
-
-    public Token getSiblingToken() {
-        return siblingToken;
-    }
-
-    public void setSiblingToken(Token siblingToken) {
-        this.siblingToken = siblingToken;
-    }
 }
