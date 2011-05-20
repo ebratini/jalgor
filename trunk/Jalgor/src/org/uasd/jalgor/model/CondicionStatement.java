@@ -21,52 +21,21 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
+
 package org.uasd.jalgor.model;
 
-import java.util.Comparator;
+import org.uasd.jalgor.business.AnalizadorLexico;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class Variable extends Token implements Comparable<Variable> {
+public class CondicionStatement extends Statement {
 
-    public enum TipoVariable {
-
-        NUM, ALFA
-    };
-    private TipoVariable tipoVariable;
-    private String id;
-
-    public Variable() {
+    public CondicionStatement(Keyword tipoSatement, AnalizadorLexico al) {
+        super(tipoSatement, al);
     }
 
-    public Variable(String id) {
-        this.id = id;
-    }
-
-    public Variable(TipoVariable tipoVariable) {
-        this.tipoVariable = tipoVariable;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public TipoVariable getTipoVariable() {
-        return tipoVariable;
-    }
-
-    public void setTipoVariable(TipoVariable tipoVariable) {
-        this.tipoVariable = tipoVariable;
-    }
-
-    @Override
-    public int compareTo(Variable o) {
-        return this.id.compareTo(o.getId());
+    public CondicionStatement() {
     }
 }

@@ -29,20 +29,10 @@ package org.uasd.jalgor.model;
  */
 public class VariableId extends Token {
 
-    private String value;
-
     public VariableId() {
     }
 
     public VariableId(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
+        super(TipoToken.VARIABLEID, value);
     }
 }

@@ -91,14 +91,9 @@ public class AnalizadorLexico {
                 }
                 break;
             case ';':
-                token = new SignoPuntuacion(codeLine[currPos]);
-                currPos++;
-                break;
             case '(':
-                token = new SignoPuntuacion(codeLine[currPos]);
-                currPos++;
-                break;
             case ')':
+            case ',':
                 token = new SignoPuntuacion(codeLine[currPos]);
                 currPos++;
                 break;
@@ -147,6 +142,10 @@ public class AnalizadorLexico {
 
         token.setSiblingToken(getNextToken());
         return token;
+    }
+
+    public char[] getCodeLine() {
+        return codeLine;
     }
 
     public void resetAnalizador(char[] codeLine) {
