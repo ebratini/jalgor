@@ -35,7 +35,7 @@ public abstract class Operador extends Token {
 
         SUMA, RESTA, MULT, DIV,
         EQ, NE, GT, GE, LT, LE,
-        AND, OR, XOR
+        AND, OR, XOR, ASIG
     };
     protected TipoOperador tipoOperador;
     protected HashMap<String, TipoOperador> opNames = new HashMap<String, TipoOperador>() {{
@@ -54,6 +54,7 @@ public abstract class Operador extends Token {
         put("&", TipoOperador.AND);
         put("|", TipoOperador.OR);
         put("^", TipoOperador.XOR);
+        put("=", TipoOperador.ASIG);
     }};
 
     public Operador() {

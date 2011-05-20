@@ -23,9 +23,14 @@
  */
 package org.uasd.jalgor.business;
 
+import org.uasd.jalgor.model.ConstanteAlfanumerica;
+import org.uasd.jalgor.model.ConstanteNumerica;
 import org.uasd.jalgor.model.Operador;
 import org.uasd.jalgor.model.OperadorAritmetico;
+import org.uasd.jalgor.model.OperadorAsignacion;
 import org.uasd.jalgor.model.OperadorBooleano;
+import org.uasd.jalgor.model.OperadorRelacional;
+import org.uasd.jalgor.model.SignoPuntuacion;
 import org.uasd.jalgor.model.Token;
 
 /**
@@ -61,25 +66,38 @@ public class AnalizadorLexico {
             case '<':
             case '>':
             case '!':
-            case '=':
                 if (codeLine[currPos + 1] == '=') {
-                    token = new OperadorBooleano();
+                    token = new OperadorRelacional();
                     ((Operador) token).setTipoOperador(((Operador) token).getOpNames().get(String.valueOf(codeLine[currPos] + codeLine[currPos + 1])));
                     currPos += 2;
                 } else {
-                    // TODO: lo que deberia devolver es un token indicando que es de asignacion
-                    token = new OperadorBooleano();
+                    token = new OperadorRelacional();
+                    ((Operador) token).setTipoOperador(((Operador) token).getOpNames().get(String.valueOf(codeLine[currPos])));
+                    currPos++;
+                }
+                break;
+            case '=':
+                if (codeLine[currPos + 1] == '=') {
+                    token = new OperadorRelacional();
+                    ((Operador) token).setTipoOperador(((Operador) token).getOpNames().get(String.valueOf(codeLine[currPos] + codeLine[currPos + 1])));
+                    currPos += 2;
+                } else {
+                    token = new OperadorAsignacion();
                     ((Operador) token).setTipoOperador(((Operador) token).getOpNames().get(String.valueOf(codeLine[currPos])));
                     currPos++;
                 }
                 break;
             case ';':
-                // TODO: pending token construct
+                token = new SignoPuntuacion(codeLine[currPos]);
                 currPos++;
                 break;
             case '(':
+                token = new SignoPuntuacion(codeLine[currPos]);
+                currPos++;
                 break;
             case ')':
+                token = new SignoPuntuacion(codeLine[currPos]);
+                currPos++;
                 break;
             case '.':
             case '0':
@@ -96,22 +114,24 @@ public class AnalizadorLexico {
                 while (Character.isDigit(codeLine[currPos++])) {
                     num.append(codeLine[currPos]);
                 }
+                token = new ConstanteNumerica(num.toString());
+                currPos++;
                 break;
-            // TODO: construir el token ConstanteNumerica
             case '"':
                 StringBuilder str = new StringBuilder();
                 while (codeLine[currPos++] != '"') {
                     str.append(codeLine[currPos]);
                 }
+                token = new ConstanteAlfanumerica(str.toString());
+                currPos++;
                 break;
-            // TODO: construir el token ConstanteCadena
             default:
                 StringBuilder var = new StringBuilder();
                 while (Character.isLetterOrDigit(codeLine[currPos++]) || codeLine[currPos++] == '_') {
                     var.append(codeLine[currPos]);
                 }
+                // TODO: construir el token VariableID | KeywordStatement
                 break;
-            // TODO: construir el token VariableID | KeywordStatement
         }
 
         return token;
