@@ -31,6 +31,7 @@ import org.uasd.jalgor.model.OperadorAsignacion;
 import org.uasd.jalgor.model.OperadorBooleano;
 import org.uasd.jalgor.model.OperadorRelacional;
 import org.uasd.jalgor.model.SignoPuntuacion;
+import org.uasd.jalgor.model.Statement;
 import org.uasd.jalgor.model.Token;
 
 /**
@@ -123,14 +124,18 @@ public class AnalizadorLexico {
                     str.append(codeLine[currPos]);
                 }
                 token = new ConstanteAlfanumerica(str.toString());
-                currPos++;
+                currPos += 2;
                 break;
             default:
                 StringBuilder var = new StringBuilder();
-                while (Character.isLetterOrDigit(codeLine[currPos++]) || codeLine[currPos++] == '_') {
+                char currChar = codeLine[currPos];
+                while (Character.isLetterOrDigit(currChar) || currChar == '_') {
                     var.append(codeLine[currPos]);
+                    currPos++;
+                    currChar = codeLine[currPos];
                 }
                 // TODO: construir el token VariableID | KeywordStatement
+                //if (Statement.Keyword.ALFA.)
                 break;
         }
 

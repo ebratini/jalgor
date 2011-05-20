@@ -27,35 +27,22 @@ package org.uasd.jalgor.model;
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public abstract class Token {
+public class VariableId extends Token {
 
-    public enum TipoToken {
+    private String value;
 
-        SIMBOLO, CONSTANTE, OPERADOR, VARIABLEID, SIGNOPUNTUACION, KEYWORD
-    };
-    private TipoToken tipoToken;
-    private Token siblingToken;
-
-    public Token() {
+    public VariableId() {
     }
 
-    public Token(TipoToken tipoToken) {
-        this.tipoToken = tipoToken;
+    public VariableId(String value) {
+        this.value = value;
     }
 
-    public TipoToken getTipoToken() {
-        return tipoToken;
+    public String getValue() {
+        return value;
     }
 
-    public void setTipoToken(TipoToken tipoToken) {
-        this.tipoToken = tipoToken;
-    }
-
-    public Token getSiblingToken() {
-        return siblingToken;
-    }
-
-    public void setSiblingToken(Token siblingToken) {
-        this.siblingToken = siblingToken;
+    public void setValue(String value) {
+        this.value = value;
     }
 }
