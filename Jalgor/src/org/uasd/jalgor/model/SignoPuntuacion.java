@@ -39,12 +39,9 @@ public class SignoPuntuacion extends Token {
         this();
         this.value = value;
     }
-    
-    public char getValue() {
-        return value;
-    }
 
     public void setValue(char value) {
         this.value = value;
+        setValue(String.valueOf(value));
     }
 }

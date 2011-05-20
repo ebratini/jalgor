@@ -35,7 +35,7 @@ public class Statement extends Token {
 
         PROGRAMA, FIN_PROGRAMA, NUM, ALFA,
         LEE, ESCRIBE, SI, ENTONCES, SINO,
-        FIN_SI, PARA, FIN_PARA
+        FIN_SI, MIENTRAS, FIN_MIENTRAS
     };
     private Keyword tipoSatement;
     private HashMap<Keyword, String> cppReps = new HashMap<Keyword, String>() {
@@ -49,8 +49,16 @@ public class Statement extends Token {
             put(Keyword.ENTONCES, "{");
             put(Keyword.SINO, "else");
             put(Keyword.FIN_SI, "}");
-            put(Keyword.PARA, "for");
-            put(Keyword.FIN_PARA, "}");
+            put(Keyword.MIENTRAS, "while");
+            put(Keyword.FIN_MIENTRAS, "}");
+        }
+    };
+    public static HashMap<String, Keyword> keywordMatcher = new HashMap<String, Keyword>() {
+
+        {
+            for (Keyword k : Keyword.values()) {
+                put(k.name(), k);
+            }
         }
     };
 
@@ -76,7 +84,7 @@ public class Statement extends Token {
     public void setTipoSatement(Keyword tipoSatement) {
         this.tipoSatement = tipoSatement;
     }
-    
+
     public String parse(Keyword statement) {
         return cppReps.get(statement);
     }

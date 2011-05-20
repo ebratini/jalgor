@@ -40,11 +40,11 @@ public class JalgorInterpreter {
     private String sourceFilePath;
     private String outFilePath;
     private StringBuilder sbCodeLines = FileManager.loadFile(new File(sourceFilePath));
-    
     private HashMap<Integer, String> codeLines = new HashMap<Integer, String>();
     private List<Statement> statements = new ArrayList<Statement>();
     private List<Variable> variables = new ArrayList<Variable>();
-    private List<InterpreterError> errores = new ArrayList<InterpreterError>();
+    //private List<InterpreterError> errores = new ArrayList<InterpreterError>();
+    private HashMap<Integer, List<InterpreterError>> errores = new HashMap<Integer, List<InterpreterError>>();
 
     public JalgorInterpreter() {
     }
@@ -80,7 +80,11 @@ public class JalgorInterpreter {
     public List<Variable> getVariables() {
         return variables;
     }
-    
+
+    public HashMap<Integer, List<InterpreterError>> getErrores() {
+        return errores;
+    }
+
     private void initCodeLines() {
         String[] lines = sbCodeLines.toString().split(System.getProperty("line.separator"));
         int i = 0;
@@ -103,7 +107,12 @@ public class JalgorInterpreter {
 
     public void start() {
         if (sbCodeLines.length() < 1) {
-            errores.add(new EmptyFileError("El archivo fuente esta vacio"));
+            errores.put(-1, new ArrayList<InterpreterError>() {
+
+                {
+                    add(new EmptyFileError("El archivo fuente esta vacio"));
+                }
+            });
             return;
         }
         // TODO: pending implementation

@@ -27,34 +27,40 @@ package org.uasd.jalgor.model;
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class Expression {
+public class Expresion {
 
-    private Expression exp1;
-    private Expression exp2;
+    /*public static enum TipoExpresion {
+        OP_SUMA, OP_RESTA, OP_MULT, OP_DIV,
+        BLN_AND, BLN_OR,
+        REL_LT, REL_LE, REL_GT, REL_GE, REL_EQ, REL_NE,
+        
+    };*/
+    private Expresion exp1;
+    private Expresion exp2;
     private Operador oper;
 
-    public Expression() {
+    public Expresion() {
     }
 
-    public Expression(Expression exp1, Expression exp2, Operador oper) {
+    public Expresion(Expresion exp1, Expresion exp2, Operador oper) {
         this.exp1 = exp1;
         this.exp2 = exp2;
         this.oper = oper;
     }
 
-    public Expression getExp1() {
+    public Expresion getExp1() {
         return exp1;
     }
 
-    public void setExp1(Expression exp1) {
+    public void setExp1(Expresion exp1) {
         this.exp1 = exp1;
     }
 
-    public Expression getExp2() {
+    public Expresion getExp2() {
         return exp2;
     }
 
-    public void setExp2(Expression exp2) {
+    public void setExp2(Expresion exp2) {
         this.exp2 = exp2;
     }
 
