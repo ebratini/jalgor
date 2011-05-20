@@ -38,34 +38,37 @@ public abstract class Operador extends Token {
         AND, OR, XOR, ASIG
     };
     protected TipoOperador tipoOperador;
-    protected HashMap<String, TipoOperador> opNames = new HashMap<String, TipoOperador>() {{
-        put("-", TipoOperador.RESTA);
-        put("+", TipoOperador.SUMA);
-        put("*", TipoOperador.MULT);
-        put("/", TipoOperador.DIV);
+    public static HashMap<String, TipoOperador> opNames = new HashMap<String, TipoOperador>() {
 
-        put("==", TipoOperador.EQ);
-        put("!=", TipoOperador.NE);
-        put(">", TipoOperador.GT);
-        put("<", TipoOperador.LT);
-        put(">=", TipoOperador.GE);
-        put("<=", TipoOperador.LE);
+        {
+            put("-", TipoOperador.RESTA);
+            put("+", TipoOperador.SUMA);
+            put("*", TipoOperador.MULT);
+            put("/", TipoOperador.DIV);
 
-        put("&", TipoOperador.AND);
-        put("|", TipoOperador.OR);
-        put("^", TipoOperador.XOR);
-        put("=", TipoOperador.ASIG);
-    }};
+            put("==", TipoOperador.EQ);
+            put("!=", TipoOperador.NE);
+            put(">", TipoOperador.GT);
+            put("<", TipoOperador.LT);
+            put(">=", TipoOperador.GE);
+            put("<=", TipoOperador.LE);
+
+            put("&", TipoOperador.AND);
+            put("|", TipoOperador.OR);
+            put("^", TipoOperador.XOR);
+            put("=", TipoOperador.ASIG);
+        }
+    };
 
     public Operador() {
         super(Token.TipoToken.OPERADOR);
     }
 
     public Operador(TipoOperador tipoOperador) {
-        super(Token.TipoToken.OPERADOR);
+        this();
         this.tipoOperador = tipoOperador;
     }
-    
+
     public TipoOperador getTipoOperador() {
         return tipoOperador;
     }
@@ -74,9 +77,10 @@ public abstract class Operador extends Token {
         this.tipoOperador = tipoOperador;
     }
 
-    public HashMap<String, TipoOperador> getOpNames() {
+    public static HashMap<String, TipoOperador> getOpNames() {
         return opNames;
     }
 
+    @Override
     public abstract String getValue();
 }
