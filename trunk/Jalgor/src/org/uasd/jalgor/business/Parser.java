@@ -27,6 +27,7 @@ import org.uasd.jalgor.model.AsignacionStatement;
 import org.uasd.jalgor.model.ComentarioStatement;
 import org.uasd.jalgor.model.ConstanteAlfanumerica;
 import org.uasd.jalgor.model.OperadorAsignacion;
+import org.uasd.jalgor.model.SignoPuntuacion;
 import org.uasd.jalgor.model.Statement;
 import org.uasd.jalgor.model.Statement.Keyword;
 import org.uasd.jalgor.model.Token;
@@ -51,7 +52,10 @@ public class Parser {
                         case ALFA:
                             statement = new AsignacionStatement(tipoSatement, al);
                             while (al.hasNextToken()) {
-                                statement.addTokenStatement(token);
+                                Token tok = al.getNextToken();
+                                if (tok instanceof ConstanteAlfanumerica || (tok instanceof SignoPuntuacion && tok.getValue().equals(";"))) {
+                                    statement.addTokenStatement(al.getNextToken());
+                                }
                             }
                             break;
                         case NUM:
