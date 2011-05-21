@@ -148,6 +148,18 @@ public class AnalizadorLexico {
         return codeLine;
     }
 
+    public boolean hasNextToken() {
+        boolean hasIt = false;
+        currPos += 1;
+
+        if (getNextToken() != null) {
+            hasIt = true;
+        }
+
+        currPos -= 1;
+        return hasIt;
+    }
+
     public void resetAnalizador(char[] codeLine) {
         this.codeLine = codeLine;
         this.currPos = 0;
