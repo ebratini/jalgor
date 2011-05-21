@@ -26,6 +26,7 @@ package org.uasd.jalgor.business;
 import java.util.Collections;
 import java.util.List;
 import org.uasd.jalgor.model.ComentarioStatement;
+import org.uasd.jalgor.model.ConstanteAlfanumerica;
 import org.uasd.jalgor.model.OperadorAsignacion;
 import org.uasd.jalgor.model.Statement;
 import org.uasd.jalgor.model.Statement.Keyword;
@@ -48,9 +49,15 @@ public class Parser {
                 Token nxtToken = al.getNextToken();
                 if (nxtToken instanceof OperadorAsignacion) {
                     nxtToken = al.getNextToken();
-                    List<Variable> variables = ji.getVariables();
-                    Collections.sort(variables);
-                    //int idxVar = Collections.binarySearch(variables, token.getValue());
+                    switch(ji.getVariables().get(token.getValue()).getTipoVariable()) {
+                        case ALFA:
+                            if (nxtToken instanceof ConstanteAlfanumerica) {
+
+                            }
+                            break;
+                        case NUM:
+                            break;
+                    }
                 }
         }
 

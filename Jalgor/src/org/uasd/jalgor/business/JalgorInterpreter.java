@@ -42,7 +42,8 @@ public class JalgorInterpreter {
     private StringBuilder sbCodeLines = FileManager.loadFile(new File(sourceFilePath));
     private HashMap<Integer, String> codeLines = new HashMap<Integer, String>();
     private List<Statement> statements = new ArrayList<Statement>();
-    private List<Variable> variables = new ArrayList<Variable>();
+    //private List<Variable> variables = new ArrayList<Variable>();
+    private HashMap<String, Variable> variables = new HashMap<String, Variable>();
     //private List<InterpreterError> errores = new ArrayList<InterpreterError>();
     private HashMap<Integer, List<InterpreterError>> errores = new HashMap<Integer, List<InterpreterError>>();
 
@@ -77,7 +78,7 @@ public class JalgorInterpreter {
         return statements;
     }
 
-    public List<Variable> getVariables() {
+    public HashMap<String, Variable> getVariables() {
         return variables;
     }
 
