@@ -67,7 +67,7 @@ public class AnalizadorSintactico {
         } else if (token instanceof KeywordToken || token instanceof VariableId) {
             if (token instanceof VariableId) {
                 if (token.getSiblingToken() instanceof OperadorAsignacion) {
-                    if (ji.getVariables().contains(new Variable(token.getValue()))) {
+                    if (ji.getVariables().containsKey(token.getValue())) {
                         statement = Parser.makeStatement(Statement.Keyword.ASIGNACION, al, ji, token);//new AsignacionStatement(Statement.Keyword.ASIGNACION, al);
                     } else {
                         errores.add("variable " + token.getValue() + "no declarada");

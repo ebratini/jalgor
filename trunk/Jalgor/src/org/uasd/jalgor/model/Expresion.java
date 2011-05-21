@@ -27,14 +27,8 @@ package org.uasd.jalgor.model;
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class Expresion {
+public class Expresion extends Token {
 
-    /*public static enum TipoExpresion {
-        OP_SUMA, OP_RESTA, OP_MULT, OP_DIV,
-        BLN_AND, BLN_OR,
-        REL_LT, REL_LE, REL_GT, REL_GE, REL_EQ, REL_NE,
-        
-    };*/
     private Expresion exp1;
     private Expresion exp2;
     private Operador oper;
