@@ -23,15 +23,13 @@
  */
 package org.uasd.jalgor.business;
 
-import java.util.Collections;
-import java.util.List;
+import org.uasd.jalgor.model.AsignacionStatement;
 import org.uasd.jalgor.model.ComentarioStatement;
 import org.uasd.jalgor.model.ConstanteAlfanumerica;
 import org.uasd.jalgor.model.OperadorAsignacion;
 import org.uasd.jalgor.model.Statement;
 import org.uasd.jalgor.model.Statement.Keyword;
 import org.uasd.jalgor.model.Token;
-import org.uasd.jalgor.model.Variable;
 
 /**
  *
@@ -51,8 +49,9 @@ public class Parser {
                     nxtToken = al.getNextToken();
                     switch(ji.getVariables().get(token.getValue()).getTipoVariable()) {
                         case ALFA:
-                            if (nxtToken instanceof ConstanteAlfanumerica) {
-
+                            statement = new AsignacionStatement(tipoSatement, al);
+                            while (al.hasNextToken()) {
+                                statement.addTokenStatement(token);
                             }
                             break;
                         case NUM:

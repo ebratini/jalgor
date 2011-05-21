@@ -73,6 +73,7 @@ public class Statement {
     private String parsedValue;
     private boolean correcta;
     private List<InterpreterError> statementErrors = new ArrayList<InterpreterError>();
+    private List<Token> tokensStatement = new ArrayList<Token>();
 
     public Statement() {
     }
@@ -140,6 +141,14 @@ public class Statement {
 
     public List<InterpreterError> getStatementErrors() {
         return statementErrors;
+    }
+
+    public List<Token> getTokensStatement() {
+        return tokensStatement;
+    }
+
+    public void addTokenStatement(Token token) {
+        this.tokensStatement.add(token);
     }
 
     public String parse(Keyword statement) {
