@@ -45,6 +45,7 @@ public class AnalizadorLexico {
 
     private int currPos;
     private char[] codeLine;
+    //private CodeLine lineCode;
 
     public Token getNextToken() {
         Token token = null;

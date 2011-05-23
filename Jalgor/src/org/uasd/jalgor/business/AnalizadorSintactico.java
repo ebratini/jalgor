@@ -30,7 +30,6 @@ import org.uasd.jalgor.model.KeywordToken;
 import org.uasd.jalgor.model.OperadorAsignacion;
 import org.uasd.jalgor.model.Statement;
 import org.uasd.jalgor.model.Token;
-import org.uasd.jalgor.model.Variable;
 import org.uasd.jalgor.model.VariableId;
 
 /**

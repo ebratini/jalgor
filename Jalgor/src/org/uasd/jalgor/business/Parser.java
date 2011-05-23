@@ -64,6 +64,6 @@ public class Parser {
                 }
         }
 
-        return null;
+        return statement;
     }
 }
