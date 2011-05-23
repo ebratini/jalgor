@@ -27,6 +27,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import org.uasd.jalgor.model.CodeLine;
 import org.uasd.jalgor.model.FileManager;
 import org.uasd.jalgor.model.Statement;
 import org.uasd.jalgor.model.Variable;
@@ -41,6 +42,7 @@ public class JalgorInterpreter {
     private String outFilePath;
     private StringBuilder sbCodeLines = FileManager.loadFile(new File(sourceFilePath));
     private HashMap<Integer, String> codeLines = new HashMap<Integer, String>();
+    private List<CodeLine> linesCode = new ArrayList<CodeLine>();
     private List<Statement> statements = new ArrayList<Statement>();
     //private List<Variable> variables = new ArrayList<Variable>();
     private HashMap<String, Variable> variables = new HashMap<String, Variable>();
@@ -91,6 +93,7 @@ public class JalgorInterpreter {
         int i = 0;
         for (String line : lines) {
             codeLines.put(i++, line);
+            linesCode.add(new CodeLine(i++, line));
         }
     }
 
