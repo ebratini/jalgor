@@ -38,11 +38,18 @@ public class KeywordToken extends Token {
         this.value = value;
     }
 
+    @Override
     public String getValue() {
         return value;
     }
 
+    @Override
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return Statement.cppReps.get(Statement.keywordMatcher.get(value));
     }
 }

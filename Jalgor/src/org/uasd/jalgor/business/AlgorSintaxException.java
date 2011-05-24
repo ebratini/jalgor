@@ -21,25 +21,18 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
-package org.uasd.jalgor.model;
-
-import org.uasd.jalgor.business.AlgorSintaxException;
-import org.uasd.jalgor.business.AnalizadorLexico;
+package org.uasd.jalgor.business;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class ComentarioStatement extends Statement {
+public class AlgorSintaxException extends Exception {
 
-    public ComentarioStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
-        super(tipoSatement, al);
-        setOriginalValue(String.valueOf(al.getCodeLine()));
-        setParsedValue(getOriginalValue());
-        setCorrecta(true);
+    public AlgorSintaxException(String message) {
+        super(message);
     }
 
-    public ComentarioStatement() {
+    public AlgorSintaxException() {
     }
 }
