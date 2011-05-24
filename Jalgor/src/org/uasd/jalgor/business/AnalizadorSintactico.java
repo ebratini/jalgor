@@ -73,34 +73,16 @@ public class AnalizadorSintactico {
             if (token instanceof VariableId) {
                 if (token.getSiblingToken() instanceof OperadorAsignacion) {
                     if (ji.getVariables().containsKey(token.getValue())) {
-                        switch (ji.getVariables().get(token.getValue()).getTipoVariable()) {
+                        TipoVariable tipoVariable = ji.getVariables().get(token.getValue()).getTipoVariable();
+                        /*switch (ji.getVariables().get(token.getValue()).getTipoVariable()) {
                             case ALFA:
                                 statement = new AsignacionStatement(Statement.Keyword.ASIGNACION, al, (VariableId) token, TipoVariable.ALFA);
                                 // TODO: think abt this
-                                /*while (al.hasNextToken()) {
-                                    Token tok = al.getNextToken();
-                                    if (tok instanceof ConstanteAlfanumerica || tok instanceof ExpresionCadena || (tok instanceof SignoPuntuacion && tok.getValue().equals(";"))) {
-                                        if (tok instanceof ConstanteAlfanumerica
-                                                && !(tok.getSiblingToken() instanceof SignoPuntuacion && tok.getSiblingToken().getValue().equals(";"))) {
-                                            throw new AlgorSintaxException("Token invalido: " + tok.getValue());
-                                        } else if (tok instanceof ExpresionCadena
-                                                && !(tok.getSiblingToken() instanceof SignoPuntuacion && tok.getSiblingToken().getValue().equals(";"))) {
-                                            throw new AlgorSintaxException("Token invalido: " + tok.getValue());
-                                        }
-                                        statement.addTokenStatement(tok);
-                                        if (tok instanceof SignoPuntuacion && tok.getValue().equals(";")) {
-                                            break;
-                                        }
-                                    } else {
-                                        throw new AlgorSintaxException("Token invalido: " + tok.getValue());
-                                    }
-                                }*/
                                 break;
                             case NUM:
                                 break;
-                        }
-
-                        //statement = Parser.makeStatement(Statement.Keyword.ASIGNACION, al, ji, token);//new AsignacionStatement(Statement.Keyword.ASIGNACION, al);
+                        }*/
+                        statement = new AsignacionStatement(Statement.Keyword.ASIGNACION, al, (VariableId) token, tipoVariable);
                     } else {
                         errores.add("variable " + token.getValue() + "no declarada");
                     }
