@@ -24,21 +24,10 @@
 
 package org.uasd.jalgor.model;
 
-//import java.util.ArrayList;
-//import java.util.List;
-import org.uasd.jalgor.business.AnalizadorLexico;
-
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class MientrasStatement extends Statement {
-    //private List<Statement> statements = new ArrayList<Statement>();
+public class SIStatement extends CondicionStatement {
 
-    public MientrasStatement(Keyword tipoSatement, AnalizadorLexico al) {
-        super(tipoSatement, al);
-    }
-
-    public MientrasStatement() {
-    }
 }

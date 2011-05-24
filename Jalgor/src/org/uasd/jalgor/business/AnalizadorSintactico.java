@@ -74,14 +74,6 @@ public class AnalizadorSintactico {
                 if (token.getSiblingToken() instanceof OperadorAsignacion) {
                     if (ji.getVariables().containsKey(token.getValue())) {
                         TipoVariable tipoVariable = ji.getVariables().get(token.getValue()).getTipoVariable();
-                        /*switch (ji.getVariables().get(token.getValue()).getTipoVariable()) {
-                            case ALFA:
-                                statement = new AsignacionStatement(Statement.Keyword.ASIGNACION, al, (VariableId) token, TipoVariable.ALFA);
-                                // TODO: think abt this
-                                break;
-                            case NUM:
-                                break;
-                        }*/
                         statement = new AsignacionStatement(Statement.Keyword.ASIGNACION, al, (VariableId) token, tipoVariable);
                     } else {
                         errores.add("variable " + token.getValue() + "no declarada");
