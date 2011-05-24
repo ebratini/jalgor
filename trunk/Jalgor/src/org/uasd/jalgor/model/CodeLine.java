@@ -23,6 +23,10 @@
  */
 package org.uasd.jalgor.model;
 
+import java.util.ArrayList;
+import java.util.List;
+import org.uasd.jalgor.business.InterpreterError;
+
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
@@ -30,14 +34,16 @@ package org.uasd.jalgor.model;
 public class CodeLine {
 
     private int lineNumber;
-    private String value;
+    private String origValue;
+    private String parsedValue;
+    private List<InterpreterError> errores = new ArrayList<InterpreterError>();
 
     public CodeLine() {
     }
 
-    public CodeLine(int lineNumber, String value) {
+    public CodeLine(int lineNumber, String origValue) {
         this.lineNumber = lineNumber;
-        this.value = value;
+        this.origValue = origValue;
     }
 
     public int getLineNumber() {
@@ -48,11 +54,31 @@ public class CodeLine {
         this.lineNumber = lineNumber;
     }
 
-    public String getValue() {
-        return value;
+    public String getOrigValue() {
+        return origValue;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setOrigValue(String origValue) {
+        this.origValue = origValue;
+    }
+
+    public String getParsedValue() {
+        return parsedValue;
+    }
+
+    public void setParsedValue(String parsedValue) {
+        this.parsedValue = parsedValue;
+    }
+
+    public List<InterpreterError> getErrores() {
+        return errores;
+    }
+
+    public void setErrores(List<InterpreterError> errores) {
+        this.errores = errores;
+    }
+
+    public void addError(InterpreterError error) {
+        this.errores.add(error);
     }
 }

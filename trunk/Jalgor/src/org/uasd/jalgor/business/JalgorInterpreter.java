@@ -41,12 +41,9 @@ public class JalgorInterpreter {
     private String sourceFilePath;
     private String outFilePath;
     private StringBuilder sbCodeLines = FileManager.loadFile(new File(sourceFilePath));
-    private HashMap<Integer, String> codeLines = new HashMap<Integer, String>();
-    private List<CodeLine> linesCode = new ArrayList<CodeLine>();
+    private List<CodeLine> codeLines = new ArrayList<CodeLine>();
     private List<Statement> statements = new ArrayList<Statement>();
-    //private List<Variable> variables = new ArrayList<Variable>();
     private HashMap<String, Variable> variables = new HashMap<String, Variable>();
-    //private List<InterpreterError> errores = new ArrayList<InterpreterError>();
     private HashMap<Integer, List<InterpreterError>> errores = new HashMap<Integer, List<InterpreterError>>();
 
     public JalgorInterpreter() {
@@ -68,10 +65,6 @@ public class JalgorInterpreter {
         return sourceFilePath;
     }
 
-    public HashMap<Integer, String> getCodeLines() {
-        return codeLines;
-    }
-
     public StringBuilder getSbCodeLines() {
         return sbCodeLines;
     }
@@ -88,12 +81,20 @@ public class JalgorInterpreter {
         return errores;
     }
 
+    public List<CodeLine> getCodeLines() {
+        return codeLines;
+    }
+
+    public void setCodeLines(List<CodeLine> codeLines) {
+        this.codeLines = codeLines;
+    }
+
     private void initCodeLines() {
         String[] lines = sbCodeLines.toString().split(System.getProperty("line.separator"));
         int i = 0;
         for (String line : lines) {
-            codeLines.put(i++, line);
-            linesCode.add(new CodeLine(i++, line));
+            //codeLines.put(i++, line);
+            codeLines.add(new CodeLine(i++, line));
         }
     }
 

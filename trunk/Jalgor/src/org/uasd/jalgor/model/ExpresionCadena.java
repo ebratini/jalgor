@@ -21,25 +21,18 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.uasd.jalgor.model;
-
-import org.uasd.jalgor.business.AlgorSintaxException;
-import org.uasd.jalgor.business.AnalizadorLexico;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class ComentarioStatement extends Statement {
+public class ExpresionCadena extends Expresion {
 
-    public ComentarioStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
-        super(tipoSatement, al);
-        setOriginalValue(String.valueOf(al.getCodeLine()));
-        setParsedValue(getOriginalValue());
-        setCorrecta(true);
+    public ExpresionCadena(Expresion exp1, Expresion exp2, Operador oper) {
+        super(exp1, exp2, oper);
     }
 
-    public ComentarioStatement() {
+    public ExpresionCadena() {
     }
 }

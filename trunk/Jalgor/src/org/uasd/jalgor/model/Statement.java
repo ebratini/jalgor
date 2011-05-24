@@ -42,7 +42,7 @@ public class Statement {
         FIN_SI, MIENTRAS, FIN_MIENTRAS
     };
     private Keyword tipoSatement;
-    private HashMap<Keyword, String> cppReps = new HashMap<Keyword, String>() {
+    public static HashMap<Keyword, String> cppReps = new HashMap<Keyword, String>() {
 
         {
             put(Keyword.NUM, "double");
@@ -87,12 +87,12 @@ public class Statement {
         this.al = al;
     }
 
-    public HashMap<Keyword, String> getCppReps() {
+    public static HashMap<Keyword, String> getCppReps() {
         return cppReps;
     }
 
-    public void setCppReps(HashMap<Keyword, String> cppReps) {
-        this.cppReps = cppReps;
+    public static void setCppReps(HashMap<Keyword, String> cppReps) {
+        Statement.cppReps = cppReps;
     }
 
     public Keyword getTipoSatement() {
@@ -154,4 +154,6 @@ public class Statement {
     public String parse(Keyword statement) {
         return cppReps.get(statement);
     }
+
+
 }

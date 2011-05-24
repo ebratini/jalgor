@@ -23,6 +23,8 @@
  */
 package org.uasd.jalgor.business;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.uasd.jalgor.model.AsignacionStatement;
 import org.uasd.jalgor.model.ComentarioStatement;
 import org.uasd.jalgor.model.ConstanteAlfanumerica;
@@ -31,6 +33,8 @@ import org.uasd.jalgor.model.SignoPuntuacion;
 import org.uasd.jalgor.model.Statement;
 import org.uasd.jalgor.model.Statement.Keyword;
 import org.uasd.jalgor.model.Token;
+import org.uasd.jalgor.model.Variable.TipoVariable;
+import org.uasd.jalgor.model.VariableId;
 
 /**
  *
@@ -40,28 +44,33 @@ public class Parser {
 
     public static Statement makeStatement(Keyword tipoSatement, AnalizadorLexico al, JalgorInterpreter ji, Token token) {
         Statement statement = null;
-        switch (tipoSatement) {
-            case COMENTARIO:
-                statement = new ComentarioStatement(tipoSatement, al);
-                break;
-            case ASIGNACION:
-                Token nxtToken = al.getNextToken();
-                if (nxtToken instanceof OperadorAsignacion) {
-                    nxtToken = al.getNextToken();
-                    switch(ji.getVariables().get(token.getValue()).getTipoVariable()) {
-                        case ALFA:
-                            statement = new AsignacionStatement(tipoSatement, al);
-                            while (al.hasNextToken()) {
-                                Token tok = al.getNextToken();
-                                if (tok instanceof ConstanteAlfanumerica || (tok instanceof SignoPuntuacion && tok.getValue().equals(";"))) {
-                                    statement.addTokenStatement(al.getNextToken());
+        try {
+            switch (tipoSatement) {
+                case COMENTARIO:
+                    statement = new ComentarioStatement(tipoSatement, al);
+                    break;
+                case ASIGNACION:
+                    Token nxtToken = al.getNextToken();
+                    if (nxtToken instanceof OperadorAsignacion) {
+                        nxtToken = al.getNextToken();
+                        switch (ji.getVariables().get(token.getValue()).getTipoVariable()) {
+                            case ALFA:
+                                statement = new AsignacionStatement(tipoSatement, al, (VariableId) token, TipoVariable.ALFA);
+                                while (al.hasNextToken()) {
+                                    Token tok = al.getNextToken();
+                                    if (tok instanceof ConstanteAlfanumerica || (tok instanceof SignoPuntuacion && tok.getValue().equals(";"))) {
+                                        statement.addTokenStatement(al.getNextToken());
+                                    }
                                 }
-                            }
-                            break;
-                        case NUM:
-                            break;
+                                break;
+                            case NUM:
+                                break;
+                        }
                     }
-                }
+            }
+
+        } catch (AlgorSintaxException ex) {
+            Logger.getLogger(Parser.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         return statement;
