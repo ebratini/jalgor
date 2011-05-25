@@ -45,7 +45,6 @@ public class AnalizadorLexico {
 
     private int currPos;
     private char[] codeLine;
-    //private Token token = null;
 
     public Token getNextToken() {
         Token token = null;
@@ -142,7 +141,9 @@ public class AnalizadorLexico {
         }
 
         if (token != null) {
+            int prevPos = currPos;
             token.setSiblingToken(getNextToken());
+            currPos = prevPos;
         }
         return token;
     }
@@ -152,14 +153,9 @@ public class AnalizadorLexico {
     }
 
     public boolean hasNextToken() {
-        boolean hasIt = false;
-        currPos += 1;
-
-        if (getNextToken() != null) {
-            hasIt = true;
-        }
-
-        currPos -= 1;
+        int prevPos = currPos;
+        boolean hasIt = (getNextToken() != null);
+        currPos = prevPos;
         return hasIt;
     }
 
