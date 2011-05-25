@@ -23,6 +23,7 @@
  */
 package org.uasd.jalgor.business;
 
+import org.uasd.jalgor.model.CodeLine;
 import org.uasd.jalgor.model.ComentarioToken;
 import org.uasd.jalgor.model.ConstanteAlfanumerica;
 import org.uasd.jalgor.model.ConstanteNumerica;
@@ -44,49 +45,65 @@ import org.uasd.jalgor.model.VariableId;
 public class AnalizadorLexico {
 
     private int currPos;
-    private char[] codeLine;
+    private CodeLine codeLine;
+    private char[] chrCodeLine;
+
+    public AnalizadorLexico() {
+    }
+
+    public AnalizadorLexico(CodeLine codeLine) {
+        this.codeLine = codeLine;
+        initChrCodeLine();
+    }
+
+    private void initChrCodeLine() {
+        if (codeLine != null) {
+            chrCodeLine = codeLine.getOrigValue().replaceAll(" ", "").toCharArray();
+        }
+    }
 
     public Token getNextToken() {
         Token token = null;
-        if (currPos == (codeLine.length - 1)) {
+        if (currPos == (chrCodeLine.length - 1)) {
             return null;
         }
-        switch (codeLine[currPos]) {
+        switch (chrCodeLine[currPos]) {
             case '-':
             case '+':
             case '*':
             case '/':
-                if (codeLine[currPos + 1] == '/') {
+                if (chrCodeLine[currPos + 1] == '/') {
                     token = new ComentarioToken();
                     currPos += 2;
                 } else {
-                    token = new OperadorAritmetico(Operador.getOpNames().get(String.valueOf(codeLine[currPos])));
+                    token = new OperadorAritmetico(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos])));
                     currPos++;
                 }
                 break;
             case '&':
             case '|':
             case '^':
-                token = new OperadorBooleano(Operador.getOpNames().get(String.valueOf(codeLine[currPos])));
+            case '~':
+                token = new OperadorBooleano(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos])));
                 currPos++;
                 break;
             case '<':
             case '>':
             case '!':
-                if (codeLine[currPos + 1] == '=') {
-                    token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(codeLine[currPos] + codeLine[currPos + 1])));
+                if (chrCodeLine[currPos + 1] == '=') {
+                    token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos] + chrCodeLine[currPos + 1])));
                     currPos += 2;
                 } else {
-                    token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(codeLine[currPos])));
+                    token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos])));
                     currPos++;
                 }
                 break;
             case '=':
-                if (codeLine[currPos + 1] == '=') {
-                    token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(codeLine[currPos] + codeLine[currPos + 1])));
+                if (chrCodeLine[currPos + 1] == '=') {
+                    token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos] + chrCodeLine[currPos + 1])));
                     currPos += 2;
                 } else {
-                    token = new OperadorAsignacion(Operador.getOpNames().get(String.valueOf(codeLine[currPos])));
+                    token = new OperadorAsignacion(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos])));
                     currPos++;
                 }
                 break;
@@ -94,7 +111,7 @@ public class AnalizadorLexico {
             case '(':
             case ')':
             case ',':
-                token = new SignoPuntuacion(codeLine[currPos]);
+                token = new SignoPuntuacion(chrCodeLine[currPos]);
                 currPos++;
                 break;
             case '.':
@@ -109,27 +126,27 @@ public class AnalizadorLexico {
             case '8':
             case '9':
                 StringBuilder num = new StringBuilder();
-                while (Character.isDigit(codeLine[currPos++])) {
-                    num.append(codeLine[currPos]);
+                while (Character.isDigit(chrCodeLine[currPos++])) {
+                    num.append(chrCodeLine[currPos]);
                 }
                 token = new ConstanteNumerica(num.toString());
                 currPos++;
                 break;
             case '"':
                 StringBuilder str = new StringBuilder();
-                while (codeLine[currPos++] != '"') {
-                    str.append(codeLine[currPos]);
+                while (chrCodeLine[currPos++] != '"') {
+                    str.append(chrCodeLine[currPos]);
                 }
                 token = new ConstanteAlfanumerica(str.toString());
                 currPos += 2;
                 break;
             default:
                 StringBuilder var = new StringBuilder();
-                char currChar = codeLine[currPos];
+                char currChar = chrCodeLine[currPos];
                 while (Character.isLetterOrDigit(currChar) || currChar == '_') {
-                    var.append(codeLine[currPos]);
+                    var.append(chrCodeLine[currPos]);
                     currPos++;
-                    currChar = codeLine[currPos];
+                    currChar = chrCodeLine[currPos];
                 }
                 if (Statement.keywordMatcher.containsKey(var.toString().toUpperCase())) {
                     token = new KeywordToken(var.toString());
@@ -148,7 +165,11 @@ public class AnalizadorLexico {
         return token;
     }
 
-    public char[] getCodeLine() {
+    public char[] getChrCodeLine() {
+        return chrCodeLine;
+    }
+    
+    public CodeLine getCodeLine() {
         return codeLine;
     }
 
@@ -159,8 +180,8 @@ public class AnalizadorLexico {
         return hasIt;
     }
 
-    public void resetAnalizador(char[] codeLine) {
+    public void resetCodeLine(CodeLine codeLine) {
         this.codeLine = codeLine;
-        this.currPos = 0;
+        initChrCodeLine();
     }
 }

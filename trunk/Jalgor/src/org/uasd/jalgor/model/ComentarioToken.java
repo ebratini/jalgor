@@ -30,10 +30,15 @@ package org.uasd.jalgor.model;
 public class ComentarioToken extends Token {
 
     public ComentarioToken() {
-        super(Token.TipoToken.SIMBOLO);
+        super(Token.TipoToken.COMENTARIO);
     }
 
-    public ComentarioToken(TipoToken tipoToken) {
-        super(tipoToken);
+    public ComentarioToken(TipoToken tipoToken, String value) {
+        super(tipoToken, value);
+    }
+
+    @Override
+    public String toString() {
+        return getValue();
     }
 }

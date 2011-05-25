@@ -43,8 +43,9 @@ public class JalgorInterpreter {
     private StringBuilder sbCodeLines = FileManager.loadFile(new File(sourceFilePath));
     private List<CodeLine> codeLines = new ArrayList<CodeLine>();
     private List<Statement> statements = new ArrayList<Statement>();
-    private HashMap<String, Variable> variables = new HashMap<String, Variable>();
-    private HashMap<Integer, List<InterpreterError>> errores = new HashMap<Integer, List<InterpreterError>>();
+    private static HashMap<String, Variable> variables = new HashMap<String, Variable>();
+    List<InterpreterError> errores = new ArrayList<InterpreterError>();
+    private AnalizadorSintactico as = new AnalizadorSintactico(this, new AnalizadorLexico());
 
     public JalgorInterpreter() {
     }
@@ -73,11 +74,11 @@ public class JalgorInterpreter {
         return statements;
     }
 
-    public HashMap<String, Variable> getVariables() {
+    public static HashMap<String, Variable> getVariables() {
         return variables;
     }
 
-    public HashMap<Integer, List<InterpreterError>> getErrores() {
+    public List<InterpreterError> getErrores() {
         return errores;
     }
 
@@ -93,33 +94,36 @@ public class JalgorInterpreter {
         String[] lines = sbCodeLines.toString().split(System.getProperty("line.separator"));
         int i = 0;
         for (String line : lines) {
-            //codeLines.put(i++, line);
             codeLines.add(new CodeLine(i++, line));
         }
     }
 
     private void validateSourceFileName(String sourceFname) throws InvalidFileNameException {
-        if (!sourceFname.endsWith(".algor")) {
+        if (!sourceFname.toLowerCase().endsWith(".algor")) {
             throw new InvalidSourceFileNameException("El nombre del archivo fuente esta mal formado");
         }
     }
 
     private void validateOutFileName(String outFName) throws InvalidFileNameException {
-        if (!outFName.endsWith(".cpp")) {
+        if (!outFName.toLowerCase().endsWith(".cpp")) {
             throw new InvalidOutFileNameException("El nombre del archivo salida esta mal formado");
         }
     }
 
     public void start() {
         if (sbCodeLines.length() < 1) {
-            errores.put(-1, new ArrayList<InterpreterError>() {
-
-                {
-                    add(new EmptyFileError("El archivo fuente esta vacio"));
-                }
-            });
+            errores.add(new EmptyFileError("El archivo fuente esta vacio"));
             return;
         }
-        // TODO: pending implementation
+        as.go();
+
+        if (!getStatements().contains(null)) {
+            // imprime archivo
+        } else {
+            if (errores.size() > 0) {
+                // imprime errores de interprete
+            }
+            // imprime errores de statements
+        }
     }
 }
