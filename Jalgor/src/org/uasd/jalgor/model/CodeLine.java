@@ -81,4 +81,26 @@ public class CodeLine {
     public void addError(InterpreterError error) {
         this.errores.add(error);
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final CodeLine other = (CodeLine) obj;
+        if (this.lineNumber != other.lineNumber) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 79 * hash + this.lineNumber;
+        return hash;
+    }
 }

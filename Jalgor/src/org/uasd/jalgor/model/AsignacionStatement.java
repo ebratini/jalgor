@@ -25,6 +25,8 @@ package org.uasd.jalgor.model;
 
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.AnalizadorLexico;
+import org.uasd.jalgor.business.InterpreterError;
+import org.uasd.jalgor.business.JalgorInterpreter;
 
 /**
  *
@@ -35,15 +37,16 @@ public class AsignacionStatement extends Statement {
     private Token idVariable;
     private Variable.TipoVariable tipoVariable;
 
-    public AsignacionStatement(Keyword tipoSatement, AnalizadorLexico al, VariableId idVariable, Variable.TipoVariable tipoVariable) throws AlgorSintaxException {
+    public AsignacionStatement(Keyword tipoSatement, AnalizadorLexico al, VariableId idVariable, Variable.TipoVariable tipoVariable)
+            throws AlgorSintaxException {
         super(tipoSatement, al);
         this.idVariable = idVariable;
         this.tipoVariable = tipoVariable;
-        setOriginalValue(String.valueOf(al.getCodeLine()));
+        setOriginalValue(al.getCodeLine().getOrigValue());
         parseMe();
     }
 
-    public AsignacionStatement() {
+    public AsignacionStatement() throws AlgorSintaxException {
     }
 
     // TODO: think abt this
@@ -54,53 +57,47 @@ public class AsignacionStatement extends Statement {
             case ALFA:
                 while (getAl().hasNextToken()) {
                     Token tok = getAl().getNextToken();
-                    if (tok instanceof ConstanteAlfanumerica || tok instanceof ExpresionCadena || (tok instanceof SignoPuntuacion && tok.getValue().equals(";"))) {
-                        if (tok instanceof ConstanteAlfanumerica
-                                && !(tok.getSiblingToken() instanceof SignoPuntuacion && tok.getSiblingToken().getValue().equals(";"))) {
-                            throw new AlgorSintaxException("Token invalido: " + tok.getValue());
-                        } else if (tok instanceof ExpresionCadena
-                                && !(tok.getSiblingToken() instanceof SignoPuntuacion && tok.getSiblingToken().getValue().equals(";"))) {
-                            throw new AlgorSintaxException("Token invalido: " + tok.getValue());
-                        }
+                    if (tok instanceof ConstanteAlfanumerica || tok instanceof VariableId
+                            || (tok instanceof OperadorAritmetico && ((OperadorAritmetico) tok).getTipoOperador().equals(Operador.TipoOperador.SUMA))
+                            || (tok instanceof SignoPuntuacion && tok.getValue().equals(";"))) {
                         this.addTokenStatement(tok);
-                        if (tok instanceof SignoPuntuacion && tok.getValue().equals(";")) {
-                            break;
-                        }
                     } else {
-                        throw new AlgorSintaxException("Token invalido: " + tok.getValue());
+                        String msjError = "Token invalido: " + tok.getValue();
+                        getAl().getCodeLine().addError(new InterpreterError(msjError));
+                        throw new AlgorSintaxException(msjError);
                     }
+                }
+                if (!getTokensStatement().get(getTokensStatement().size() - 1).getValue().equals(";")) {
+                    String msjError = "Token invalido al final de linea: " + getTokensStatement().get(getTokensStatement().size() - 1).getValue();
+                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                    throw new AlgorSintaxException(msjError);
                 }
                 break;
             case NUM:
                 while (getAl().hasNextToken()) {
                     Token tok = getAl().getNextToken();
-                    if (tok instanceof ConstanteNumerica || tok instanceof ExpresionNumerica || (tok instanceof SignoPuntuacion && tok.getValue().equals(";"))) {
-                        if (tok instanceof ConstanteNumerica
-                                && !(tok.getSiblingToken() instanceof SignoPuntuacion && tok.getSiblingToken().getValue().equals(";"))) {
-                            throw new AlgorSintaxException("Token invalido: " + tok.getValue());
-                        } else if (tok instanceof ExpresionNumerica
-                                && !(tok.getSiblingToken() instanceof SignoPuntuacion && tok.getSiblingToken().getValue().equals(";"))) {
-                            throw new AlgorSintaxException("Token invalido: " + tok.getValue());
-                        }
+                    if (tok instanceof ConstanteNumerica || (tok instanceof VariableId && JalgorInterpreter.getVariables().containsKey(tok.getValue()))
+                            || tok instanceof OperadorAritmetico || (tok instanceof SignoPuntuacion && tok.getValue().equals(";"))) {
                         this.addTokenStatement(tok);
-                        if (tok instanceof SignoPuntuacion && tok.getValue().equals(";")) {
-                            break;
-                        }
                     } else {
-                        throw new AlgorSintaxException("Token invalido: " + tok.getValue());
+                        String msjError = "Token invalido: " + tok.getValue();
+                        getAl().getCodeLine().addError(new InterpreterError(msjError));
+                        throw new AlgorSintaxException(msjError);
                     }
+                }
+                if (!getTokensStatement().get(getTokensStatement().size() - 1).getValue().equals(";")) {
+                    String msjError = "Token invalido al final de linea: " + getTokensStatement().get(getTokensStatement().size() - 1).getValue();
+                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                    throw new AlgorSintaxException(msjError);
                 }
                 break;
         }
+
+        setParsedValue(parse());
     }
 
     @Override
     public String toString() {
-        StringBuilder parsedValue = new StringBuilder();
-
-        for (Token tok : this.getTokensStatement()) {
-            parsedValue.append(tok.toString()).append(" ");
-        }
-        return parsedValue.toString();
+        return getParsedValue();
     }
 }

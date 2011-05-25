@@ -23,7 +23,9 @@
  */
 package org.uasd.jalgor.model;
 
+import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.AnalizadorLexico;
+import org.uasd.jalgor.business.InterpreterError;
 
 /**
  *
@@ -31,10 +33,43 @@ import org.uasd.jalgor.business.AnalizadorLexico;
  */
 public class ProgramaStatement extends Statement {
 
-    public ProgramaStatement() {
+    public ProgramaStatement() throws AlgorSintaxException {
     }
 
-    public ProgramaStatement(Keyword tipoSatement, AnalizadorLexico al) {
+    public ProgramaStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
+        setOriginalValue(al.getCodeLine().getOrigValue());
+        parseMe();
+    }
+
+    private void parseMe() throws AlgorSintaxException {
+        Token token = getAl().getNextToken();
+        switch (getTipoSatement()) {
+            case PROGRAMA:
+                if (!(token instanceof VariableId)) {
+                    String msjError = "Identificador esperado";
+                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                    throw new AlgorSintaxException(msjError);
+                }
+                if (!(token.getSiblingToken() instanceof SignoPuntuacion)
+                        || (token.getSiblingToken() instanceof SignoPuntuacion && !((SignoPuntuacion) token.getSiblingToken()).getValue().equals(";"))) {
+                    String msjError = "; esperado";
+                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                    throw new AlgorSintaxException(msjError);
+                }
+                addTokenStatement(token);
+                addTokenStatement(token.getSiblingToken());
+                break;
+            case FIN_PROGRAMA:
+                if (!(token instanceof SignoPuntuacion)
+                        || (token instanceof SignoPuntuacion && !((SignoPuntuacion) token).getValue().equals(";"))) {
+                    String msjError = "; esperado";
+                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                    throw new AlgorSintaxException(msjError);
+                }
+                addTokenStatement(token);
+                break;
+        }
+        setParsedValue(parse());
     }
 }

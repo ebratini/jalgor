@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import org.uasd.jalgor.business.AnalizadorLexico;
-import org.uasd.jalgor.business.InterpreterError;
 
 /**
  *
@@ -38,8 +37,7 @@ public class Statement {
     public enum Keyword {
 
         COMENTARIO, ASIGNACION, PROGRAMA, FIN_PROGRAMA, NUM, ALFA,
-        LEE, ESCRIBE, SI, ENTONCES, SINO,
-        FIN_SI, MIENTRAS, FIN_MIENTRAS
+        LEE, ESCRIBE, SI, ENTONCES, SINO, FIN_SI, MIENTRAS, FIN_MIENTRAS
     };
     private Keyword tipoSatement;
     public static HashMap<Keyword, String> cppReps = new HashMap<Keyword, String>() {
@@ -71,8 +69,6 @@ public class Statement {
     private AnalizadorLexico al;
     private String originalValue;
     private String parsedValue;
-    private boolean correcta;
-    private List<InterpreterError> statementErrors = new ArrayList<InterpreterError>();
     private List<Token> tokensStatement = new ArrayList<Token>();
 
     public Statement() {
@@ -115,14 +111,6 @@ public class Statement {
         return keywordMatcher;
     }
 
-    public boolean isCorrecta() {
-        return correcta;
-    }
-
-    public void setCorrecta(boolean correcta) {
-        this.correcta = correcta;
-    }
-
     public String getOriginalValue() {
         return originalValue;
     }
@@ -139,10 +127,6 @@ public class Statement {
         this.parsedValue = parsedValue;
     }
 
-    public List<InterpreterError> getStatementErrors() {
-        return statementErrors;
-    }
-
     public List<Token> getTokensStatement() {
         return tokensStatement;
     }
@@ -151,9 +135,13 @@ public class Statement {
         this.tokensStatement.add(token);
     }
 
-    public String parse(Keyword statement) {
-        return cppReps.get(statement);
+    protected String parse() {
+        StringBuilder sbParsedValue = new StringBuilder();
+
+        for (Token tok : this.getTokensStatement()) {
+            sbParsedValue.append(tok.toString()).append(" ");
+        }
+
+        return sbParsedValue.toString();
     }
-
-
 }

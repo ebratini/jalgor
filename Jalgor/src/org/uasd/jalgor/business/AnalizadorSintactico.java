@@ -26,10 +26,17 @@ package org.uasd.jalgor.business;
 import java.util.ArrayList;
 import java.util.List;
 import org.uasd.jalgor.model.AsignacionStatement;
+import org.uasd.jalgor.model.CodeLine;
 import org.uasd.jalgor.model.ComentarioStatement;
 import org.uasd.jalgor.model.ComentarioToken;
+import org.uasd.jalgor.model.CondicionStatement;
+import org.uasd.jalgor.model.DeclaracionStatement;
+import org.uasd.jalgor.model.EscribeStatement;
 import org.uasd.jalgor.model.KeywordToken;
+import org.uasd.jalgor.model.LeeStatement;
+import org.uasd.jalgor.model.MientrasStatement;
 import org.uasd.jalgor.model.OperadorAsignacion;
+import org.uasd.jalgor.model.ProgramaStatement;
 import org.uasd.jalgor.model.Statement;
 import org.uasd.jalgor.model.Token;
 import org.uasd.jalgor.model.Variable.TipoVariable;
@@ -61,54 +68,70 @@ public class AnalizadorSintactico {
         this.al = al;
     }
 
-    public Statement analize(Token token) throws AlgorSintaxException {
+    public void go() {
+        for (CodeLine codLine : ji.getCodeLines()) {
+            al.resetCodeLine(codLine);
+            ji.getStatements().add(analizeCodeLine());
+        }
+    }
 
+    public Statement analizeCodeLine() {
+        Token token = al.getNextToken();
         Statement statement = null;
-        if (token instanceof ComentarioToken) {
-            statement = new ComentarioStatement(Statement.Keyword.COMENTARIO, al);
-        } else if (token instanceof KeywordToken || token instanceof VariableId) {
-            if (token instanceof VariableId) {
-                if (token.getSiblingToken() instanceof OperadorAsignacion) {
-                    if (ji.getVariables().containsKey(token.getValue())) {
-                        TipoVariable tipoVariable = ji.getVariables().get(token.getValue()).getTipoVariable();
-                        statement = new AsignacionStatement(Statement.Keyword.ASIGNACION, al, (VariableId) token, tipoVariable);
+        try {
+            if (token instanceof ComentarioToken) {
+                statement = new ComentarioStatement(Statement.Keyword.COMENTARIO, al);
+            } else if (token instanceof KeywordToken || token instanceof VariableId) {
+                if (token instanceof VariableId) {
+                    if (token.getSiblingToken() instanceof OperadorAsignacion) {
+                        if (JalgorInterpreter.getVariables().containsKey(token.getValue())) {
+                            TipoVariable tipoVariable = JalgorInterpreter.getVariables().get(token.getValue()).getTipoVariable();
+                            statement = new AsignacionStatement(Statement.Keyword.ASIGNACION, al, (VariableId) token, tipoVariable);
+                        } else {
+                            String msjError = "variable " + token.getValue() + "no declarada";
+                            errores.add(msjError);
+                            al.getCodeLine().addError(new InterpreterError(msjError));
+                        }
                     } else {
-                        errores.add("variable " + token.getValue() + "no declarada");
+                        String msjError = "[=] esperado";
+                        errores.add(msjError);
+                        al.getCodeLine().addError(new InterpreterError(msjError));
                     }
-                } else {
-                    errores.add("[=] esperado");
-                }
-            } else if (token instanceof KeywordToken) {
-                Statement.Keyword tipoKeyword = Statement.getKeywordMatcher().get(token.getValue());
-                switch (tipoKeyword) {
+                } else if (token instanceof KeywordToken) {
+                    Statement.Keyword tipoKeyword = Statement.getKeywordMatcher().get(token.getValue());
+                    switch (tipoKeyword) {
 
-                    case PROGRAMA:
-                    case FIN_PROGRAMA:
-                        statement = Parser.makeStatement(tipoKeyword, al, ji, token);//new ProgramaStatement(tipoKeyword, al);
-                        break;
-                    case NUM:
-                    case ALFA:
-                        statement = Parser.makeStatement(tipoKeyword, al, ji, token);//new DeclaracionStatement(tipoKeyword, al);
-                        break;
-                    case LEE:
-                        statement = Parser.makeStatement(tipoKeyword, al, ji, token);//new LeeStatement(tipoKeyword, al);
-                        break;
-                    case ESCRIBE:
-                        statement = Parser.makeStatement(tipoKeyword, al, ji, token);//new EscribeStatement(tipoKeyword, al);
-                        break;
-                    case SI:
-                    case SINO:
-                    case FIN_SI:
-                        statement = Parser.makeStatement(tipoKeyword, al, ji, token);//new CondicionStatement(tipoKeyword, al);
-                        break;
-                    case MIENTRAS:
-                    case FIN_MIENTRAS:
-                        statement = Parser.makeStatement(tipoKeyword, al, ji, token);//new MientrasStatement(tipoKeyword, al);
-                        break;
+                        case PROGRAMA:
+                        case FIN_PROGRAMA:
+                            statement = new ProgramaStatement(tipoKeyword, al);
+                            break;
+                        case NUM:
+                        case ALFA:
+                            statement = new DeclaracionStatement(tipoKeyword, al);
+                            break;
+                        case LEE:
+                            statement = new LeeStatement(tipoKeyword, al);
+                            break;
+                        case ESCRIBE:
+                            statement = new EscribeStatement(tipoKeyword, al);
+                            break;
+                        case SI:
+                        case SINO:
+                        case FIN_SI:
+                            statement = new CondicionStatement(tipoKeyword, al);
+                            break;
+                        case MIENTRAS:
+                        case FIN_MIENTRAS:
+                            statement = new MientrasStatement(tipoKeyword, al);
+                            break;
+                    }
                 }
+            } else {
+                String msjError = "mal comienzo de linea de codigo";
+                errores.add(msjError);
+                al.getCodeLine().addError(new InterpreterError(msjError));
             }
-        } else {
-            errores.add("mal comienzo de linea de codigo");
+        } catch (AlgorSintaxException ase) {
         }
         return statement;
     }

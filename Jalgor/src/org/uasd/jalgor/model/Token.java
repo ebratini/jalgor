@@ -31,7 +31,7 @@ public abstract class Token {
 
     public enum TipoToken {
 
-        SIMBOLO, CONSTANTE, OPERADOR, VARIABLEID, SIGNOPUNTUACION, KEYWORD, EXPRESION
+        CONSTANTE, OPERADOR, VARIABLEID, SIGNOPUNTUACION, KEYWORD, EXPRESION, COMENTARIO
     };
     private TipoToken tipoToken;
     private String value;

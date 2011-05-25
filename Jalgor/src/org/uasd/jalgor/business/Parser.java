@@ -53,7 +53,7 @@ public class Parser {
                     Token nxtToken = al.getNextToken();
                     if (nxtToken instanceof OperadorAsignacion) {
                         nxtToken = al.getNextToken();
-                        switch (ji.getVariables().get(token.getValue()).getTipoVariable()) {
+                        switch (JalgorInterpreter.getVariables().get(token.getValue()).getTipoVariable()) {
                             case ALFA:
                                 statement = new AsignacionStatement(tipoSatement, al, (VariableId) token, TipoVariable.ALFA);
                                 while (al.hasNextToken()) {
