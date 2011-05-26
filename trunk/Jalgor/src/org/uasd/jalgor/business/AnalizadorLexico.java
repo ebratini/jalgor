@@ -141,9 +141,11 @@ public class AnalizadorLexico {
                 currPos += 2;
                 break;
             default:
+                // TODO: arreglar lo de keyword: alfa a; --> alfaa;
                 StringBuilder var = new StringBuilder();
                 char currChar = chrCodeLine[currPos];
-                while (Character.isLetterOrDigit(currChar) || currChar == '_') {
+                while ((Character.isLetterOrDigit(currChar) || currChar == '_')
+                        && !Statement.keywordMatcher.containsKey(var.toString().toUpperCase())) {
                     var.append(chrCodeLine[currPos]);
                     currPos++;
                     currChar = chrCodeLine[currPos];
@@ -168,7 +170,7 @@ public class AnalizadorLexico {
     public char[] getChrCodeLine() {
         return chrCodeLine;
     }
-    
+
     public CodeLine getCodeLine() {
         return codeLine;
     }

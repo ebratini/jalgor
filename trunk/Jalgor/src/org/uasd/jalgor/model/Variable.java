@@ -23,8 +23,6 @@
  */
 package org.uasd.jalgor.model;
 
-import java.util.Comparator;
-
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
@@ -47,6 +45,11 @@ public class Variable extends Token implements Comparable<Variable> {
 
     public Variable(TipoVariable tipoVariable) {
         this.tipoVariable = tipoVariable;
+    }
+
+    public Variable(TipoVariable tipoVariable, String id) {
+        this(tipoVariable);
+        this.id = id;
     }
 
     public String getId() {

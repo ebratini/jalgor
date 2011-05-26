@@ -26,6 +26,7 @@ package org.uasd.jalgor.model;
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.AnalizadorLexico;
 import org.uasd.jalgor.business.InterpreterError;
+import org.uasd.jalgor.business.JalgorInterpreter;
 
 /**
  *
@@ -38,32 +39,64 @@ public class DeclaracionStatement extends Statement {
 
     public DeclaracionStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
-        setOriginalValue(getAl().getCodeLine().getOrigValue());
-
+        parseMe();
     }
 
     private void parseMe() throws AlgorSintaxException {
         Token token = getAl().getNextToken();
+        Token nxtToken = token.getSiblingToken();
         if (!(token instanceof VariableId)) {
             String msjError = "Identificador esperado";
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
-        Token nxtToken = token.getSiblingToken();
-        if (!(nxtToken instanceof OperadorAsignacion) && !(nxtToken instanceof SignoPuntuacion)
+        if ((!(nxtToken instanceof OperadorAsignacion) && !(nxtToken instanceof SignoPuntuacion))
                 || (nxtToken instanceof SignoPuntuacion
-                && (((SignoPuntuacion) nxtToken).getValue().equals(",") || ((SignoPuntuacion) nxtToken).getValue().equals(";")))) {
+                && (!((SignoPuntuacion) nxtToken).getValue().equals(",") && !((SignoPuntuacion) nxtToken).getValue().equals(";")))) {
 
-            String msjError = "Token invalido" + nxtToken.getValue();
+            String msjError = "Token invalido " + nxtToken.getValue() + "; [;|,|=] esperado";
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
-        switch (getTipoSatement()) {
-            case ALFA:
-
-                break;
-            case NUM:
-                break;
+        if (JalgorInterpreter.getVariables().containsKey(token.getValue())) {
+            String msjError = "Variable " + token.getValue() + " ya ha sido declarada";
+            getAl().getCodeLine().addError(new InterpreterError(msjError));
+            throw new AlgorSintaxException(msjError);
         }
+
+        JalgorInterpreter.getVariables().put(token.getValue(),
+                new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), token.getValue()));
+
+        if (!(nxtToken instanceof OperadorAritmetico)) {
+            while (getAl().hasNextToken()) {
+                Token tok = getAl().getNextToken();
+                if (tok instanceof VariableId) {
+                    if (JalgorInterpreter.getVariables().containsKey(tok.getValue())) {
+                        String msjError = "Variable " + tok.getValue() + " ya ha sido declarada";
+                        getAl().getCodeLine().addError(new InterpreterError(msjError));
+                        throw new AlgorSintaxException(msjError);
+                    }
+                    JalgorInterpreter.getVariables().put(tok.getValue(),
+                            new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), tok.getValue()));
+                }
+                addTokenStatement(tok);
+            }
+            if (!getTokensStatement().get(getTokensStatement().size() - 1).getValue().equals(";")) {
+                String msjError = "Token invalido al final de linea: " + getTokensStatement().get(getTokensStatement().size() - 1).getValue();
+                msjError += "; [;] esperado";
+                getAl().getCodeLine().addError(new InterpreterError(msjError));
+                throw new AlgorSintaxException(msjError);
+            }
+            setParsedValue(parse());
+        } else if (nxtToken instanceof OperadorAsignacion) {
+            Statement asigStatement = new AsignacionStatement(getTipoSatement(), getAl(), (VariableId) token,
+                    Variable.TipoVariable.valueOf(getTipoSatement().toString()));
+
+            setParsedValue(parse() + " " + asigStatement.getParsedValue());
+        }
+    }
+
+    private boolean variableEstaDeclarada(String variableID) {
+        return false;
     }
 }
