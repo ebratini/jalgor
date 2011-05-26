@@ -67,7 +67,7 @@ public class DeclaracionStatement extends Statement {
         JalgorInterpreter.getVariables().put(token.getValue(),
                 new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), token.getValue()));
 
-        if (!(nxtToken instanceof OperadorAritmetico)) {
+        if (!(nxtToken instanceof OperadorAsignacion)) {
             while (getAl().hasNextToken()) {
                 Token tok = getAl().getNextToken();
                 if (tok instanceof VariableId) {

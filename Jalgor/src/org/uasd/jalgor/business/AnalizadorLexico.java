@@ -141,7 +141,6 @@ public class AnalizadorLexico {
                 currPos += 2;
                 break;
             default:
-                // TODO: arreglar lo de keyword: alfa a; --> alfaa;
                 StringBuilder var = new StringBuilder();
                 char currChar = chrCodeLine[currPos];
                 while ((Character.isLetterOrDigit(currChar) || currChar == '_')
