@@ -44,7 +44,7 @@ public class JalgorInterpreter {
     private List<CodeLine> codeLines = new ArrayList<CodeLine>();
     private List<Statement> statements = new ArrayList<Statement>();
     private static HashMap<String, Variable> variables = new HashMap<String, Variable>();
-    List<InterpreterError> errores = new ArrayList<InterpreterError>();
+    private List<InterpreterError> errores = new ArrayList<InterpreterError>();
     private AnalizadorSintactico as = new AnalizadorSintactico(this, new AnalizadorLexico());
 
     public JalgorInterpreter() {
@@ -90,11 +90,20 @@ public class JalgorInterpreter {
         this.codeLines = codeLines;
     }
 
+    private void normalizeCodeLine(String line) {
+        line = line.replaceAll(" ", "");
+        line = line.replaceAll("\t", "");
+        line = line.trim();
+    }
+
     private void initCodeLines() {
         String[] lines = sbCodeLines.toString().split(System.getProperty("line.separator"));
         int i = 1;
         for (String line : lines) {
-            codeLines.add(new CodeLine(i++, line));
+            normalizeCodeLine(line);
+            if (line.length() > 0 && !line.equals("")) {
+                codeLines.add(new CodeLine(i++, line));
+            }
         }
     }
 
@@ -110,20 +119,54 @@ public class JalgorInterpreter {
         }
     }
 
+    private void printErrores() {
+        for (InterpreterError ie : errores) {
+            System.out.println(ie.getMensaje());
+        }
+    }
+
+    private boolean hayErrorEnLineaCodigo() {
+        boolean hayError = false;
+        for (CodeLine cl : codeLines) {
+            if (cl.getErrores().size() > 0) {
+                hayError = true;
+            }
+        }
+
+        return hayError;
+    }
+
+    private void printCodeLineErrors() {
+        for (CodeLine cl : codeLines) {
+            for (InterpreterError ie : cl.getErrores()) {
+                System.out.format("%d %s", cl.getLineNumber(), ie.getMensaje());
+            }
+        }
+    }
+
     public void start() {
         if (sbCodeLines.length() < 1) {
             errores.add(new EmptyFileError("El archivo fuente esta vacio"));
+            printErrores();
             return;
         }
+
+        initCodeLines();
         as.go();
 
-        if (!getStatements().contains(null)) {
+        if (!getStatements().contains(null) && !hayErrorEnLineaCodigo()) {
             // imprime archivo
-        } else {
-            if (errores.size() > 0) {
-                // imprime errores de interprete
+            StringBuilder fileContent = new StringBuilder();
+            for (Statement stm : statements) {
+                fileContent.append(stm.toString()).append(System.getProperty("line.separator"));
             }
-            // imprime errores de statements
+            FileManager.writeToFile(fileContent, new File(outFilePath), false);
+        } else {
+            // imprime errores
+            if (errores.size() > 0) {
+                printErrores();
+            }
+            printCodeLineErrors();
         }
     }
 }

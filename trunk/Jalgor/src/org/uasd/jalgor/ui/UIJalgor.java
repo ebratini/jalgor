@@ -39,31 +39,38 @@ import org.uasd.jalgor.business.JalgorInterpreter;
  */
 public class UIJalgor {
 
-    private HashMap<String, String> cmdLneArgs = new HashMap<String, String>() {{
-        put("-i", null);
-        put("-o", null);
-        put("-gui", "0");
-    }};
-    
-    private HashMap<String, String> cmdLneArgDesc = new HashMap<String, String>() {{
-        put("-i", "para indicar el path name del archivo fuente");
-        put("-o", "para indicar el path name del archivo .cpp de salida");
-        put("-gui", "para indicar si lanza modo grafico");
-    }};
+    private HashMap<String, String> cmdLneArgs = new HashMap<String, String>() {
+
+        {
+            put("-i", null);
+            put("-o", null);
+            put("-gui", "0");
+        }
+    };
+    private HashMap<String, String> cmdLneArgDesc = new HashMap<String, String>() {
+
+        {
+            put("-i", "para indicar el path name del archivo fuente");
+            put("-o", "para indicar el path name del archivo .cpp de salida");
+            put("-gui", "para indicar si lanza modo grafico");
+        }
+    };
 
     public static void main(String[] args) {
         UIJalgor uiJalgor = new UIJalgor();
         try {
             uiJalgor.validarEntrada(args);
-            /*if (!uiJalgor.getCmdLneArgs().get("-gui").equalsIgnoreCase("0")) {
-                uiJalgor.startGraphicMode();
-            }*/
-            try {
-                new JalgorInterpreter(args[0], args[1]).start();
-            } catch (InvalidFileNameException ex) {
-                Logger.getLogger(UIJalgor.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            uiJalgor.initJalgor();
         } catch (InvalidCommandLineParamException ex) {
+            Logger.getLogger(UIJalgor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void initJalgor() {
+        UIJalgor uiJalgor = new UIJalgor();
+        try {
+            new JalgorInterpreter(cmdLneArgs.get("-i"), cmdLneArgs.get("-o")).start();
+        } catch (InvalidFileNameException ex) {
             Logger.getLogger(UIJalgor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -79,35 +86,37 @@ public class UIJalgor {
     private String getAvailableCmdLneOps() {
         StringBuilder availCmdLneArgs = new StringBuilder();
         for (Map.Entry<String, String> cmdLineArg : cmdLneArgDesc.entrySet()) {
-            availCmdLneArgs.append(String.format("%s -- > %s", cmdLineArg.getKey(), cmdLineArg.getValue()));
+            availCmdLneArgs.append(String.format("%s    %s", cmdLineArg.getKey(), cmdLineArg.getValue())).append("\n");
         }
 
         return availCmdLneArgs.toString();
     }
 
     private void printCmdLneArgDesc() {
-        System.out.println("Argumentos de linea de comando disponibles");
+        System.out.println("Argumentos de linea de comando disponibles\n");
         System.out.println(getAvailableCmdLneOps());
     }
-    
+
     private void validarEntrada(String[] args) throws InvalidCommandLineParamException {
         if (args.length < 2) {
             String excMessage = "Una excepcion de tipo InvalidCommandLineParamException ha ocurrido.\n";
-            excMessage += "Insuficientes argumentos de linea de comando";
+            excMessage += "Insuficientes argumentos de linea de comando\n";
+            printCmdLneArgDesc();
             throw new InvalidCommandLineParamException(excMessage);
         }
 
         if (args.length >= 2) {
             if ((args.length % 2) != 0) {
                 String excMessage = "Una excepcion de tipo InvalidCommandLineParamException ha ocurrido.\n";
-                excMessage += "Revise el numero de argumentos enviados";
+                excMessage += "Revise el numero de argumentos enviados\n";
+                printCmdLneArgDesc();
                 throw new InvalidCommandLineParamException(excMessage);
             } else {
                 for (int i = 0, j = 1; i < args.length; i += 2, j += 2) {
                     if (args[i].equalsIgnoreCase("-i")) {
                         if (!new File(args[j]).exists()) {
                             String excMessage = "Una excepcion de tipo InvalidCommandLineParamException ha ocurrido.\n";
-                            excMessage += "Verifique el nombre/existencia de archivo";
+                            excMessage += "Verifique el nombre/existencia de archivo\n";
                             throw new InvalidCommandLineParamException(excMessage);
                         }
                     }

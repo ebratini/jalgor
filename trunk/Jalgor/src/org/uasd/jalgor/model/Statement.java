@@ -44,6 +44,7 @@ public abstract class Statement {
     public static HashMap<Keyword, String> cppReps = new HashMap<Keyword, String>() {
 
         {
+            put(Keyword.COMENTARIO, "//");
             put(Keyword.NUM, "double");
             put(Keyword.ALFA, "string");
             put(Keyword.LEE, "cin>>");
@@ -56,7 +57,6 @@ public abstract class Statement {
             put(Keyword.FIN_MIENTRAS, "}");
             put(Keyword.VERDADERO, "true");
             put(Keyword.FALSO, "false");
-            put(Keyword.COMENTARIO, "//");
         }
     };
     public static HashMap<String, Keyword> keywordMatcher = new HashMap<String, Keyword>() {
