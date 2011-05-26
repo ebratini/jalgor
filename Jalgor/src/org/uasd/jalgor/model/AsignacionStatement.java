@@ -48,7 +48,6 @@ public class AsignacionStatement extends Statement {
     public AsignacionStatement() throws AlgorSintaxException {
     }
 
-    // TODO: think abt this
     private void parseMe() throws AlgorSintaxException {
         this.addTokenStatement(idVariable);
         Token token = getAl().getNextToken();
