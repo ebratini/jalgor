@@ -51,6 +51,7 @@ public class AnalizadorSintactico {
     private AnalizadorLexico al = new AnalizadorLexico();
     private List<String> errores = new ArrayList<String>();
     private JalgorInterpreter ji = new JalgorInterpreter();
+    private int currLinePos = 1;
 
     public AnalizadorSintactico() {
     }
@@ -69,13 +70,29 @@ public class AnalizadorSintactico {
     }
 
     public void go() {
-        for (CodeLine codLine : ji.getCodeLines()) {
-            al.resetCodeLine(codLine);
+        while (hasNextCodeLine()) {
             ji.getStatements().add(analizeCodeLine());
         }
     }
 
+    private boolean hasNextCodeLine() {
+        int prevPos = currLinePos;
+        boolean hasIt = (getNextCodeLine() != null);
+        currLinePos = prevPos;
+        return hasIt;
+    }
+
+    private CodeLine getNextCodeLine() {
+        CodeLine codeLine = null;
+        if (currLinePos < ji.getCodeLines().size()) {
+            codeLine = ji.getCodeLines().get(currLinePos);
+        }
+        currLinePos++;
+        return codeLine;
+    }
+
     public Statement analizeCodeLine() {
+        al.resetCodeLine(getNextCodeLine());
         Token token = al.getNextToken();
         Statement statement = null;
         try {
@@ -116,11 +133,25 @@ public class AnalizadorSintactico {
                             statement = new EscribeStatement(tipoKeyword, al);
                             break;
                         case SI:
+                            statement = new CondicionStatement(tipoKeyword, al);
+                            Statement condSt = analizeCodeLine();
+                            do {
+                                ((CondicionStatement) statement).addBlockStatement(condSt);
+                            } while(hasNextCodeLine() && (!(condSt instanceof CondicionStatement)) && condSt.getTipoSatement().equals(Statement.Keyword.FIN_SI));
+                            break;
                         case SINO:
+                            statement = new CondicionStatement(tipoKeyword, al);
+                            break;
                         case FIN_SI:
                             statement = new CondicionStatement(tipoKeyword, al);
                             break;
                         case MIENTRAS:
+                            statement = new MientrasStatement(tipoKeyword, al);
+                            Statement bucleSt = analizeCodeLine();
+                            do {
+                                ((MientrasStatement) statement).addBlockStatement(bucleSt);
+                            } while(hasNextCodeLine() && (!(bucleSt instanceof MientrasStatement)) && bucleSt.getTipoSatement().equals(Statement.Keyword.FIN_PROGRAMA));
+                            break;
                         case FIN_MIENTRAS:
                             statement = new MientrasStatement(tipoKeyword, al);
                             break;
