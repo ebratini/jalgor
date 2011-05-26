@@ -21,24 +21,88 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.uasd.jalgor.model;
 
-//import java.util.ArrayList;
-//import java.util.List;
+import java.util.ArrayList;
+import java.util.List;
+import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.AnalizadorLexico;
+import org.uasd.jalgor.business.InterpreterError;
+import org.uasd.jalgor.business.JalgorInterpreter;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
 public class MientrasStatement extends Statement {
-    //private List<Statement> statements = new ArrayList<Statement>();
 
-    public MientrasStatement(Keyword tipoSatement, AnalizadorLexico al) {
+    private List<Statement> blockStatements = new ArrayList<Statement>();
+
+    public MientrasStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
+        parseMe();
     }
 
-    public MientrasStatement() {
+    public MientrasStatement() throws AlgorSintaxException {
+    }
+
+    public List<Statement> getBlockStatements() {
+        return blockStatements;
+    }
+
+    public void setBlockStatements(List<Statement> blockStatements) {
+        this.blockStatements = blockStatements;
+    }
+
+    public void addBlockStatement(Statement statement) {
+        this.blockStatements.add(statement);
+    }
+
+    private void parseMe() throws AlgorSintaxException {
+        Token token = getAl().getNextToken();
+        switch (getTipoSatement()) {
+            case MIENTRAS:
+                if (!(token instanceof VariableId) && !(token instanceof ConstanteAlfanumerica) && !(token instanceof ConstanteNumerica)) {
+                    String msjError = "[Identificador|Constante (alfa)numerica] esperado";
+                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                    throw new AlgorSintaxException(msjError);
+                }
+                if (token instanceof VariableId && !JalgorInterpreter.getVariables().containsKey(token.getValue())) {
+                    String msjError = "Variable " + token.getValue() + " no ha sido declarada";
+                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                    throw new AlgorSintaxException(msjError);
+                }
+
+                addTokenStatement(token);
+
+                while (getAl().hasNextToken()) {
+                    Token tok = getAl().getNextToken();
+                    if (token instanceof KeywordToken) {
+                        String msjError = "Token invalido: " + tok.getValue();
+                        getAl().getCodeLine().addError(new InterpreterError(msjError));
+                        throw new AlgorSintaxException(msjError);
+                    }
+                    if (tok instanceof VariableId && !JalgorInterpreter.getVariables().containsKey(tok.getValue())) {
+                        String msjError = "Variable " + tok.getValue() + " no ha sido declarada";
+                        getAl().getCodeLine().addError(new InterpreterError(msjError));
+                        throw new AlgorSintaxException(msjError);
+                    }
+                    addTokenStatement(tok);
+                }
+
+                // TODO: el parse para estos dos tipos de statement es diferente
+                setParsedValue(parse());
+                break;
+            case FIN_MIENTRAS:
+                if (token != null) {
+                    String msjError = "Token invalido " + token.getValue();
+                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                    throw new AlgorSintaxException(msjError);
+                }
+
+                // TODO: el parse para estos dos tipos de statement es diferente
+                setParsedValue(parse());
+                break;
+        }
     }
 }
