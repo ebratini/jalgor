@@ -35,8 +35,6 @@ public class ComentarioStatement extends Statement {
 
     public ComentarioStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
-        setOriginalValue(String.valueOf(al.getCodeLine()));
-        addTokenStatement(new ComentarioToken(Token.TipoToken.COMENTARIO, "//"));
         setParsedValue(parse());
         setParsedValue(getParsedValue() + " " + getOriginalValue());
     }

@@ -42,7 +42,6 @@ public class AsignacionStatement extends Statement {
         super(tipoSatement, al);
         this.idVariable = idVariable;
         this.tipoVariable = tipoVariable;
-        setOriginalValue(al.getCodeLine().getOrigValue());
         parseMe();
     }
 
@@ -52,7 +51,13 @@ public class AsignacionStatement extends Statement {
     // TODO: think abt this
     private void parseMe() throws AlgorSintaxException {
         this.addTokenStatement(idVariable);
-        this.addTokenStatement(getAl().getNextToken());
+        Token token = getAl().getNextToken();
+        if (!(token instanceof OperadorAsignacion)) {
+            String msjError = "Token invalido: " + token.getValue() + "; [=] esperado";
+            getAl().getCodeLine().addError(new InterpreterError(msjError));
+            throw new AlgorSintaxException(msjError);
+        }
+        this.addTokenStatement(token);
         switch (tipoVariable) {
             case ALFA:
                 while (getAl().hasNextToken()) {

@@ -38,7 +38,6 @@ public class ProgramaStatement extends Statement {
 
     public ProgramaStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
-        setOriginalValue(al.getCodeLine().getOrigValue());
         parseMe();
     }
 

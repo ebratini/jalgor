@@ -32,7 +32,7 @@ import org.uasd.jalgor.business.AnalizadorLexico;
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class Statement {
+public abstract class Statement {
 
     public enum Keyword {
 
@@ -56,6 +56,7 @@ public class Statement {
             put(Keyword.FIN_MIENTRAS, "}");
             put(Keyword.VERDADERO, "true");
             put(Keyword.FALSO, "false");
+            put(Keyword.COMENTARIO, "//");
         }
     };
     public static HashMap<String, Keyword> keywordMatcher = new HashMap<String, Keyword>() {
@@ -84,6 +85,7 @@ public class Statement {
     public Statement(Keyword tipoSatement, AnalizadorLexico al) {
         this.tipoSatement = tipoSatement;
         this.al = al;
+        originalValue = al.getCodeLine().getOrigValue();
     }
 
     public static HashMap<Keyword, String> getCppReps() {
@@ -140,11 +142,10 @@ public class Statement {
 
     protected String parse() {
         StringBuilder sbParsedValue = new StringBuilder();
-
+        sbParsedValue.append(cppReps.get(tipoSatement)).append(" ");
         for (Token tok : this.getTokensStatement()) {
             sbParsedValue.append(tok.toString()).append(" ");
         }
-
         return sbParsedValue.toString();
     }
 }
