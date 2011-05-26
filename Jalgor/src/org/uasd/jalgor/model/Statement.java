@@ -37,7 +37,8 @@ public class Statement {
     public enum Keyword {
 
         COMENTARIO, ASIGNACION, PROGRAMA, FIN_PROGRAMA, NUM, ALFA,
-        LEE, ESCRIBE, SI, ENTONCES, SINO, FIN_SI, MIENTRAS, FIN_MIENTRAS
+        LEE, ESCRIBE, SI, ENTONCES, SINO, FIN_SI, MIENTRAS, FIN_MIENTRAS,
+        VERDADERO, FALSO
     };
     private Keyword tipoSatement;
     public static HashMap<Keyword, String> cppReps = new HashMap<Keyword, String>() {
@@ -53,6 +54,8 @@ public class Statement {
             put(Keyword.FIN_SI, "}");
             put(Keyword.MIENTRAS, "while");
             put(Keyword.FIN_MIENTRAS, "}");
+            put(Keyword.VERDADERO, "true");
+            put(Keyword.FALSO, "false");
         }
     };
     public static HashMap<String, Keyword> keywordMatcher = new HashMap<String, Keyword>() {

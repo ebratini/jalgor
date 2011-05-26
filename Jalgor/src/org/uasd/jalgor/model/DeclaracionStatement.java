@@ -21,10 +21,11 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.uasd.jalgor.model;
 
+import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.AnalizadorLexico;
+import org.uasd.jalgor.business.InterpreterError;
 
 /**
  *
@@ -32,10 +33,37 @@ import org.uasd.jalgor.business.AnalizadorLexico;
  */
 public class DeclaracionStatement extends Statement {
 
-    public DeclaracionStatement() {
+    public DeclaracionStatement() throws AlgorSintaxException {
     }
 
-    public DeclaracionStatement(Keyword tipoSatement, AnalizadorLexico al) {
+    public DeclaracionStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
+        setOriginalValue(getAl().getCodeLine().getOrigValue());
+
+    }
+
+    private void parseMe() throws AlgorSintaxException {
+        Token token = getAl().getNextToken();
+        if (!(token instanceof VariableId)) {
+            String msjError = "Identificador esperado";
+            getAl().getCodeLine().addError(new InterpreterError(msjError));
+            throw new AlgorSintaxException(msjError);
+        }
+        Token nxtToken = token.getSiblingToken();
+        if (!(nxtToken instanceof OperadorAsignacion) && !(nxtToken instanceof SignoPuntuacion)
+                || (nxtToken instanceof SignoPuntuacion
+                && (((SignoPuntuacion) nxtToken).getValue().equals(",") || ((SignoPuntuacion) nxtToken).getValue().equals(";")))) {
+
+            String msjError = "Token invalido" + nxtToken.getValue();
+            getAl().getCodeLine().addError(new InterpreterError(msjError));
+            throw new AlgorSintaxException(msjError);
+        }
+        switch (getTipoSatement()) {
+            case ALFA:
+
+                break;
+            case NUM:
+                break;
+        }
     }
 }
