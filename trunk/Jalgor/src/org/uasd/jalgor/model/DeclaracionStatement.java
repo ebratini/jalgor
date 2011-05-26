@@ -95,8 +95,4 @@ public class DeclaracionStatement extends Statement {
             setParsedValue(parse() + " " + asigStatement.getParsedValue());
         }
     }
-
-    private boolean variableEstaDeclarada(String variableID) {
-        return false;
-    }
 }
