@@ -40,12 +40,12 @@ public class JalgorInterpreter {
 
     private String sourceFilePath;
     private String outFilePath;
-    private StringBuilder sbCodeLines = FileManager.loadFile(new File(sourceFilePath));
+    private StringBuilder sbCodeLines;
     private List<CodeLine> codeLines = new ArrayList<CodeLine>();
     private List<Statement> statements = new ArrayList<Statement>();
     private static HashMap<String, Variable> variables = new HashMap<String, Variable>();
     private List<InterpreterError> errores = new ArrayList<InterpreterError>();
-    private AnalizadorSintactico as = new AnalizadorSintactico(this, new AnalizadorLexico());
+    private AnalizadorSintactico as; // = new AnalizadorSintactico();
 
     public JalgorInterpreter() {
     }
@@ -55,6 +55,9 @@ public class JalgorInterpreter {
         validateOutFileName(outFilePath);
         this.sourceFilePath = sourceFilePath;
         this.outFilePath = outFilePath;
+        this.sbCodeLines = FileManager.loadFile(new File(sourceFilePath));
+        //this.as.setAl(new AnalizadorLexico());
+        //this.as.setJi(this);
         initCodeLines();
     }
 

@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import org.uasd.jalgor.business.InvalidCommandLineParamException;
 import org.uasd.jalgor.business.InvalidFileNameException;
 import org.uasd.jalgor.business.JalgorInterpreter;
@@ -57,6 +58,8 @@ public class UIJalgor {
     };
 
     public static void main(String[] args) {
+        String params = JOptionPane.showInputDialog("Digite parametros de archivo entrada y salida separados por ;");
+        args = params.split(";");
         UIJalgor uiJalgor = new UIJalgor();
         try {
             uiJalgor.validarEntrada(args);
@@ -65,9 +68,8 @@ public class UIJalgor {
             Logger.getLogger(UIJalgor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     private void initJalgor() {
-        UIJalgor uiJalgor = new UIJalgor();
         try {
             new JalgorInterpreter(cmdLneArgs.get("-i"), cmdLneArgs.get("-o")).start();
         } catch (InvalidFileNameException ex) {
@@ -86,7 +88,7 @@ public class UIJalgor {
     private String getAvailableCmdLneOps() {
         StringBuilder availCmdLneArgs = new StringBuilder();
         for (Map.Entry<String, String> cmdLineArg : cmdLneArgDesc.entrySet()) {
-            availCmdLneArgs.append(String.format("%s    %s", cmdLineArg.getKey(), cmdLineArg.getValue())).append("\n");
+            availCmdLneArgs.append(String.format("%-4s %s", cmdLineArg.getKey(), cmdLineArg.getValue())).append("\n");
         }
 
         return availCmdLneArgs.toString();
