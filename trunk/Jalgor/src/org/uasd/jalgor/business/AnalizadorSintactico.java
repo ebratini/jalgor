@@ -48,8 +48,11 @@ import org.uasd.jalgor.model.VariableId;
  */
 public class AnalizadorSintactico {
 
+    // TODO: crear metodo que construye expresiones y arbol binario
     private AnalizadorLexico al = new AnalizadorLexico();
     private List<String> errores = new ArrayList<String>();
+
+    // TODO: no se necesitara objeto ji por que los miembros que necesito los hare estaticos
     private JalgorInterpreter ji = new JalgorInterpreter();
     private int currLinePos = 1;
 
@@ -60,6 +63,7 @@ public class AnalizadorSintactico {
         this.al = al;
     }
 
+    // TODO: eliminar este constructor
     public AnalizadorSintactico(JalgorInterpreter ji, AnalizadorLexico al) {
         this.ji = ji;
         this.al = al;
@@ -69,6 +73,7 @@ public class AnalizadorSintactico {
         this.al = al;
     }
 
+    // TODO: Eliminar
     public JalgorInterpreter getJi() {
         return ji;
     }
@@ -104,6 +109,7 @@ public class AnalizadorSintactico {
 
     private CodeLine getNextCodeLine() {
         CodeLine codeLine = null;
+        // TODO: sustituir ji por nombre de clase (static access)
         if (currLinePos < ji.getCodeLines().size()) {
             codeLine = ji.getCodeLines().get(currLinePos);
         }

@@ -36,6 +36,7 @@ public class Variable extends Token implements Comparable<Variable> {
     private TipoVariable tipoVariable;
     private String id;
 
+    // TODO: agregar miembro ambito
     public Variable() {
     }
 

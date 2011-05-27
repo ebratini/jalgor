@@ -57,7 +57,7 @@ public class DeclaracionStatement extends Statement {
             String msjError = "Token invalido " + nxtToken.getValue() + "; [;|,|=] esperado";
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
-        }
+        } // TOOD: crear clase AnalizadorSemantico
         if (JalgorInterpreter.getVariables().containsKey(token.getValue())) {
             String msjError = "Variable " + token.getValue() + " ya ha sido declarada";
             getAl().getCodeLine().addError(new InterpreterError(msjError));
