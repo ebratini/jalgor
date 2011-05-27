@@ -51,7 +51,6 @@ public class AnalizadorSintactico {
     // TODO: crear metodo que construye expresiones y arbol binario
     private AnalizadorLexico al = new AnalizadorLexico();
     private List<String> errores = new ArrayList<String>();
-
     // TODO: no se necesitara objeto ji por que los miembros que necesito los hare estaticos
     private JalgorInterpreter ji = new JalgorInterpreter();
     private int currLinePos = 1;
@@ -93,7 +92,7 @@ public class AnalizadorSintactico {
     public List<String> getErrores() {
         return errores;
     }
-    
+
     public void go() {
         while (hasNextCodeLine()) {
             ji.getStatements().add(analizeCodeLine());
@@ -146,6 +145,7 @@ public class AnalizadorSintactico {
 
                         case PROGRAMA:
                         case FIN_PROGRAMA:
+                            // TODO: hacer que programa statement contenga las demas sentencias, para manejar lo del ambito de variables
                             statement = new ProgramaStatement(tipoKeyword, al);
                             break;
                         case NUM:
@@ -163,7 +163,7 @@ public class AnalizadorSintactico {
                             Statement condSt = analizeCodeLine();
                             do {
                                 ((CondicionStatement) statement).addBlockStatement(condSt);
-                            } while(hasNextCodeLine() && (!(condSt instanceof CondicionStatement)) && condSt.getTipoSatement().equals(Statement.Keyword.FIN_SI));
+                            } while (hasNextCodeLine() && (!(condSt instanceof CondicionStatement)) && condSt.getTipoSatement().equals(Statement.Keyword.FIN_SI));
                             break;
                         case SINO:
                             statement = new CondicionStatement(tipoKeyword, al);
@@ -176,7 +176,7 @@ public class AnalizadorSintactico {
                             Statement bucleSt = analizeCodeLine();
                             do {
                                 ((MientrasStatement) statement).addBlockStatement(bucleSt);
-                            } while(hasNextCodeLine() && (!(bucleSt instanceof MientrasStatement)) && bucleSt.getTipoSatement().equals(Statement.Keyword.FIN_PROGRAMA));
+                            } while (hasNextCodeLine() && (!(bucleSt instanceof MientrasStatement)) && bucleSt.getTipoSatement().equals(Statement.Keyword.FIN_PROGRAMA));
                             break;
                         case FIN_MIENTRAS:
                             statement = new MientrasStatement(tipoKeyword, al);
