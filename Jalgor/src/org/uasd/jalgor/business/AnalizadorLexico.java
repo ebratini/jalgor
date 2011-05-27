@@ -69,6 +69,7 @@ public class AnalizadorLexico {
         }
         switch (chrCodeLine[currPos]) {
             case '-':
+                // TODO: validar si se trata de un numero negativo
             case '+':
             case '*':
             case '/':
@@ -87,6 +88,7 @@ public class AnalizadorLexico {
                 token = new OperadorBooleano(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos])));
                 currPos++;
                 break;
+                // TODO: posibilidad de sustituir en lenguaje algor por letras. ie: < --> tokenizar LT (si a lt b)
             case '<':
             case '>':
             case '!':
@@ -140,7 +142,7 @@ public class AnalizadorLexico {
                 token = new ConstanteAlfanumerica(str.toString());
                 currPos += 2;
                 break;
-            default:
+            default: // TODO: resolver problemas de ambiguedad entre keywords y variables id (num a --> numa)
                 StringBuilder var = new StringBuilder();
                 char currChar = chrCodeLine[currPos];
                 while ((Character.isLetterOrDigit(currChar) || currChar == '_')
