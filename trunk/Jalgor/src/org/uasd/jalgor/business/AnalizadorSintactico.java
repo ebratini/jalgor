@@ -69,6 +69,26 @@ public class AnalizadorSintactico {
         this.al = al;
     }
 
+    public JalgorInterpreter getJi() {
+        return ji;
+    }
+
+    public void setJi(JalgorInterpreter ji) {
+        this.ji = ji;
+    }
+
+    public AnalizadorLexico getAl() {
+        return al;
+    }
+
+    public int getCurrLinePos() {
+        return currLinePos;
+    }
+
+    public List<String> getErrores() {
+        return errores;
+    }
+    
     public void go() {
         while (hasNextCodeLine()) {
             ji.getStatements().add(analizeCodeLine());
