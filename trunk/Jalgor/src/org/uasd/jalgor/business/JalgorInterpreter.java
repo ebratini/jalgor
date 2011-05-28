@@ -47,8 +47,6 @@ public class JalgorInterpreter {
     private static List<InterpreterError> errores = new ArrayList<InterpreterError>();
     private AnalizadorSintactico as = new AnalizadorSintactico(new AnalizadorLexico());
 
-    private static int ambitoStatementSeq;
-
     public JalgorInterpreter() {
     }
 
@@ -92,7 +90,7 @@ public class JalgorInterpreter {
     public static void setCodeLines(List<CodeLine> codeLines) {
         JalgorInterpreter.codeLines = codeLines;
     }
-    
+
     private void initCodeLines() {
         String[] lines = sbCodeLines.toString().split(System.getProperty("line.separator"));
         int i = 1;
@@ -138,10 +136,6 @@ public class JalgorInterpreter {
                 System.out.format("%d %s", cl.getLineNumber(), ie.getMensaje());
             }
         }
-    }
-
-    public static int getNextAmbitoStmSeq() {
-        return ambitoStatementSeq++;
     }
 
     public void start() {

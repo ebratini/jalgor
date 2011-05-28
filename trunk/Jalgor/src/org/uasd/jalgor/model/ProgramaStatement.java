@@ -36,7 +36,7 @@ import org.uasd.jalgor.business.JalgorInterpreter;
  */
 public class ProgramaStatement extends Statement {
 
-    private int ambitoSeqId = JalgorInterpreter.getNextAmbitoStmSeq();
+    private int ambitoSeqId = -1;
     private List<Statement> blockStatements = new ArrayList<Statement>();
 
     public ProgramaStatement() throws AlgorSintaxException {
@@ -48,6 +48,12 @@ public class ProgramaStatement extends Statement {
 
     public ProgramaStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
+        parseMe();
+    }
+
+    public ProgramaStatement(Keyword tipoSatement, AnalizadorLexico al, int ambito) throws AlgorSintaxException {
+        super(tipoSatement, al);
+        this.ambitoSeqId = ambito;
         parseMe();
     }
 
