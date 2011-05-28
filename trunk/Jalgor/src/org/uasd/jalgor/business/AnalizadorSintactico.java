@@ -24,6 +24,7 @@
 package org.uasd.jalgor.business;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import org.uasd.jalgor.model.AsignacionStatement;
 import org.uasd.jalgor.model.CodeLine;
@@ -51,9 +52,10 @@ public class AnalizadorSintactico {
     // TODO: crear metodo que construye expresiones y arbol binario
     private AnalizadorLexico al = new AnalizadorLexico();
     private List<String> errores = new ArrayList<String>();
-    // TODO: no se necesitara objeto ji por que los miembros que necesito los hare estaticos
-    private JalgorInterpreter ji = new JalgorInterpreter();
-    private int currLinePos = 1;
+    private int currLinePos = 0;
+
+    // TODO: para resolver problema de ambito de variables: crear pila de ambito stack(int)
+    private LinkedList<Integer> ambitoStatements = new LinkedList<Integer>();
 
     public AnalizadorSintactico() {
     }
@@ -62,23 +64,8 @@ public class AnalizadorSintactico {
         this.al = al;
     }
 
-    // TODO: eliminar este constructor
-    public AnalizadorSintactico(JalgorInterpreter ji, AnalizadorLexico al) {
-        this.ji = ji;
-        this.al = al;
-    }
-
     public void setAl(AnalizadorLexico al) {
         this.al = al;
-    }
-
-    // TODO: Eliminar
-    public JalgorInterpreter getJi() {
-        return ji;
-    }
-
-    public void setJi(JalgorInterpreter ji) {
-        this.ji = ji;
     }
 
     public AnalizadorLexico getAl() {
@@ -95,7 +82,7 @@ public class AnalizadorSintactico {
 
     public void go() {
         while (hasNextCodeLine()) {
-            ji.getStatements().add(analizeCodeLine());
+            JalgorInterpreter.getStatements().add(analizeCodeLine());
         }
     }
 
@@ -108,14 +95,14 @@ public class AnalizadorSintactico {
 
     private CodeLine getNextCodeLine() {
         CodeLine codeLine = null;
-        // TODO: sustituir ji por nombre de clase (static access)
-        if (currLinePos < ji.getCodeLines().size()) {
-            codeLine = ji.getCodeLines().get(currLinePos);
+        if (currLinePos < JalgorInterpreter.getCodeLines().size()) {
+            codeLine = JalgorInterpreter.getCodeLines().get(currLinePos);
         }
         currLinePos++;
         return codeLine;
     }
 
+    // este metodo sirve para obtener las sentencias por linea de codigo
     public Statement analizeCodeLine() {
         al.resetCodeLine(getNextCodeLine());
         Token token = al.getNextToken();
@@ -124,8 +111,26 @@ public class AnalizadorSintactico {
             if (token instanceof ComentarioToken) {
                 statement = new ComentarioStatement(Statement.Keyword.COMENTARIO, al);
             } else if (token instanceof KeywordToken || token instanceof VariableId) {
+
+                // verificando si el ambito del token es el correcto (entre sentencias programa y fin_programa)
+                // si no esta, se lanza una excepcion
+                if (!JalgorInterpreter.getStatements().contains(new ProgramaStatement(Statement.Keyword.PROGRAMA))
+                        && !Statement.getKeywordMatcher().get(token.getValue()).equals(Statement.Keyword.PROGRAMA)) {
+
+                    String msjError = "Token: " + token.getValue() + "invalido. ";
+                    msjError += "[programa] esperado";
+                    errores.add(msjError);
+                    al.getCodeLine().addError(new InterpreterError(msjError));
+                    throw new AlgorSintaxException(msjError);
+                }
                 if (token instanceof VariableId) {
                     if (token.getSiblingToken() instanceof OperadorAsignacion) {
+
+                        /* si la sentencia es de asignacion (variable seguida de op de asignacion)
+                         * reviso si ya ha sido declarada, sino se lanza una excepcion
+                         */
+                        // TODO: ver como se puede obtener un objeto de tipo variable para comparar
+                        // TODO: buscar a traves de un metodo en cada ambito de la pila de menor a mayor la existencia de la variable
                         if (JalgorInterpreter.getVariables().containsKey(token.getValue())) {
                             TipoVariable tipoVariable = JalgorInterpreter.getVariables().get(token.getValue()).getTipoVariable();
                             statement = new AsignacionStatement(Statement.Keyword.ASIGNACION, al, (VariableId) token, tipoVariable);
@@ -133,11 +138,13 @@ public class AnalizadorSintactico {
                             String msjError = "variable " + token.getValue() + "no declarada";
                             errores.add(msjError);
                             al.getCodeLine().addError(new InterpreterError(msjError));
+                            throw new AlgorSintaxException(msjError);
                         }
                     } else {
                         String msjError = "[=] esperado";
                         errores.add(msjError);
                         al.getCodeLine().addError(new InterpreterError(msjError));
+                        throw new AlgorSintaxException(msjError);
                     }
                 } else if (token instanceof KeywordToken) {
                     Statement.Keyword tipoKeyword = Statement.getKeywordMatcher().get(token.getValue());
@@ -145,8 +152,23 @@ public class AnalizadorSintactico {
 
                         case PROGRAMA:
                         case FIN_PROGRAMA:
-                            // TODO: hacer que programa statement contenga las demas sentencias, para manejar lo del ambito de variables
+                            // TODO: ver si ya existe cualquiera de las dos sentencias en la lista de senteencias de JI
+                            // TODO: si es fin_programa, ver si ya existe una sentencia programa
+
+                            // TODO: validar y agregar ambito de sentencia
+                            ambitoStatements.offer(JalgorInterpreter.getNextAmbitoStmSeq());
+
                             statement = new ProgramaStatement(tipoKeyword, al);
+                            Statement prgStm = analizeCodeLine();
+                            do {
+                                ((ProgramaStatement) statement).addBlockStatement(prgStm);
+                            } while (hasNextCodeLine() && (!(prgStm instanceof ProgramaStatement)) && prgStm.getTipoSatement().equals(Statement.Keyword.FIN_PROGRAMA));
+
+                            // TODO: si llego hasta aqui es porque es un fin de sentencia, para manejar el ambito, hacer un poll a la pila
+                            // de ambito
+
+                            // validar y dar un poll al ambito de sentencia
+                            ambitoStatements.poll();
                             break;
                         case NUM:
                         case ALFA:
@@ -159,11 +181,19 @@ public class AnalizadorSintactico {
                             statement = new EscribeStatement(tipoKeyword, al);
                             break;
                         case SI:
+                            // TODO: validar y agregar ambito de sentencia
+                            ambitoStatements.offer(JalgorInterpreter.getNextAmbitoStmSeq());
+                            
                             statement = new CondicionStatement(tipoKeyword, al);
                             Statement condSt = analizeCodeLine();
                             do {
                                 ((CondicionStatement) statement).addBlockStatement(condSt);
                             } while (hasNextCodeLine() && (!(condSt instanceof CondicionStatement)) && condSt.getTipoSatement().equals(Statement.Keyword.FIN_SI));
+                            // TODO: si llego hasta aqui es porque es un fin de sentencia, para manejar el ambito, hacer un poll a la pila
+                            // de ambito
+
+                            // validar y dar un poll al ambito de sentencia
+                            ambitoStatements.poll();
                             break;
                         case SINO:
                             statement = new CondicionStatement(tipoKeyword, al);
@@ -172,11 +202,19 @@ public class AnalizadorSintactico {
                             statement = new CondicionStatement(tipoKeyword, al);
                             break;
                         case MIENTRAS:
+                            // TODO: validar y agregar ambito de sentencia
+                            ambitoStatements.offer(JalgorInterpreter.getNextAmbitoStmSeq());
+                            
                             statement = new MientrasStatement(tipoKeyword, al);
                             Statement bucleSt = analizeCodeLine();
                             do {
                                 ((MientrasStatement) statement).addBlockStatement(bucleSt);
-                            } while (hasNextCodeLine() && (!(bucleSt instanceof MientrasStatement)) && bucleSt.getTipoSatement().equals(Statement.Keyword.FIN_PROGRAMA));
+                            } while (hasNextCodeLine() && (!(bucleSt instanceof MientrasStatement)) && bucleSt.getTipoSatement().equals(Statement.Keyword.FIN_MIENTRAS));
+                            // TODO: si llego hasta aqui es porque es un fin de sentencia, para manejar el ambito, hacer un poll a la pila
+                            // de ambito
+
+                            // validar y dar un poll al ambito de sentencia
+                            ambitoStatements.poll();
                             break;
                         case FIN_MIENTRAS:
                             statement = new MientrasStatement(tipoKeyword, al);

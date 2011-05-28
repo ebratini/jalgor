@@ -58,8 +58,8 @@ public class UIJalgor {
     };
 
     public static void main(String[] args) {
-        String params = JOptionPane.showInputDialog("Digite parametros de archivo entrada y salida separados por ;");
-        args = params.split(";");
+        String[] params = JOptionPane.showInputDialog("Digite parametros de archivo entrada y salida separados por ;").split(";");
+        args = new String[] {"-i", params[0], "-o", params[1]};
         UIJalgor uiJalgor = new UIJalgor();
         try {
             uiJalgor.validarEntrada(args);

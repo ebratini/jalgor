@@ -23,9 +23,12 @@
  */
 package org.uasd.jalgor.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.AnalizadorLexico;
 import org.uasd.jalgor.business.InterpreterError;
+import org.uasd.jalgor.business.JalgorInterpreter;
 
 /**
  *
@@ -33,7 +36,14 @@ import org.uasd.jalgor.business.InterpreterError;
  */
 public class ProgramaStatement extends Statement {
 
+    private int ambitoSeqId = JalgorInterpreter.getNextAmbitoStmSeq();
+    private List<Statement> blockStatements = new ArrayList<Statement>();
+
     public ProgramaStatement() throws AlgorSintaxException {
+    }
+
+    public ProgramaStatement(Keyword tipoSatement) {
+        super(tipoSatement);
     }
 
     public ProgramaStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
@@ -70,5 +80,21 @@ public class ProgramaStatement extends Statement {
                 break;
         }
         setParsedValue(parse());
+    }
+
+    public List<Statement> getBlockStatements() {
+        return blockStatements;
+    }
+
+    public void setBlockStatements(List<Statement> blockStatements) {
+        this.blockStatements = blockStatements;
+    }
+
+    public void addBlockStatement(Statement statement) {
+        this.blockStatements.add(statement);
+    }
+
+    public int getAmbitoSeqId() {
+        return ambitoSeqId;
     }
 }

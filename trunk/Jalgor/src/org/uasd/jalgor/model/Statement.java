@@ -148,4 +148,26 @@ public abstract class Statement {
         }
         return sbParsedValue.toString();
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Statement other = (Statement) obj;
+        if (this.tipoSatement != other.tipoSatement) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 17 * hash + (this.tipoSatement != null ? this.tipoSatement.hashCode() : 0);
+        return hash;
+    }
 }
