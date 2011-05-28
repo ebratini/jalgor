@@ -70,7 +70,7 @@ public class AnalizadorLexico {
         switch (chrCodeLine[currPos]) {
             case ' ':
             case '\t':
-                // TODO: mover el indice hasta que el char sea diferente de espacio
+                // TODO: mover el indice hasta que el char sea diferente de espacio o tab
                 break;
             case '-':
                 // TODO: validar si se trata de un numero negativo
@@ -145,7 +145,6 @@ public class AnalizadorLexico {
                 }
                 token = new ConstanteAlfanumerica(str.toString());
                 currPos += 2;
-                int a;
                 break;
             default: // TODO: resolver problemas de ambiguedad entre keywords y variables id (num a --> numa)
                 StringBuilder var = new StringBuilder();

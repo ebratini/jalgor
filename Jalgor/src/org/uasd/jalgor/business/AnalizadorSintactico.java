@@ -54,6 +54,7 @@ public class AnalizadorSintactico {
     private List<String> errores = new ArrayList<String>();
     private int currLinePos = 0;
 
+    private int ambitoStatementSeq;
     // TODO: para resolver problema de ambito de variables: crear pila de ambito stack(int)
     private LinkedList<Integer> ambitoStatements = new LinkedList<Integer>();
 
@@ -100,6 +101,10 @@ public class AnalizadorSintactico {
         }
         currLinePos++;
         return codeLine;
+    }
+
+    private int getNextAmbitoStmSeq() {
+        return ambitoStatementSeq++;
     }
 
     // este metodo sirve para obtener las sentencias por linea de codigo
@@ -156,7 +161,7 @@ public class AnalizadorSintactico {
                             // TODO: si es fin_programa, ver si ya existe una sentencia programa
 
                             // TODO: validar y agregar ambito de sentencia
-                            ambitoStatements.offer(JalgorInterpreter.getNextAmbitoStmSeq());
+                            ambitoStatements.offer(getNextAmbitoStmSeq());
 
                             statement = new ProgramaStatement(tipoKeyword, al);
                             Statement prgStm = analizeCodeLine();
@@ -182,8 +187,8 @@ public class AnalizadorSintactico {
                             break;
                         case SI:
                             // TODO: validar y agregar ambito de sentencia
-                            ambitoStatements.offer(JalgorInterpreter.getNextAmbitoStmSeq());
-                            
+                            ambitoStatements.offer(getNextAmbitoStmSeq());
+
                             statement = new CondicionStatement(tipoKeyword, al);
                             Statement condSt = analizeCodeLine();
                             do {
@@ -203,8 +208,8 @@ public class AnalizadorSintactico {
                             break;
                         case MIENTRAS:
                             // TODO: validar y agregar ambito de sentencia
-                            ambitoStatements.offer(JalgorInterpreter.getNextAmbitoStmSeq());
-                            
+                            ambitoStatements.offer(getNextAmbitoStmSeq());
+
                             statement = new MientrasStatement(tipoKeyword, al);
                             Statement bucleSt = analizeCodeLine();
                             do {

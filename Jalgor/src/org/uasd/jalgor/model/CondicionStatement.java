@@ -36,11 +36,17 @@ import org.uasd.jalgor.business.JalgorInterpreter;
  */
 public class CondicionStatement extends Statement {
 
-    private int ambitoSeqId = JalgorInterpreter.getNextAmbitoStmSeq();
+    private int ambitoSeqId = -1;
     private List<Statement> blockStatements = new ArrayList<Statement>();
 
     public CondicionStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
+        parseMe();
+    }
+
+    public CondicionStatement(Keyword tipoSatement, AnalizadorLexico al, int ambito) throws AlgorSintaxException {
+        super(tipoSatement, al);
+        this.ambitoSeqId = ambito;
         parseMe();
     }
 
