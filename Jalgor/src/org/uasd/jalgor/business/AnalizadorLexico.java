@@ -68,6 +68,10 @@ public class AnalizadorLexico {
             return null;
         }
         switch (chrCodeLine[currPos]) {
+            case ' ':
+            case '\t':
+                // TODO: mover el indice hasta que el char sea diferente de espacio
+                break;
             case '-':
                 // TODO: validar si se trata de un numero negativo
             case '+':
@@ -141,11 +145,13 @@ public class AnalizadorLexico {
                 }
                 token = new ConstanteAlfanumerica(str.toString());
                 currPos += 2;
+                int a;
                 break;
             default: // TODO: resolver problemas de ambiguedad entre keywords y variables id (num a --> numa)
                 StringBuilder var = new StringBuilder();
                 char currChar = chrCodeLine[currPos];
                 while ((Character.isLetterOrDigit(currChar) || currChar == '_')
+                        // TODO: esta linea se debe eliminar para evitar ambiguedad. num a --/-> numa
                         && !Statement.keywordMatcher.containsKey(var.toString().toUpperCase())) {
                     var.append(chrCodeLine[currPos]);
                     currPos++;

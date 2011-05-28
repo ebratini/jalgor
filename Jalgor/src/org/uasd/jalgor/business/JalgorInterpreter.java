@@ -40,12 +40,14 @@ public class JalgorInterpreter {
 
     private String sourceFilePath;
     private String outFilePath;
-    private StringBuilder sbCodeLines;
-    private List<CodeLine> codeLines = new ArrayList<CodeLine>();
-    private List<Statement> statements = new ArrayList<Statement>();
+    private static StringBuilder sbCodeLines;
+    private static List<CodeLine> codeLines = new ArrayList<CodeLine>();
+    private static List<Statement> statements = new ArrayList<Statement>();
     private static HashMap<String, Variable> variables = new HashMap<String, Variable>();
-    private List<InterpreterError> errores = new ArrayList<InterpreterError>();
-    private AnalizadorSintactico as; // = new AnalizadorSintactico();
+    private static List<InterpreterError> errores = new ArrayList<InterpreterError>();
+    private AnalizadorSintactico as = new AnalizadorSintactico(new AnalizadorLexico());
+
+    private static int ambitoStatementSeq;
 
     public JalgorInterpreter() {
     }
@@ -55,9 +57,7 @@ public class JalgorInterpreter {
         validateOutFileName(outFilePath);
         this.sourceFilePath = sourceFilePath;
         this.outFilePath = outFilePath;
-        this.sbCodeLines = FileManager.loadFile(new File(sourceFilePath));
-        //this.as.setAl(new AnalizadorLexico());
-        //this.as.setJi(this);
+        JalgorInterpreter.sbCodeLines = FileManager.loadFile(new File(sourceFilePath));
         initCodeLines();
     }
 
@@ -69,11 +69,11 @@ public class JalgorInterpreter {
         return sourceFilePath;
     }
 
-    public StringBuilder getSbCodeLines() {
+    public static StringBuilder getSbCodeLines() {
         return sbCodeLines;
     }
 
-    public List<Statement> getStatements() {
+    public static List<Statement> getStatements() {
         return statements;
     }
 
@@ -81,29 +81,22 @@ public class JalgorInterpreter {
         return variables;
     }
 
-    public List<InterpreterError> getErrores() {
+    public static List<InterpreterError> getErrores() {
         return errores;
     }
 
-    public List<CodeLine> getCodeLines() {
+    public static List<CodeLine> getCodeLines() {
         return codeLines;
     }
 
-    public void setCodeLines(List<CodeLine> codeLines) {
-        this.codeLines = codeLines;
+    public static void setCodeLines(List<CodeLine> codeLines) {
+        JalgorInterpreter.codeLines = codeLines;
     }
-
-    private void normalizeCodeLine(String line) {
-        line = line.replaceAll(" ", "");
-        line = line.replaceAll("\t", "");
-        line = line.trim();
-    }
-
+    
     private void initCodeLines() {
         String[] lines = sbCodeLines.toString().split(System.getProperty("line.separator"));
         int i = 1;
         for (String line : lines) {
-            normalizeCodeLine(line);
             if (line.length() > 0 && !line.equals("")) {
                 codeLines.add(new CodeLine(i++, line));
             }
@@ -145,6 +138,10 @@ public class JalgorInterpreter {
                 System.out.format("%d %s", cl.getLineNumber(), ie.getMensaje());
             }
         }
+    }
+
+    public static int getNextAmbitoStmSeq() {
+        return ambitoStatementSeq++;
     }
 
     public void start() {

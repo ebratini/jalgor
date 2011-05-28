@@ -29,6 +29,8 @@ package org.uasd.jalgor.model;
  */
 public class Variable extends Token implements Comparable<Variable> {
 
+    private int ambito;
+
     public enum TipoVariable {
 
         NUM, ALFA
@@ -53,6 +55,11 @@ public class Variable extends Token implements Comparable<Variable> {
         this.id = id;
     }
 
+    public Variable(TipoVariable tipoVariable, String id, int ambito) {
+        this(tipoVariable, id);
+        this.ambito = ambito;
+    }
+
     public String getId() {
         return id;
     }
@@ -67,6 +74,40 @@ public class Variable extends Token implements Comparable<Variable> {
 
     public void setTipoVariable(TipoVariable tipoVariable) {
         this.tipoVariable = tipoVariable;
+    }
+
+    public int getAmbito() {
+        return ambito;
+    }
+
+    public void setAmbito(int ambito) {
+        this.ambito = ambito;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Variable other = (Variable) obj;
+        if (this.ambito != other.ambito) {
+            return false;
+        }
+        if ((this.id == null) ? (other.id != null) : !this.id.equals(other.id)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 41 * hash + this.ambito;
+        hash = 41 * hash + (this.id != null ? this.id.hashCode() : 0);
+        return hash;
     }
 
     @Override
