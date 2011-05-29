@@ -33,6 +33,7 @@ import org.uasd.jalgor.model.SignoPuntuacion;
 import org.uasd.jalgor.model.Statement;
 import org.uasd.jalgor.model.Statement.Keyword;
 import org.uasd.jalgor.model.Token;
+import org.uasd.jalgor.model.Variable;
 import org.uasd.jalgor.model.Variable.TipoVariable;
 import org.uasd.jalgor.model.VariableId;
 
@@ -53,7 +54,8 @@ public class Parser {
                     Token nxtToken = al.getNextToken();
                     if (nxtToken instanceof OperadorAsignacion) {
                         nxtToken = al.getNextToken();
-                        switch (JalgorInterpreter.getVariables().get(token.getValue()).getTipoVariable()) {
+                        Variable var = AnalizadorSemantico.searchVariable(token.getValue(), AnalizadorSintactico.getAmbitoStatements());
+                        switch (var.getTipoVariable()) {
                             case ALFA:
                                 statement = new AsignacionStatement(tipoSatement, al, (VariableId) token, TipoVariable.ALFA);
                                 while (al.hasNextToken()) {

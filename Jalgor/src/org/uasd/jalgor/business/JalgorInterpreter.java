@@ -43,7 +43,7 @@ public class JalgorInterpreter {
     private static StringBuilder sbCodeLines;
     private static List<CodeLine> codeLines = new ArrayList<CodeLine>();
     private static List<Statement> statements = new ArrayList<Statement>();
-    private static HashMap<String, Variable> variables = new HashMap<String, Variable>();
+    private static List<Variable> variables = new ArrayList<Variable>();
     private static List<InterpreterError> errores = new ArrayList<InterpreterError>();
     private AnalizadorSintactico as = new AnalizadorSintactico(new AnalizadorLexico());
 
@@ -75,7 +75,7 @@ public class JalgorInterpreter {
         return statements;
     }
 
-    public static HashMap<String, Variable> getVariables() {
+    public static List<Variable> getVariables() {
         return variables;
     }
 

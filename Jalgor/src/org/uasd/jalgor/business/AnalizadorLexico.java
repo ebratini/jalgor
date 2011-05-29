@@ -70,20 +70,25 @@ public class AnalizadorLexico {
         switch (chrCodeLine[currPos]) {
             case ' ':
             case '\t':
-                // TODO: mover el indice hasta que el char sea diferente de espacio o tab
+                // mover el indice hasta que el char sea diferente de espacio o tab
+                while (chrCodeLine[currPos] == ' ' || chrCodeLine[currPos] == '\t') {
+                    currPos++;
+                }
                 break;
             case '-':
-                // TODO: validar si se trata de un numero negativo
             case '+':
             case '*':
             case '/':
-                if (chrCodeLine[currPos + 1] == '/') {
+                if (chrCodeLine[currPos] == '-' && chrCodeLine[currPos + 1] == '-') {
+                    break;
+                }
+                if (chrCodeLine[currPos] == '/' && chrCodeLine[currPos + 1] == '/') {
                     token = new ComentarioToken();
                     currPos += 2;
-                } else {
-                    token = new OperadorAritmetico(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos])));
-                    currPos++;
+                    break;
                 }
+                token = new OperadorAritmetico(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos])));
+                currPos++;
                 break;
             case '&':
             case '|':
@@ -92,7 +97,6 @@ public class AnalizadorLexico {
                 token = new OperadorBooleano(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos])));
                 currPos++;
                 break;
-                // TODO: posibilidad de sustituir en lenguaje algor por letras. ie: < --> tokenizar LT (si a lt b)
             case '<':
             case '>':
             case '!':
@@ -132,6 +136,10 @@ public class AnalizadorLexico {
             case '8':
             case '9':
                 StringBuilder num = new StringBuilder();
+                // si es un numero negativo
+                if (chrCodeLine[currPos - 1] == '-') {
+                    num.append("-");
+                }
                 while (Character.isDigit(chrCodeLine[currPos++])) {
                     num.append(chrCodeLine[currPos]);
                 }
@@ -149,9 +157,7 @@ public class AnalizadorLexico {
             default: // TODO: resolver problemas de ambiguedad entre keywords y variables id (num a --> numa)
                 StringBuilder var = new StringBuilder();
                 char currChar = chrCodeLine[currPos];
-                while ((Character.isLetterOrDigit(currChar) || currChar == '_')
-                        // TODO: esta linea se debe eliminar para evitar ambiguedad. num a --/-> numa
-                        && !Statement.keywordMatcher.containsKey(var.toString().toUpperCase())) {
+                while ((Character.isLetterOrDigit(currChar) || currChar == '_')) {
                     var.append(chrCodeLine[currPos]);
                     currPos++;
                     currChar = chrCodeLine[currPos];
