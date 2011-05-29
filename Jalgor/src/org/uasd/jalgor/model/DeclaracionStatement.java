@@ -60,7 +60,7 @@ public class DeclaracionStatement extends Statement {
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
-        if (AnalizadorSemantico.variableExiste(token.getValue(), AnalizadorSintactico.getAmbitoStatements())) {
+        if (AnalizadorSemantico.variableExiste(token.getValue())) {
             String msjError = "Variable " + token.getValue() + " ya ha sido declarada";
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
@@ -72,7 +72,7 @@ public class DeclaracionStatement extends Statement {
             while (getAl().hasNextToken()) {
                 Token tok = getAl().getNextToken();
                 if (tok instanceof VariableId) {
-                    if (AnalizadorSemantico.variableExiste(token.getValue(), AnalizadorSintactico.getAmbitoStatements())) {
+                    if (AnalizadorSemantico.variableExiste(token.getValue())) {
                         String msjError = "Variable " + tok.getValue() + " ya ha sido declarada";
                         getAl().getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);

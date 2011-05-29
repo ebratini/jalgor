@@ -52,7 +52,7 @@ public class EscribeStatement extends Statement {
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
-        if (token instanceof VariableId && !AnalizadorSemantico.variableExiste(token.getValue(), AnalizadorSintactico.getAmbitoStatements())) {
+        if (token instanceof VariableId && !AnalizadorSemantico.variableExiste(token.getValue())) {
             String msjError = "Variable " + token.getValue() + " no ha sido declarada";
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
@@ -67,7 +67,7 @@ public class EscribeStatement extends Statement {
                 getAl().getCodeLine().addError(new InterpreterError(msjError));
                 throw new AlgorSintaxException(msjError);
             }
-            if (tok instanceof VariableId && !AnalizadorSemantico.variableExiste(token.getValue(), AnalizadorSintactico.getAmbitoStatements())) {
+            if (tok instanceof VariableId && !AnalizadorSemantico.variableExiste(token.getValue())) {
                 String msjError = "Variable " + tok.getValue() + " no ha sido declarada";
                 getAl().getCodeLine().addError(new InterpreterError(msjError));
                 throw new AlgorSintaxException(msjError);

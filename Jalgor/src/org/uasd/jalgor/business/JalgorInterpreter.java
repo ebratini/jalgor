@@ -25,12 +25,8 @@ package org.uasd.jalgor.business;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import org.uasd.jalgor.model.CodeLine;
-import org.uasd.jalgor.model.FileManager;
-import org.uasd.jalgor.model.Statement;
-import org.uasd.jalgor.model.Variable;
+import org.uasd.jalgor.model.*;
 
 /**
  *

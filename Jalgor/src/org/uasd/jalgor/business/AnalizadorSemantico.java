@@ -24,7 +24,6 @@
 package org.uasd.jalgor.business;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import org.uasd.jalgor.model.Variable;
 
@@ -34,11 +33,10 @@ import org.uasd.jalgor.model.Variable;
  */
 public class AnalizadorSemantico {
 
-    public static boolean variableExiste(String variableId, LinkedList<Integer> ambitoStatements) {
+    public static boolean variableExiste(String variableId) {
         boolean existe = false;
         Variable var = new Variable(variableId, -1);
-        Collections.sort(ambitoStatements,Collections.reverseOrder());
-        for (Integer ambito : ambitoStatements) {
+        for (Integer ambito : AnalizadorSintactico.getAmbitoStatements()) {
             var.setAmbito(ambito);
             if (JalgorInterpreter.getVariables().contains(var)) {
                 existe = true;
@@ -47,15 +45,11 @@ public class AnalizadorSemantico {
         }
         return existe;
     }
-
-    public void checkVariable() throws AlgorSintaxException {
-    }
-
-    public static Variable searchVariable(String variableId, LinkedList<Integer> ambitoStatements) {
+    
+    public static Variable searchVariable(String variableId) {
         Variable variable = null;
         Variable searchedVar = null;
-        Collections.sort(ambitoStatements, Collections.reverseOrder());
-        for (Integer ambito : ambitoStatements) {
+        for (Integer ambito : AnalizadorSintactico.getAmbitoStatements()) {
             searchedVar = new Variable(variableId, ambito);
             int idx = Collections.binarySearch(JalgorInterpreter.getVariables(), searchedVar, Collections.reverseOrder());
 

@@ -23,14 +23,12 @@
  */
 package org.uasd.jalgor.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.AnalizadorLexico;
 import org.uasd.jalgor.business.AnalizadorSemantico;
 import org.uasd.jalgor.business.AnalizadorSintactico;
 import org.uasd.jalgor.business.InterpreterError;
-import org.uasd.jalgor.business.JalgorInterpreter;
 
 /**
  *
@@ -39,7 +37,7 @@ import org.uasd.jalgor.business.JalgorInterpreter;
 public class CondicionStatement extends Statement {
 
     private int ambitoSeqId = -1;
-    private List<Statement> blockStatements = new ArrayList<Statement>();
+    private LinkedList<Statement> blockStatements = new LinkedList<Statement>();
 
     public CondicionStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
@@ -55,16 +53,16 @@ public class CondicionStatement extends Statement {
     public CondicionStatement() throws AlgorSintaxException {
     }
 
-    public List<Statement> getBlockStatements() {
+    public LinkedList<Statement> getBlockStatements() {
         return blockStatements;
     }
 
-    public void setBlockStatements(List<Statement> blockStatements) {
+    public void setBlockStatements(LinkedList<Statement> blockStatements) {
         this.blockStatements = blockStatements;
     }
 
     public void addBlockStatement(Statement statement) {
-        this.blockStatements.add(statement);
+        this.blockStatements.offer(statement);
     }
 
     public int getAmbitoSeqId() {
@@ -80,7 +78,7 @@ public class CondicionStatement extends Statement {
                     getAl().getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
-                if (token instanceof VariableId && !AnalizadorSemantico.variableExiste(token.getValue(), AnalizadorSintactico.getAmbitoStatements())) {
+                if (token instanceof VariableId && !AnalizadorSemantico.variableExiste(token.getValue())) {
                     String msjError = "Variable " + token.getValue() + " no ha sido declarada";
                     getAl().getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
@@ -95,7 +93,7 @@ public class CondicionStatement extends Statement {
                         getAl().getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
-                    if (tok instanceof VariableId && !AnalizadorSemantico.variableExiste(token.getValue(), AnalizadorSintactico.getAmbitoStatements())) {
+                    if (tok instanceof VariableId && !AnalizadorSemantico.variableExiste(token.getValue())) {
                         String msjError = "Variable " + tok.getValue() + " no ha sido declarada";
                         getAl().getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);

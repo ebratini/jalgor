@@ -73,6 +73,8 @@ public abstract class Statement {
     private AnalizadorLexico al;
     private String originalValue;
     private String parsedValue;
+
+    // TODO: considerar usar linkedlist en lugar de list
     private List<Token> tokensStatement = new ArrayList<Token>();
 
     public Statement() {
