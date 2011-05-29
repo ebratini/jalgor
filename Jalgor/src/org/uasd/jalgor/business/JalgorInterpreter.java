@@ -52,7 +52,6 @@ public class JalgorInterpreter {
         this.sourceFilePath = sourceFilePath;
         this.outFilePath = outFilePath;
         JalgorInterpreter.sbCodeLines = FileManager.loadFile(new File(sourceFilePath));
-        initCodeLines();
     }
 
     public String getOutFilePath() {
@@ -91,7 +90,7 @@ public class JalgorInterpreter {
         String[] lines = sbCodeLines.toString().split(System.getProperty("line.separator"));
         int i = 1;
         for (String line : lines) {
-            if (line.length() > 0 && !line.equals("")) {
+            if (line.length() > 0 && !line.trim().isEmpty()) {
                 codeLines.add(new CodeLine(i++, line));
             }
         }
@@ -140,10 +139,8 @@ public class JalgorInterpreter {
             printErrores();
             return;
         }
-
         initCodeLines();
         as.go();
-
         if (!getStatements().contains(null) && !hayErrorEnLineaCodigo()) {
             // imprime archivo
             StringBuilder fileContent = new StringBuilder();
