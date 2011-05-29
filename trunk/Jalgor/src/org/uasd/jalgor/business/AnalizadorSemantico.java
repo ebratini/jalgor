@@ -21,21 +21,49 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.uasd.jalgor.business;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
+import org.uasd.jalgor.model.Variable;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
 public class AnalizadorSemantico {
-    public boolean variableExiste(String variableId, LinkedList<Integer> ambitoStatements) {
-        return false;
+
+    public static boolean variableExiste(String variableId, LinkedList<Integer> ambitoStatements) {
+        boolean existe = false;
+        Variable var = new Variable(variableId, -1);
+        Collections.sort(ambitoStatements,Collections.reverseOrder());
+        for (Integer ambito : ambitoStatements) {
+            var.setAmbito(ambito);
+            if (JalgorInterpreter.getVariables().contains(var)) {
+                existe = true;
+                break;
+            }
+        }
+        return existe;
     }
 
     public void checkVariable() throws AlgorSintaxException {
-        
+    }
+
+    public static Variable searchVariable(String variableId, LinkedList<Integer> ambitoStatements) {
+        Variable variable = null;
+        Variable searchedVar = null;
+        Collections.sort(ambitoStatements, Collections.reverseOrder());
+        for (Integer ambito : ambitoStatements) {
+            searchedVar = new Variable(variableId, ambito);
+            int idx = Collections.binarySearch(JalgorInterpreter.getVariables(), searchedVar, Collections.reverseOrder());
+
+            if (idx >= 0) {
+                variable = JalgorInterpreter.getVariables().get(idx);
+                break;
+            }
+        }
+        return variable;
     }
 }

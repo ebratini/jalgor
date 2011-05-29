@@ -25,6 +25,8 @@ package org.uasd.jalgor.model;
 
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.AnalizadorLexico;
+import org.uasd.jalgor.business.AnalizadorSemantico;
+import org.uasd.jalgor.business.AnalizadorSintactico;
 import org.uasd.jalgor.business.InterpreterError;
 import org.uasd.jalgor.business.JalgorInterpreter;
 
@@ -50,7 +52,7 @@ public class EscribeStatement extends Statement {
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
-        if (token instanceof VariableId && !JalgorInterpreter.getVariables().containsKey(token.getValue())) {
+        if (token instanceof VariableId && !AnalizadorSemantico.variableExiste(token.getValue(), AnalizadorSintactico.getAmbitoStatements())) {
             String msjError = "Variable " + token.getValue() + " no ha sido declarada";
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
@@ -65,7 +67,7 @@ public class EscribeStatement extends Statement {
                 getAl().getCodeLine().addError(new InterpreterError(msjError));
                 throw new AlgorSintaxException(msjError);
             }
-            if (tok instanceof VariableId && !JalgorInterpreter.getVariables().containsKey(tok.getValue())) {
+            if (tok instanceof VariableId && !AnalizadorSemantico.variableExiste(token.getValue(), AnalizadorSintactico.getAmbitoStatements())) {
                 String msjError = "Variable " + tok.getValue() + " no ha sido declarada";
                 getAl().getCodeLine().addError(new InterpreterError(msjError));
                 throw new AlgorSintaxException(msjError);

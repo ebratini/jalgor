@@ -40,6 +40,7 @@ import org.uasd.jalgor.model.OperadorAsignacion;
 import org.uasd.jalgor.model.ProgramaStatement;
 import org.uasd.jalgor.model.Statement;
 import org.uasd.jalgor.model.Token;
+import org.uasd.jalgor.model.Variable;
 import org.uasd.jalgor.model.Variable.TipoVariable;
 import org.uasd.jalgor.model.VariableId;
 
@@ -55,8 +56,7 @@ public class AnalizadorSintactico {
     private int currLinePos = 0;
 
     private int ambitoStatementSeq;
-    // TODO: para resolver problema de ambito de variables: crear pila de ambito stack(int)
-    private LinkedList<Integer> ambitoStatements = new LinkedList<Integer>();
+    private static LinkedList<Integer> ambitoStatements = new LinkedList<Integer>();
 
     public AnalizadorSintactico() {
     }
@@ -107,6 +107,10 @@ public class AnalizadorSintactico {
         return ambitoStatementSeq++;
     }
 
+    public static LinkedList<Integer> getAmbitoStatements() {
+        return ambitoStatements;
+    }
+
     // este metodo sirve para obtener las sentencias por linea de codigo
     public Statement analizeCodeLine() {
         al.resetCodeLine(getNextCodeLine());
@@ -134,10 +138,9 @@ public class AnalizadorSintactico {
                         /* si la sentencia es de asignacion (variable seguida de op de asignacion)
                          * reviso si ya ha sido declarada, sino se lanza una excepcion
                          */
-                        // TODO: ver como se puede obtener un objeto de tipo variable para comparar
-                        // TODO: buscar a traves de un metodo en cada ambito de la pila de menor a mayor la existencia de la variable
-                        if (JalgorInterpreter.getVariables().containsKey(token.getValue())) {
-                            TipoVariable tipoVariable = JalgorInterpreter.getVariables().get(token.getValue()).getTipoVariable();
+                        Variable var = AnalizadorSemantico.searchVariable(token.getValue(), ambitoStatements);
+                        if (var != null) {
+                            TipoVariable tipoVariable = var.getTipoVariable(); // JalgorInterpreter.getVariables().get(token.getValue()).getTipoVariable();
                             statement = new AsignacionStatement(Statement.Keyword.ASIGNACION, al, (VariableId) token, tipoVariable);
                         } else {
                             String msjError = "variable " + token.getValue() + "no declarada";

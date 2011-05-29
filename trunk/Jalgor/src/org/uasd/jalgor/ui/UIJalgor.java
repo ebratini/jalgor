@@ -136,6 +136,7 @@ public class UIJalgor {
         }
     }
 
+    // TODO: agregar llamada a modo grafico del interprete
     private void startGraphicMode() {
     }
 }

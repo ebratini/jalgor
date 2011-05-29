@@ -25,6 +25,8 @@ package org.uasd.jalgor.model;
 
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.AnalizadorLexico;
+import org.uasd.jalgor.business.AnalizadorSemantico;
+import org.uasd.jalgor.business.AnalizadorSintactico;
 import org.uasd.jalgor.business.InterpreterError;
 import org.uasd.jalgor.business.JalgorInterpreter;
 
@@ -57,27 +59,25 @@ public class DeclaracionStatement extends Statement {
             String msjError = "Token invalido " + nxtToken.getValue() + "; [;|,|=] esperado";
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
-        } // TOOD: crear clase AnalizadorSemantico
-        if (JalgorInterpreter.getVariables().containsKey(token.getValue())) {
+        }
+        if (AnalizadorSemantico.variableExiste(token.getValue(), AnalizadorSintactico.getAmbitoStatements())) {
             String msjError = "Variable " + token.getValue() + " ya ha sido declarada";
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
 
-        JalgorInterpreter.getVariables().put(token.getValue(),
-                new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), token.getValue()));
+        JalgorInterpreter.getVariables().add(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), token.getValue()));
 
         if (!(nxtToken instanceof OperadorAsignacion)) {
             while (getAl().hasNextToken()) {
                 Token tok = getAl().getNextToken();
                 if (tok instanceof VariableId) {
-                    if (JalgorInterpreter.getVariables().containsKey(tok.getValue())) {
+                    if (AnalizadorSemantico.variableExiste(token.getValue(), AnalizadorSintactico.getAmbitoStatements())) {
                         String msjError = "Variable " + tok.getValue() + " ya ha sido declarada";
                         getAl().getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
-                    JalgorInterpreter.getVariables().put(tok.getValue(),
-                            new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), tok.getValue()));
+                    JalgorInterpreter.getVariables().add(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), tok.getValue()));
                 }
                 addTokenStatement(tok);
             }

@@ -25,6 +25,8 @@ package org.uasd.jalgor.model;
 
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.AnalizadorLexico;
+import org.uasd.jalgor.business.AnalizadorSemantico;
+import org.uasd.jalgor.business.AnalizadorSintactico;
 import org.uasd.jalgor.business.InterpreterError;
 import org.uasd.jalgor.business.JalgorInterpreter;
 
@@ -80,7 +82,8 @@ public class AsignacionStatement extends Statement {
             case NUM:
                 while (getAl().hasNextToken()) {
                     Token tok = getAl().getNextToken();
-                    if (tok instanceof ConstanteNumerica || (tok instanceof VariableId && JalgorInterpreter.getVariables().containsKey(tok.getValue()))
+                    if (tok instanceof ConstanteNumerica
+                            || (tok instanceof VariableId && AnalizadorSemantico.variableExiste(tok.getValue(), AnalizadorSintactico.getAmbitoStatements()))
                             || tok instanceof OperadorAritmetico || (tok instanceof SignoPuntuacion && tok.getValue().equals(";"))) {
                         this.addTokenStatement(tok);
                     } else {

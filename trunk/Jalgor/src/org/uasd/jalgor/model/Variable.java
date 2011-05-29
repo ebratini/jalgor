@@ -55,6 +55,11 @@ public class Variable extends Token implements Comparable<Variable> {
         this.id = id;
     }
 
+    public Variable(String id, int ambito) {
+        this(id);
+        this.ambito = ambito;
+    }
+
     public Variable(TipoVariable tipoVariable, String id, int ambito) {
         this(tipoVariable, id);
         this.ambito = ambito;
