@@ -29,19 +29,12 @@ package org.uasd.jalgor.model;
  */
 public class SignoPuntuacion extends Token {
 
-    private char value;
-
     public SignoPuntuacion() {
         super(Token.TipoToken.SIGNOPUNTUACION);
     }
 
-    public SignoPuntuacion(char value) {
+    public SignoPuntuacion(String value) {
         this();
-        this.value = value;
-    }
-
-    public void setValue(char value) {
-        this.value = value;
-        setValue(String.valueOf(value));
+        setValue(value);
     }
 }

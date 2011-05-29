@@ -51,18 +51,18 @@ public class AnalizadorLexico {
 
     public Token getNextToken() {
         Token token = null;
-        /*if (currPos == (chrCodeLine.length - 1)) {
-            return null;
-        }*/
         if (!hasNextChar()) {
             return null;
         }
-        switch (chrCodeLine[currPos]) {
+        char currChar = chrCodeLine[currPos];
+        switch (currChar) {
             case ' ':
             case '\t':
                 // mover el indice hasta que el char sea diferente de espacio o tab
-                while (chrCodeLine[currPos] == ' ' || chrCodeLine[currPos] == '\t') {
-                    currPos++;
+                //while (chrCodeLine[currPos] == ' ' || chrCodeLine[currPos] == '\t') {
+                while (currChar == ' ' || currChar == '\t') {
+                    //currPos++;
+                    currChar = getNextChar();
                 }
                 token = getNextToken();
                 break;
@@ -70,49 +70,52 @@ public class AnalizadorLexico {
             case '+':
             case '*':
             case '/':
-                if (chrCodeLine[currPos] == '-' && chrCodeLine[currPos + 1] == '-') {
+
+                if (currChar == '-' && (hasNextChar()
+                        && (chrCodeLine[currPos + 1] == '.' || Character.isDigit(chrCodeLine[currPos + 1])))) {
+                    token = getNextToken();
                     break;
                 }
-                if (chrCodeLine[currPos] == '/' && chrCodeLine[currPos + 1] == '/') {
+                if (currChar == '/' && (hasNextChar() && chrCodeLine[currPos + 1] == '/')) {
                     token = new ComentarioToken();
                     currPos += 2;
                     break;
                 }
-                token = new OperadorAritmetico(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos])));
-                currPos++;
+                token = new OperadorAritmetico(Operador.getOpNames().get(String.valueOf(currChar)));
+                //currPos++;
                 break;
             case '&':
             case '|':
             case '^':
             case '~':
-                token = new OperadorBooleano(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos])));
-                currPos++;
+                token = new OperadorBooleano(Operador.getOpNames().get(String.valueOf(currChar)));
+                //currPos++;
                 break;
             case '<':
             case '>':
             case '!':
-                if (chrCodeLine[currPos + 1] == '=') {
-                    token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos] + chrCodeLine[currPos + 1])));
+                if (chrCodeLine[currPos] == '=') {
+                    token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(currChar + chrCodeLine[currPos + 1])));
                     currPos += 2;
                 } else {
-                    token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos])));
-                    currPos++;
+                    token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(currChar)));
+                    //currPos++;
                 }
                 break;
             case '=':
                 if (chrCodeLine[currPos + 1] == '=') {
-                    token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos] + chrCodeLine[currPos + 1])));
+                    token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(currChar + chrCodeLine[currPos + 1])));
                     currPos += 2;
                 } else {
-                    token = new OperadorAsignacion(Operador.getOpNames().get(String.valueOf(chrCodeLine[currPos])));
-                    currPos++;
+                    token = new OperadorAsignacion(Operador.getOpNames().get(String.valueOf(currChar)));
+                    //currPos++;
                 }
                 break;
             case ';':
             case '(':
             case ')':
             case ',':
-                token = new SignoPuntuacion(chrCodeLine[currPos]);
+                token = new SignoPuntuacion(String.valueOf(currChar));
                 currPos++;
                 break;
             case '.':
@@ -131,23 +134,30 @@ public class AnalizadorLexico {
                 if (chrCodeLine[currPos - 1] == '-') {
                     num.append("-");
                 }
-                while (Character.isDigit(chrCodeLine[currPos++])) {
-                    num.append(chrCodeLine[currPos]);
+                if (currChar == '.') {
+                    num.append(".");
+                    currChar = getNextChar();
+                }
+                while (hasNextChar() && Character.isDigit(currChar)) {
+                    num.append(currChar);
+                    currChar = getNextChar();
                 }
                 token = new ConstanteNumerica(num.toString());
                 currPos++;
                 break;
             case '"':
                 StringBuilder str = new StringBuilder();
-                while (chrCodeLine[currPos++] != '"') {
-                    str.append(chrCodeLine[currPos]);
+                currChar = getNextChar();
+                while (hasNextChar() && currChar != '"') {
+                    str.append(currChar);
+                    currChar =  getNextChar();
                 }
                 token = new ConstanteAlfanumerica(str.toString());
-                currPos += 2;
+                //currPos += 2;
                 break;
             default: // TODO: resolver problemas de ambiguedad entre keywords y variables id (num a --> numa)
                 StringBuilder var = new StringBuilder();
-                char currChar = chrCodeLine[currPos];
+                //currChar = chrCodeLine[currPos];
                 while ((Character.isLetterOrDigit(currChar) || currChar == '_') && currChar != '\0') {
                     var.append(currChar);
                     //currPos++;
@@ -186,11 +196,12 @@ public class AnalizadorLexico {
     }
 
     private char getNextChar() {
+        char nxtChar = '\0';
         currPos++;
         if (hasNextChar()) {
-            return chrCodeLine[currPos];
+            nxtChar = chrCodeLine[currPos];
         }
-        return '\0';
+        return nxtChar;
     }
 
     public boolean hasNextToken() {

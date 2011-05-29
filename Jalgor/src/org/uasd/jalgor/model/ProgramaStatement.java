@@ -57,7 +57,7 @@ public class ProgramaStatement extends Statement {
 
     private void parseMe() throws AlgorSintaxException {
         Token token = getAl().getNextToken();
-        Token nxtToken = getAl().getNextToken();
+        //Token nxtToken = getAl().getNextToken();
         switch (getTipoSatement()) {
             case PROGRAMA:
                 if (!(token instanceof VariableId)) {
@@ -65,14 +65,14 @@ public class ProgramaStatement extends Statement {
                     getAl().getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
-                if (!(nxtToken instanceof SignoPuntuacion)
+                /*if (!(nxtToken instanceof SignoPuntuacion)
                         || (nxtToken instanceof SignoPuntuacion && !((SignoPuntuacion) nxtToken).getValue().equals(";"))) {
                     String msjError = "; esperado";
                     getAl().getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
-                }
+                }*/
                 addTokenStatement(token);
-                addTokenStatement(nxtToken);
+                //addTokenStatement(nxtToken);
                 break;
             case FIN_PROGRAMA:
                 /*if (!(token instanceof SignoPuntuacion)

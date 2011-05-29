@@ -29,6 +29,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import org.uasd.jalgor.business.InvalidCommandLineParamException;
 import org.uasd.jalgor.business.InvalidFileNameException;
@@ -101,10 +102,14 @@ public class UIJalgor {
 
     private void validarEntrada(String[] args) throws InvalidCommandLineParamException {
         if (args.length < 2) {
-            String excMessage = "Una excepcion de tipo InvalidCommandLineParamException ha ocurrido.\n";
+            /*String excMessage = "Una excepcion de tipo InvalidCommandLineParamException ha ocurrido.\n";
             excMessage += "Insuficientes argumentos de linea de comando\n";
             printCmdLneArgDesc();
-            throw new InvalidCommandLineParamException(excMessage);
+            throw new InvalidCommandLineParamException(excMessage);*/
+            JalgorGM jgm = new JalgorGM();
+            jgm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            jgm.setLocationByPlatform(true);
+            jgm.setVisible(true);
         }
 
         if (args.length >= 2) {
