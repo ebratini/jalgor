@@ -63,10 +63,11 @@ public abstract class Statement {
 
         {
             for (Keyword k : Keyword.values()) {
-                if (k.name().equalsIgnoreCase("comentario") || k.name().equalsIgnoreCase("asignacion")) {
+                if (k.toString().toLowerCase().equalsIgnoreCase("comentario")
+                        || k.toString().toLowerCase().equalsIgnoreCase("asignacion")) {
                     continue;
                 }
-                put(k.name(), k);
+                put(k.toString().toLowerCase(), k);
             }
         }
     };

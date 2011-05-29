@@ -57,6 +57,7 @@ public class ProgramaStatement extends Statement {
 
     private void parseMe() throws AlgorSintaxException {
         Token token = getAl().getNextToken();
+        Token nxtToken = getAl().getNextToken();
         switch (getTipoSatement()) {
             case PROGRAMA:
                 if (!(token instanceof VariableId)) {
@@ -64,23 +65,23 @@ public class ProgramaStatement extends Statement {
                     getAl().getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
-                if (!(token.getSiblingToken() instanceof SignoPuntuacion)
-                        || (token.getSiblingToken() instanceof SignoPuntuacion && !((SignoPuntuacion) token.getSiblingToken()).getValue().equals(";"))) {
+                if (!(nxtToken instanceof SignoPuntuacion)
+                        || (nxtToken instanceof SignoPuntuacion && !((SignoPuntuacion) nxtToken).getValue().equals(";"))) {
                     String msjError = "; esperado";
                     getAl().getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
                 addTokenStatement(token);
-                addTokenStatement(token.getSiblingToken());
+                addTokenStatement(nxtToken);
                 break;
             case FIN_PROGRAMA:
-                if (!(token instanceof SignoPuntuacion)
+                /*if (!(token instanceof SignoPuntuacion)
                         || (token instanceof SignoPuntuacion && !((SignoPuntuacion) token).getValue().equals(";"))) {
                     String msjError = "; esperado";
                     getAl().getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
-                addTokenStatement(token);
+                addTokenStatement(token);*/
                 break;
         }
         setParsedValue(parse());

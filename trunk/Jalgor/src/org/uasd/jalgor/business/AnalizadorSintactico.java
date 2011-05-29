@@ -121,7 +121,7 @@ public class AnalizadorSintactico {
 
                 // verificando si el ambito del token es el correcto (entre sentencias programa y fin_programa)
                 // si no esta, se lanza una excepcion
-                if (!isPrgStmSet) {
+                if (!isPrgStmSet && !token.getValue().equalsIgnoreCase("programa")) {
                     String msjError = "Token: " + token.getValue() + "invalido. ";
                     msjError += "[programa] esperado";
                     errores.add(msjError);
@@ -151,7 +151,7 @@ public class AnalizadorSintactico {
                         throw new AlgorSintaxException(msjError);
                     }
                 } else if (token instanceof KeywordToken) {
-                    Statement.Keyword tipoKeyword = Statement.getKeywordMatcher().get(token.getValue());
+                    Statement.Keyword tipoKeyword = Statement.getKeywordMatcher().get(token.getValue().toLowerCase());
                     switch (tipoKeyword) {
 
                         case PROGRAMA:
