@@ -145,7 +145,13 @@ public class JalgorInterpreter {
             // imprime archivo
             StringBuilder fileContent = new StringBuilder();
             for (Statement stm : statements) {
-                fileContent.append(stm.toString()).append(System.getProperty("line.separator"));
+                if (stm instanceof ProgramaStatement) {
+                    for (Statement prgStm : ((ProgramaStatement) stm).getBlockStatements()) {
+                        fileContent.append(prgStm.toString()).append(System.getProperty("line.separator"));
+                    }
+                } else {
+                    fileContent.append(stm.toString()).append(System.getProperty("line.separator"));
+                }
             }
             FileManager.writeToFile(fileContent, new File(outFilePath), false);
         } else {

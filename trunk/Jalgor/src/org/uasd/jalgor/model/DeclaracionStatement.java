@@ -26,7 +26,6 @@ package org.uasd.jalgor.model;
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.AnalizadorLexico;
 import org.uasd.jalgor.business.AnalizadorSemantico;
-import org.uasd.jalgor.business.AnalizadorSintactico;
 import org.uasd.jalgor.business.InterpreterError;
 import org.uasd.jalgor.business.JalgorInterpreter;
 
@@ -46,7 +45,7 @@ public class DeclaracionStatement extends Statement {
 
     private void parseMe() throws AlgorSintaxException {
         Token token = getAl().getNextToken();
-        Token nxtToken = token.getSiblingToken();
+        Token nxtToken = getAl().getNextToken();//token.getSiblingToken();
         if (!(token instanceof VariableId)) {
             String msjError = "Identificador esperado";
             getAl().getCodeLine().addError(new InterpreterError(msjError));
@@ -72,7 +71,7 @@ public class DeclaracionStatement extends Statement {
             while (getAl().hasNextToken()) {
                 Token tok = getAl().getNextToken();
                 if (tok instanceof VariableId) {
-                    if (AnalizadorSemantico.variableExiste(token.getValue())) {
+                    if (AnalizadorSemantico.variableExiste(tok.getValue())) {
                         String msjError = "Variable " + tok.getValue() + " ya ha sido declarada";
                         getAl().getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
