@@ -51,7 +51,10 @@ public class AnalizadorLexico {
 
     public Token getNextToken() {
         Token token = null;
-        if (currPos == (chrCodeLine.length - 1)) {
+        /*if (currPos == (chrCodeLine.length - 1)) {
+            return null;
+        }*/
+        if (!hasNextChar()) {
             return null;
         }
         switch (chrCodeLine[currPos]) {
@@ -61,6 +64,7 @@ public class AnalizadorLexico {
                 while (chrCodeLine[currPos] == ' ' || chrCodeLine[currPos] == '\t') {
                     currPos++;
                 }
+                token = getNextToken();
                 break;
             case '-':
             case '+':
@@ -144,25 +148,25 @@ public class AnalizadorLexico {
             default: // TODO: resolver problemas de ambiguedad entre keywords y variables id (num a --> numa)
                 StringBuilder var = new StringBuilder();
                 char currChar = chrCodeLine[currPos];
-                while ((Character.isLetterOrDigit(currChar) || currChar == '_')) {
-                    var.append(chrCodeLine[currPos]);
-                    currPos++;
-                    currChar = chrCodeLine[currPos];
+                while ((Character.isLetterOrDigit(currChar) || currChar == '_') && currChar != '\0') {
+                    var.append(currChar);
+                    //currPos++;
+                    currChar = getNextChar();// chrCodeLine[currPos];
                 }
-                if (Statement.keywordMatcher.containsKey(var.toString().toUpperCase())) {
-                    token = new KeywordToken(var.toString());
+                if (Statement.keywordMatcher.containsKey(var.toString().toLowerCase())) {
+                    token = new KeywordToken(var.toString().toLowerCase());
                 } else {
                     token = new VariableId(var.toString());
                 }
-                currPos++;
+                //currPos++;
                 break;
         }
 
-        if (token != null) {
+        /*if (token != null) {
             int prevPos = currPos;
             token.setSiblingToken(getNextToken());
             currPos = prevPos;
-        }
+        }*/
         return token;
     }
 
@@ -174,6 +178,21 @@ public class AnalizadorLexico {
         return codeLine;
     }
 
+    private boolean hasNextChar() {
+        if (currPos < chrCodeLine.length) {
+            return true;
+        }
+        return false;
+    }
+
+    private char getNextChar() {
+        currPos++;
+        if (hasNextChar()) {
+            return chrCodeLine[currPos];
+        }
+        return '\0';
+    }
+
     public boolean hasNextToken() {
         int prevPos = currPos;
         boolean hasIt = (getNextToken() != null);
@@ -183,6 +202,7 @@ public class AnalizadorLexico {
 
     public void resetCodeLine(CodeLine codeLine) {
         this.codeLine = codeLine;
+        currPos = 0;
         initChrCodeLine();
     }
 }

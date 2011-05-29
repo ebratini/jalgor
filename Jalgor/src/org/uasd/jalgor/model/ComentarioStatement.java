@@ -35,8 +35,8 @@ public class ComentarioStatement extends Statement {
 
     public ComentarioStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
-        setParsedValue(parse());
-        setParsedValue(getParsedValue() + " " + getOriginalValue());
+        //setParsedValue(parse());
+        setParsedValue(getOriginalValue());
     }
 
     public ComentarioStatement() {
