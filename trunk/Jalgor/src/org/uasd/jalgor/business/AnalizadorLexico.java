@@ -45,7 +45,7 @@ public class AnalizadorLexico {
 
     private void initChrCodeLine() {
         if (codeLine != null) {
-            chrCodeLine = codeLine.getOrigValue().replaceAll(" ", "").toCharArray();
+            chrCodeLine = codeLine.getOrigValue().toCharArray();
         }
     }
 
