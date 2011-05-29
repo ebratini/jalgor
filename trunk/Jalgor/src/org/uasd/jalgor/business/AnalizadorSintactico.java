@@ -26,23 +26,8 @@ package org.uasd.jalgor.business;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import org.uasd.jalgor.model.AsignacionStatement;
-import org.uasd.jalgor.model.CodeLine;
-import org.uasd.jalgor.model.ComentarioStatement;
-import org.uasd.jalgor.model.ComentarioToken;
-import org.uasd.jalgor.model.CondicionStatement;
-import org.uasd.jalgor.model.DeclaracionStatement;
-import org.uasd.jalgor.model.EscribeStatement;
-import org.uasd.jalgor.model.KeywordToken;
-import org.uasd.jalgor.model.LeeStatement;
-import org.uasd.jalgor.model.MientrasStatement;
-import org.uasd.jalgor.model.OperadorAsignacion;
-import org.uasd.jalgor.model.ProgramaStatement;
-import org.uasd.jalgor.model.Statement;
-import org.uasd.jalgor.model.Token;
-import org.uasd.jalgor.model.Variable;
+import org.uasd.jalgor.model.*;
 import org.uasd.jalgor.model.Variable.TipoVariable;
-import org.uasd.jalgor.model.VariableId;
 
 /**
  *
@@ -54,9 +39,10 @@ public class AnalizadorSintactico {
     private AnalizadorLexico al = new AnalizadorLexico();
     private List<String> errores = new ArrayList<String>();
     private int currLinePos = 0;
-
     private int ambitoStatementSeq;
     private static LinkedList<Integer> ambitoStatements = new LinkedList<Integer>();
+    private boolean isPrgStmSet = false;
+    private boolean isFinPrgStmSet = false;
 
     public AnalizadorSintactico() {
     }
@@ -111,6 +97,18 @@ public class AnalizadorSintactico {
         return ambitoStatements;
     }
 
+    // metodo para hallar la sentencia programa
+    private ProgramaStatement searchProgramaStatement() {
+        ProgramaStatement ps = null;
+        for (Statement stm : JalgorInterpreter.getStatements()) {
+            if (stm.getTipoSatement().equals(Statement.Keyword.PROGRAMA)) {
+                ps = (ProgramaStatement) stm;
+                break;
+            }
+        }
+        return ps;
+    }
+
     // este metodo sirve para obtener las sentencias por linea de codigo
     public Statement analizeCodeLine() {
         al.resetCodeLine(getNextCodeLine());
@@ -123,9 +121,7 @@ public class AnalizadorSintactico {
 
                 // verificando si el ambito del token es el correcto (entre sentencias programa y fin_programa)
                 // si no esta, se lanza una excepcion
-                if (!JalgorInterpreter.getStatements().contains(new ProgramaStatement(Statement.Keyword.PROGRAMA))
-                        && !Statement.getKeywordMatcher().get(token.getValue()).equals(Statement.Keyword.PROGRAMA)) {
-
+                if (!isPrgStmSet) {
                     String msjError = "Token: " + token.getValue() + "invalido. ";
                     msjError += "[programa] esperado";
                     errores.add(msjError);
@@ -138,7 +134,7 @@ public class AnalizadorSintactico {
                         /* si la sentencia es de asignacion (variable seguida de op de asignacion)
                          * reviso si ya ha sido declarada, sino se lanza una excepcion
                          */
-                        Variable var = AnalizadorSemantico.searchVariable(token.getValue(), ambitoStatements);
+                        Variable var = AnalizadorSemantico.searchVariable(token.getValue());
                         if (var != null) {
                             TipoVariable tipoVariable = var.getTipoVariable(); // JalgorInterpreter.getVariables().get(token.getValue()).getTipoVariable();
                             statement = new AsignacionStatement(Statement.Keyword.ASIGNACION, al, (VariableId) token, tipoVariable);
@@ -159,24 +155,51 @@ public class AnalizadorSintactico {
                     switch (tipoKeyword) {
 
                         case PROGRAMA:
-                        case FIN_PROGRAMA:
-                            // TODO: ver si ya existe cualquiera de las dos sentencias en la lista de senteencias de JI
-                            // TODO: si es fin_programa, ver si ya existe una sentencia programa
+                            // ver si ya existe la sentencia fin_programa en la lista de sentencias de JI
+                            if (isPrgStmSet) {
+                                String msjError = "Token: " + token.getValue() + " invalido.";
+                                errores.add(msjError);
+                                al.getCodeLine().addError(new InterpreterError(msjError));
+                                throw new AlgorSintaxException(msjError);
+                            }
 
-                            // TODO: validar y agregar ambito de sentencia
                             ambitoStatements.offer(getNextAmbitoStmSeq());
+                            isPrgStmSet = true;
 
                             statement = new ProgramaStatement(tipoKeyword, al);
-                            Statement prgStm = analizeCodeLine();
-                            do {
+                            Statement prgStm = null;
+                            while (hasNextCodeLine() && !(prgStm instanceof ProgramaStatement && prgStm.getTipoSatement().equals(Statement.Keyword.FIN_PROGRAMA))) {
+                                prgStm = analizeCodeLine();
                                 ((ProgramaStatement) statement).addBlockStatement(prgStm);
-                            } while (hasNextCodeLine() && (!(prgStm instanceof ProgramaStatement)) && prgStm.getTipoSatement().equals(Statement.Keyword.FIN_PROGRAMA));
+                            }
+                            // si llego hasta aqui es porque es un fin de sentencia,
+                            // para manejar el ambito, hacer un poll a la pila de ambito
+                            ambitoStatements.pollLast();
 
-                            // TODO: si llego hasta aqui es porque es un fin de sentencia, para manejar el ambito, hacer un poll a la pila
-                            // de ambito
-
-                            // validar y dar un poll al ambito de sentencia
-                            ambitoStatements.poll();
+                            // validar que/ se halla salido del bucle por sentencia fin_programa y no por fin de archivo
+                            if (((ProgramaStatement) statement).getBlockStatements().getLast().getTipoSatement() != Statement.Keyword.FIN_PROGRAMA) {
+                                String msjError = "Sentencia [fin_programa] esperado";
+                                errores.add(msjError);
+                                al.getCodeLine().addError(new InterpreterError(msjError));
+                                throw new AlgorSintaxException(msjError);
+                            }
+                            break;
+                        case FIN_PROGRAMA:
+                            if (!isPrgStmSet) {
+                                String msjError = "Token: " + token.getValue() + "invalido. ";
+                                msjError += "[programa] esperado";
+                                errores.add(msjError);
+                                al.getCodeLine().addError(new InterpreterError(msjError));
+                                throw new AlgorSintaxException(msjError);
+                            }
+                            if (isFinPrgStmSet) {
+                                String msjError = "Token: " + token.getValue() + "invalido. ";
+                                errores.add(msjError);
+                                al.getCodeLine().addError(new InterpreterError(msjError));
+                                throw new AlgorSintaxException(msjError);
+                            }
+                            statement = new ProgramaStatement(tipoKeyword, al);
+                            isFinPrgStmSet = true;
                             break;
                         case NUM:
                         case ALFA:
@@ -189,19 +212,19 @@ public class AnalizadorSintactico {
                             statement = new EscribeStatement(tipoKeyword, al);
                             break;
                         case SI:
-                            // TODO: validar y agregar ambito de sentencia
+                            // agregar ambito de sentencia
                             ambitoStatements.offer(getNextAmbitoStmSeq());
 
                             statement = new CondicionStatement(tipoKeyword, al);
-                            Statement condSt = analizeCodeLine();
-                            do {
+                            Statement condSt = null;
+                            while (hasNextCodeLine() && !(condSt instanceof CondicionStatement && condSt.getTipoSatement().equals(Statement.Keyword.FIN_SI))) {
+                                condSt = analizeCodeLine();
                                 ((CondicionStatement) statement).addBlockStatement(condSt);
-                            } while (hasNextCodeLine() && (!(condSt instanceof CondicionStatement)) && condSt.getTipoSatement().equals(Statement.Keyword.FIN_SI));
-                            // TODO: si llego hasta aqui es porque es un fin de sentencia, para manejar el ambito, hacer un poll a la pila
-                            // de ambito
-
-                            // validar y dar un poll al ambito de sentencia
-                            ambitoStatements.poll();
+                            }
+                            // si llego hasta aqui es porque es un fin de sentencia,
+                            // para manejar el ambito, hacer un poll a la pila de ambito
+                            ambitoStatements.pollLast();
+                            // validar que se halla salido del bucle por sentencia fin_si y no por fin de archivo
                             break;
                         case SINO:
                             statement = new CondicionStatement(tipoKeyword, al);
@@ -229,10 +252,11 @@ public class AnalizadorSintactico {
                             break;
                     }
                 }
-            } else {
+            } else if (token != null) {
                 String msjError = "mal comienzo de linea de codigo";
                 errores.add(msjError);
                 al.getCodeLine().addError(new InterpreterError(msjError));
+                throw new AlgorSintaxException(msjError);
             }
         } catch (AlgorSintaxException ase) {
         }

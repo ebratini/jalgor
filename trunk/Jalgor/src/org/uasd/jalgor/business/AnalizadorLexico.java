@@ -23,20 +23,7 @@
  */
 package org.uasd.jalgor.business;
 
-import org.uasd.jalgor.model.CodeLine;
-import org.uasd.jalgor.model.ComentarioToken;
-import org.uasd.jalgor.model.ConstanteAlfanumerica;
-import org.uasd.jalgor.model.ConstanteNumerica;
-import org.uasd.jalgor.model.KeywordToken;
-import org.uasd.jalgor.model.Operador;
-import org.uasd.jalgor.model.OperadorAritmetico;
-import org.uasd.jalgor.model.OperadorAsignacion;
-import org.uasd.jalgor.model.OperadorBooleano;
-import org.uasd.jalgor.model.OperadorRelacional;
-import org.uasd.jalgor.model.SignoPuntuacion;
-import org.uasd.jalgor.model.Statement;
-import org.uasd.jalgor.model.Token;
-import org.uasd.jalgor.model.VariableId;
+import org.uasd.jalgor.model.*;
 
 /**
  *

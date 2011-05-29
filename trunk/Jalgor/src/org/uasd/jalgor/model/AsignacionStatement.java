@@ -83,7 +83,7 @@ public class AsignacionStatement extends Statement {
                 while (getAl().hasNextToken()) {
                     Token tok = getAl().getNextToken();
                     if (tok instanceof ConstanteNumerica
-                            || (tok instanceof VariableId && AnalizadorSemantico.variableExiste(tok.getValue(), AnalizadorSintactico.getAmbitoStatements()))
+                            || (tok instanceof VariableId && AnalizadorSemantico.variableExiste(tok.getValue()))
                             || tok instanceof OperadorAritmetico || (tok instanceof SignoPuntuacion && tok.getValue().equals(";"))) {
                         this.addTokenStatement(tok);
                     } else {

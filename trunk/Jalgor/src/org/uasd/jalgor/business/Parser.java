@@ -54,7 +54,7 @@ public class Parser {
                     Token nxtToken = al.getNextToken();
                     if (nxtToken instanceof OperadorAsignacion) {
                         nxtToken = al.getNextToken();
-                        Variable var = AnalizadorSemantico.searchVariable(token.getValue(), AnalizadorSintactico.getAmbitoStatements());
+                        Variable var = AnalizadorSemantico.searchVariable(token.getValue());
                         switch (var.getTipoVariable()) {
                             case ALFA:
                                 statement = new AsignacionStatement(tipoSatement, al, (VariableId) token, TipoVariable.ALFA);

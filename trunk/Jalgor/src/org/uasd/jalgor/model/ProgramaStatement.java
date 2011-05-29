@@ -23,12 +23,10 @@
  */
 package org.uasd.jalgor.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.AnalizadorLexico;
 import org.uasd.jalgor.business.InterpreterError;
-import org.uasd.jalgor.business.JalgorInterpreter;
 
 /**
  *
@@ -37,7 +35,7 @@ import org.uasd.jalgor.business.JalgorInterpreter;
 public class ProgramaStatement extends Statement {
 
     private int ambitoSeqId = -1;
-    private List<Statement> blockStatements = new ArrayList<Statement>();
+    private LinkedList<Statement> blockStatements = new LinkedList<Statement>();
 
     public ProgramaStatement() throws AlgorSintaxException {
     }
@@ -88,16 +86,16 @@ public class ProgramaStatement extends Statement {
         setParsedValue(parse());
     }
 
-    public List<Statement> getBlockStatements() {
+    public LinkedList<Statement> getBlockStatements() {
         return blockStatements;
     }
 
-    public void setBlockStatements(List<Statement> blockStatements) {
+    public void setBlockStatements(LinkedList<Statement> blockStatements) {
         this.blockStatements = blockStatements;
     }
 
     public void addBlockStatement(Statement statement) {
-        this.blockStatements.add(statement);
+        this.blockStatements.offer(statement);
     }
 
     public int getAmbitoSeqId() {

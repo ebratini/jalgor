@@ -28,7 +28,6 @@ import org.uasd.jalgor.business.AnalizadorLexico;
 import org.uasd.jalgor.business.AnalizadorSemantico;
 import org.uasd.jalgor.business.AnalizadorSintactico;
 import org.uasd.jalgor.business.InterpreterError;
-import org.uasd.jalgor.business.JalgorInterpreter;
 
 /**
  *
@@ -52,7 +51,7 @@ public class LeeStatement extends Statement {
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
-        if (!AnalizadorSemantico.variableExiste(token.getValue(), AnalizadorSintactico.getAmbitoStatements())) {
+        if (!AnalizadorSemantico.variableExiste(token.getValue())) {
             String msjError = "Variable " + token.getValue() + " no ha sido declarada";
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
