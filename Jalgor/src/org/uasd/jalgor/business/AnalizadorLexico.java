@@ -56,6 +56,7 @@ public class AnalizadorLexico {
         }
         char currChar = chrCodeLine[currPos];
         switch (currChar) {
+            // TODO: posibilidad de crear un token espacio para mantener formato igual al fuente original
             case ' ':
             case '\t':
                 // mover el indice hasta que el char sea diferente de espacio o tab
