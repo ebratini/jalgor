@@ -30,6 +30,7 @@
 package org.uasd.jalgor.ui;
 
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -90,8 +91,6 @@ public class JalgorGM extends javax.swing.JFrame {
         jtaOutFile = new javax.swing.JTextArea();
         txtOutFilePath = new javax.swing.JTextField();
         btnBuscarOutFilePath = new javax.swing.JButton();
-        jScrollPane4 = new javax.swing.JScrollPane();
-        jEditorPane1 = new javax.swing.JEditorPane();
         mnuMenuBar = new javax.swing.JMenuBar();
         mnuJalgor = new javax.swing.JMenu();
         mnuCompilar = new javax.swing.JMenuItem();
@@ -116,11 +115,11 @@ public class JalgorGM extends javax.swing.JFrame {
         statusPanel.setLayout(statusPanelLayout);
         statusPanelLayout.setHorizontalGroup(
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 1036, Short.MAX_VALUE)
+            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 834, Short.MAX_VALUE)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1016, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 814, Short.MAX_VALUE)
                 .addComponent(statusAnimationLabel)
                 .addContainerGap())
         );
@@ -137,21 +136,21 @@ public class JalgorGM extends javax.swing.JFrame {
 
         pnlBotonesAccion.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        btnCompilar.setText("Compilar");
+        btnCompilar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/traductor65x65.png"))); // NOI18N
         btnCompilar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCompilarActionPerformed(evt);
             }
         });
 
-        btnLimpiar.setText("Limpiar");
+        btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/escoba_35x35.png"))); // NOI18N
         btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLimpiarActionPerformed(evt);
             }
         });
 
-        btnSalir.setText("Salir");
+        btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/salir2_35x35.png"))); // NOI18N
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalirActionPerformed(evt);
@@ -165,9 +164,9 @@ public class JalgorGM extends javax.swing.JFrame {
             .addGroup(pnlBotonesAccionLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlBotonesAccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnSalir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnCompilar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnLimpiar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))
+                    .addComponent(btnCompilar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 58, Short.MAX_VALUE)
+                    .addComponent(btnLimpiar, javax.swing.GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE)
+                    .addComponent(btnSalir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 36, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlBotonesAccionLayout.setVerticalGroup(
@@ -244,6 +243,11 @@ public class JalgorGM extends javax.swing.JFrame {
         jScrollPane2.setViewportView(jtaOutFile);
 
         txtOutFilePath.setText("path archivo salida");
+        txtOutFilePath.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtOutFilePathKeyPressed(evt);
+            }
+        });
 
         btnBuscarOutFilePath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/searchglass_vflip.gif"))); // NOI18N
         btnBuscarOutFilePath.setBorder(null);
@@ -280,8 +284,6 @@ public class JalgorGM extends javax.swing.JFrame {
         );
 
         jSplitPane1.setRightComponent(pnlOutFile);
-
-        jScrollPane4.setViewportView(jEditorPane1);
 
         mnuJalgor.setText("Jalgor");
         mnuJalgor.addActionListener(new java.awt.event.ActionListener() {
@@ -371,27 +373,22 @@ public class JalgorGM extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblSalidaJalgor)
-                .addContainerGap(998, Short.MAX_VALUE))
+                .addContainerGap(796, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 1016, Short.MAX_VALUE)
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                         .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
-                        .addComponent(pnlBotonesAccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(8, 8, 8))))
+                        .addComponent(pnlBotonesAccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
                     .addComponent(pnlBotonesAccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE))
                 .addGap(23, 23, 23)
@@ -487,6 +484,13 @@ public class JalgorGM extends javax.swing.JFrame {
         this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
 
+    private void txtOutFilePathKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtOutFilePathKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            btnCompilar.doClick();
+        }
+    }//GEN-LAST:event_txtOutFilePathKeyPressed
+
     /**
      * @param args the command line arguments
      */
@@ -510,6 +514,9 @@ public class JalgorGM extends javax.swing.JFrame {
     private void compilar(String sourceFilePath, String outFilePath) {
         try {
             JalgorInterpreter ji = new JalgorInterpreter(sourceFilePath, outFilePath);
+            if (jtaSourceFile.getText().length() < 1) {
+                jtaSourceFile.setText(FileManager.loadFile(new File(txtSourceFilePath.getText())).toString());
+            }
             ji.start();
 
             if (JalgorInterpreter.getErrores().size() > 0 || ji.hayErrorEnLineaCodigo()) {
@@ -522,34 +529,6 @@ public class JalgorGM extends javax.swing.JFrame {
                 }
                 sbErrores.append(ji.getCodeLineErrors());
                 jtaSalidaJalgor.setText(sbErrores.toString());
-
-
-                // formatting source textarea
-                class JtaUtils  {
-
-                    //Document doc = jtaSourceFile.getDocument();
-                    public String getLineText(int lineNumber) {
-                        try {
-                            
-                            int startIndex = jtaSourceFile.getLineStartOffset(lineNumber);
-                            int endIndex = jtaSourceFile.getLineEndOffset(lineNumber);
-                            java.lang.String line = jtaSourceFile.getText().substring(startIndex, endIndex - startIndex);
-                            return line;
-                        } catch (BadLocationException ex) {
-                            return "";
-                        }
-                    }
-                }
-                JtaUtils jtaUtils = new JtaUtils();
-                Pattern pat = Pattern.compile("\\d+");
-                Matcher mat = null;
-                for (String line : ji.getCodeLineErrors().toString().split(System.getProperty("line.separator"))) {
-                    mat = pat.matcher(line);
-                    //int numLine = (mat.find(0) ? Integer.parseInt(line.substring(mat.start(), mat.end())) : 0);
-                    int numLine = (mat.find(0) ? Integer.parseInt(mat.group()) - 1 : 0);
-                    JOptionPane.showMessageDialog(this, jtaUtils.getLineText(numLine));
-                    break;
-                }
                 return;
             }
             jtaOutFile.setText(FileManager.loadFile(new File(outFilePath)).toString());
@@ -567,11 +546,9 @@ public class JalgorGM extends javax.swing.JFrame {
     private javax.swing.JButton btnCompilar;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnSalir;
-    private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextArea jtaOutFile;
