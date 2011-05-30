@@ -84,8 +84,12 @@ public class AnalizadorSintactico {
         CodeLine codeLine = null;
         if (currLinePos < JalgorInterpreter.getCodeLines().size()) {
             codeLine = JalgorInterpreter.getCodeLines().get(currLinePos);
+            while (codeLine.getOrigValue().trim().isEmpty()) {
+                currLinePos++;
+                codeLine = getNextCodeLine();
+            }
         }
-        currLinePos++;
+        //currLinePos++;
         return codeLine;
     }
 
@@ -112,6 +116,7 @@ public class AnalizadorSintactico {
     // este metodo sirve para obtener las sentencias por linea de codigo
     public Statement analizeCodeLine() {
         al.resetCodeLine(getNextCodeLine());
+        currLinePos++;
         Token token = al.getNextToken();
         Statement statement = null;
         try {
@@ -122,8 +127,8 @@ public class AnalizadorSintactico {
                 // verificando si el ambito del token es el correcto (entre sentencias programa y fin_programa)
                 // si no esta, se lanza una excepcion
                 if (!isPrgStmSet && !token.getValue().equalsIgnoreCase("programa")) {
-                    String msjError = "Token: " + token.getValue() + "invalido. ";
-                    msjError += "[programa] esperado";
+                    String msjError = "Token: " + token.getValue() + " invalido. ";
+                    msjError += "[programa] esperado\n";
                     errores.add(msjError);
                     al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
@@ -139,13 +144,13 @@ public class AnalizadorSintactico {
                             TipoVariable tipoVariable = var.getTipoVariable(); // JalgorInterpreter.getVariables().get(token.getValue()).getTipoVariable();
                             statement = new AsignacionStatement(Statement.Keyword.ASIGNACION, al, (VariableId) token, tipoVariable);
                         } else {
-                            String msjError = "variable " + token.getValue() + "no declarada";
+                            String msjError = "variable " + token.getValue() + " no declarada\n";
                             errores.add(msjError);
                             al.getCodeLine().addError(new InterpreterError(msjError));
                             throw new AlgorSintaxException(msjError);
                         }
                     } else {
-                        String msjError = "[=] esperado";
+                        String msjError = "[=] esperado\n";
                         errores.add(msjError);
                         al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
@@ -157,7 +162,7 @@ public class AnalizadorSintactico {
                         case PROGRAMA:
                             // ver si ya existe la sentencia fin_programa en la lista de sentencias de JI
                             if (isPrgStmSet) {
-                                String msjError = "Token: " + token.getValue() + " invalido.";
+                                String msjError = "Token: " + token.getValue() + " invalido.\n";
                                 errores.add(msjError);
                                 al.getCodeLine().addError(new InterpreterError(msjError));
                                 throw new AlgorSintaxException(msjError);
@@ -178,7 +183,7 @@ public class AnalizadorSintactico {
 
                             // validar que/ se halla salido del bucle por sentencia fin_programa y no por fin de archivo
                             if (((ProgramaStatement) statement).getBlockStatements().getLast().getTipoSatement() != Statement.Keyword.FIN_PROGRAMA) {
-                                String msjError = "Sentencia [fin_programa] esperado";
+                                String msjError = "Sentencia [fin_programa] esperado\n";
                                 errores.add(msjError);
                                 al.getCodeLine().addError(new InterpreterError(msjError));
                                 throw new AlgorSintaxException(msjError);
@@ -186,14 +191,14 @@ public class AnalizadorSintactico {
                             break;
                         case FIN_PROGRAMA:
                             if (!isPrgStmSet) {
-                                String msjError = "Token: " + token.getValue() + "invalido. ";
-                                msjError += "[programa] esperado";
+                                String msjError = "Token: " + token.getValue() + " invalido. ";
+                                msjError += "[programa] esperado\n";
                                 errores.add(msjError);
                                 al.getCodeLine().addError(new InterpreterError(msjError));
                                 throw new AlgorSintaxException(msjError);
                             }
                             if (isFinPrgStmSet) {
-                                String msjError = "Token: " + token.getValue() + "invalido. ";
+                                String msjError = "Token: " + token.getValue() + " invalido.\n";
                                 errores.add(msjError);
                                 al.getCodeLine().addError(new InterpreterError(msjError));
                                 throw new AlgorSintaxException(msjError);
@@ -253,7 +258,7 @@ public class AnalizadorSintactico {
                     }
                 }
             } else if (token != null) {
-                String msjError = "mal comienzo de linea de codigo";
+                String msjError = "Mal comienzo de linea de codigo\n";
                 errores.add(msjError);
                 al.getCodeLine().addError(new InterpreterError(msjError));
                 throw new AlgorSintaxException(msjError);

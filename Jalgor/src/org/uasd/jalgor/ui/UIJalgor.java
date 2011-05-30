@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import org.uasd.jalgor.business.InvalidCommandLineParamException;
 import org.uasd.jalgor.business.InvalidFileNameException;
@@ -59,21 +58,25 @@ public class UIJalgor {
     };
 
     public static void main(String[] args) {
-        String[] params = JOptionPane.showInputDialog("Digite parametros de archivo entrada y salida separados por ;").split(";");
-        args = new String[] {"-i", params[0], "-o", params[1]};
         UIJalgor uiJalgor = new UIJalgor();
-        try {
-            uiJalgor.validarEntrada(args);
-            uiJalgor.initJalgor();
-        } catch (InvalidCommandLineParamException ex) {
-            Logger.getLogger(UIJalgor.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        uiJalgor.initJalgor(args);
     }
     
-    private void initJalgor() {
+    private void initJalgor(String[] args) {
         try {
-            new JalgorInterpreter(cmdLneArgs.get("-i"), cmdLneArgs.get("-o")).start();
-        } catch (InvalidFileNameException ex) {
+            /*if (args.length < 2) {
+                startGraphicMode();
+                return;
+            }*/
+            String[] params = JOptionPane.showInputDialog("Digite parametros de archivo entrada y salida separados por ;").split(";");
+            args = new String[]{"-i", params[0], "-o", params[1]};
+            validarEntrada(args);
+            try {
+                new JalgorInterpreter(cmdLneArgs.get("-i"), cmdLneArgs.get("-o")).start();
+            } catch (InvalidFileNameException ex) {
+                Logger.getLogger(UIJalgor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (InvalidCommandLineParamException ex) {
             Logger.getLogger(UIJalgor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -101,17 +104,6 @@ public class UIJalgor {
     }
 
     private void validarEntrada(String[] args) throws InvalidCommandLineParamException {
-        if (args.length < 2) {
-            /*String excMessage = "Una excepcion de tipo InvalidCommandLineParamException ha ocurrido.\n";
-            excMessage += "Insuficientes argumentos de linea de comando\n";
-            printCmdLneArgDesc();
-            throw new InvalidCommandLineParamException(excMessage);*/
-            JalgorGM jgm = new JalgorGM();
-            jgm.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            jgm.setLocationByPlatform(true);
-            jgm.setVisible(true);
-        }
-
         if (args.length >= 2) {
             if ((args.length % 2) != 0) {
                 String excMessage = "Una excepcion de tipo InvalidCommandLineParamException ha ocurrido.\n";
@@ -140,8 +132,10 @@ public class UIJalgor {
             }
         }
     }
-
-    // TODO: agregar llamada a modo grafico del interprete
+    
     private void startGraphicMode() {
+        JalgorGM jgm = new JalgorGM();
+        jgm.setLocationByPlatform(true);
+        jgm.setVisible(true);
     }
 }

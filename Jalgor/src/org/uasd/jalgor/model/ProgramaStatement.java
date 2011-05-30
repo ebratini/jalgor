@@ -57,7 +57,6 @@ public class ProgramaStatement extends Statement {
 
     private void parseMe() throws AlgorSintaxException {
         Token token = getAl().getNextToken();
-        //Token nxtToken = getAl().getNextToken();
         switch (getTipoSatement()) {
             case PROGRAMA:
                 if (!(token instanceof VariableId)) {
@@ -65,26 +64,13 @@ public class ProgramaStatement extends Statement {
                     getAl().getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
-                /*if (!(nxtToken instanceof SignoPuntuacion)
-                        || (nxtToken instanceof SignoPuntuacion && !((SignoPuntuacion) nxtToken).getValue().equals(";"))) {
-                    String msjError = "; esperado";
-                    getAl().getCodeLine().addError(new InterpreterError(msjError));
-                    throw new AlgorSintaxException(msjError);
-                }*/
                 addTokenStatement(token);
-                //addTokenStatement(nxtToken);
+                setParsedValue(this.parse());
                 break;
             case FIN_PROGRAMA:
-                /*if (!(token instanceof SignoPuntuacion)
-                        || (token instanceof SignoPuntuacion && !((SignoPuntuacion) token).getValue().equals(";"))) {
-                    String msjError = "; esperado";
-                    getAl().getCodeLine().addError(new InterpreterError(msjError));
-                    throw new AlgorSintaxException(msjError);
-                }
-                addTokenStatement(token);*/
+                setParsedValue(super.parse());
                 break;
         }
-        setParsedValue(parse());
     }
 
     public LinkedList<Statement> getBlockStatements() {
@@ -101,5 +87,12 @@ public class ProgramaStatement extends Statement {
 
     public int getAmbitoSeqId() {
         return ambitoSeqId;
+    }
+
+    protected String parse() {
+        StringBuilder sbParsedValue = new StringBuilder();
+        sbParsedValue.append("// ").append(getOriginalValue()).append(System.getProperty("line.separator"));
+        sbParsedValue.append(cppReps.get(getTipoSatement()));
+        return sbParsedValue.toString();
     }
 }

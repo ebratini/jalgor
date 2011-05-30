@@ -45,6 +45,8 @@ public abstract class Statement {
 
         {
             put(Keyword.COMENTARIO, "//");
+            put(Keyword.PROGRAMA, "int main() {");
+            put(Keyword.FIN_PROGRAMA, "}");
             put(Keyword.NUM, "double");
             put(Keyword.ALFA, "string");
             put(Keyword.LEE, "cin>>");
@@ -145,11 +147,11 @@ public abstract class Statement {
 
     protected String parse() {
         StringBuilder sbParsedValue = new StringBuilder();
-        sbParsedValue.append(cppReps.get(tipoSatement)).append(" ");
+        sbParsedValue.append(cppReps.get(tipoSatement));
         for (Token tok : this.getTokensStatement()) {
             sbParsedValue.append(tok.toString()).append(" ");
         }
-        return sbParsedValue.toString();
+        return sbParsedValue.toString().trim();
     }
 
     @Override
