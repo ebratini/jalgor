@@ -190,6 +190,7 @@ public class JalgorGM extends javax.swing.JFrame {
 
         jSplitPane1.setResizeWeight(1.0);
 
+        pnlSourceFile.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         pnlSourceFile.setPreferredSize(new java.awt.Dimension(347, 348));
 
         jtaSourceFile.setColumns(20);
@@ -213,9 +214,9 @@ public class JalgorGM extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSourceFileLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlSourceFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 327, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
                     .addGroup(pnlSourceFileLayout.createSequentialGroup()
-                        .addComponent(txtSourceFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                        .addComponent(txtSourceFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnBuscarSrcFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -228,12 +229,13 @@ public class JalgorGM extends javax.swing.JFrame {
                     .addComponent(btnBuscarSrcFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSourceFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         jSplitPane1.setLeftComponent(pnlSourceFile);
 
+        pnlOutFile.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         pnlOutFile.setPreferredSize(new java.awt.Dimension(372, 350));
 
         jtaOutFile.setColumns(20);
@@ -262,9 +264,9 @@ public class JalgorGM extends javax.swing.JFrame {
             .addGroup(pnlOutFileLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlOutFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
                     .addGroup(pnlOutFileLayout.createSequentialGroup()
-                        .addComponent(txtOutFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
+                        .addComponent(txtOutFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(btnBuscarOutFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
@@ -277,7 +279,7 @@ public class JalgorGM extends javax.swing.JFrame {
                     .addComponent(btnBuscarOutFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtOutFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
