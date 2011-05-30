@@ -71,17 +71,16 @@ public class AnalizadorLexico {
             case '+':
             case '*':
             case '/':
-
                 if (currChar == '-' && (hasNextChar()
                         && (chrCodeLine[currPos + 1] == '.' || Character.isDigit(chrCodeLine[currPos + 1])))) {
                     token = getNextToken();
                     break;
                 }
-                if (currChar == '/' && (hasNextChar() && chrCodeLine[currPos + 1] == '/')) {
+                /*if (currChar == '/' && (hasNextChar() && chrCodeLine[currPos + 1] == '/')) {
                     token = new ComentarioToken();
                     currPos += 2;
                     break;
-                }
+                }*/
                 token = new OperadorAritmetico(Operador.getOpNames().get(String.valueOf(currChar)));
                 //currPos++;
                 break;
@@ -156,7 +155,7 @@ public class AnalizadorLexico {
                 token = new ConstanteAlfanumerica(str.toString());
                 //currPos += 2;
                 break;
-            default: // TODO: resolver problemas de ambiguedad entre keywords y variables id (num a --> numa)
+            default:
                 StringBuilder var = new StringBuilder();
                 //currChar = chrCodeLine[currPos];
                 while ((Character.isLetterOrDigit(currChar) || currChar == '_') && currChar != '\0') {
@@ -164,8 +163,12 @@ public class AnalizadorLexico {
                     //currPos++;
                     currChar = getNextChar();// chrCodeLine[currPos];
                 }
+                if (var.toString().equals("com")) {
+                   token = new ComentarioToken();
+                   break;
+                }
                 if (Statement.keywordMatcher.containsKey(var.toString().toLowerCase())) {
-                    token = new KeywordToken(var.toString().toLowerCase());
+                    token = new KeywordToken(var.toString());
                 } else {
                     token = new VariableId(var.toString());
                 }
