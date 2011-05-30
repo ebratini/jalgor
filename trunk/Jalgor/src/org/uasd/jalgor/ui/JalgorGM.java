@@ -27,8 +27,23 @@
  *
  * Created on May 29, 2011, 6:08:14 PM
  */
-
 package org.uasd.jalgor.ui;
+
+import java.awt.Toolkit;
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
+import org.uasd.jalgor.business.InterpreterError;
+import org.uasd.jalgor.business.InvalidFileNameException;
+import org.uasd.jalgor.business.JalgorInterpreter;
+import org.uasd.jalgor.model.FileManager;
 
 /**
  *
@@ -60,10 +75,10 @@ public class JalgorGM extends javax.swing.JFrame {
         pnlBotonesAccion = new javax.swing.JPanel();
         btnCompilar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
+        btnSalir = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jtaSalidaJalgor = new javax.swing.JTextArea();
         lblSalidaJalgor = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
         jSplitPane1 = new javax.swing.JSplitPane();
         pnlSourceFile = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -75,6 +90,8 @@ public class JalgorGM extends javax.swing.JFrame {
         jtaOutFile = new javax.swing.JTextArea();
         txtOutFilePath = new javax.swing.JTextField();
         btnBuscarOutFilePath = new javax.swing.JButton();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jEditorPane1 = new javax.swing.JEditorPane();
         mnuMenuBar = new javax.swing.JMenuBar();
         mnuJalgor = new javax.swing.JMenu();
         mnuCompilar = new javax.swing.JMenuItem();
@@ -90,6 +107,7 @@ public class JalgorGM extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Jalgor: Algorithm Interpreter");
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/imagenes/traductor2.JPG")));
         setResizable(false);
 
         statusAnimationLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -98,11 +116,11 @@ public class JalgorGM extends javax.swing.JFrame {
         statusPanel.setLayout(statusPanelLayout);
         statusPanelLayout.setHorizontalGroup(
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 857, Short.MAX_VALUE)
+            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 1036, Short.MAX_VALUE)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 837, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1016, Short.MAX_VALUE)
                 .addComponent(statusAnimationLabel)
                 .addContainerGap())
         );
@@ -120,8 +138,25 @@ public class JalgorGM extends javax.swing.JFrame {
         pnlBotonesAccion.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         btnCompilar.setText("Compilar");
+        btnCompilar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCompilarActionPerformed(evt);
+            }
+        });
 
         btnLimpiar.setText("Limpiar");
+        btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLimpiarActionPerformed(evt);
+            }
+        });
+
+        btnSalir.setText("Salir");
+        btnSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlBotonesAccionLayout = new javax.swing.GroupLayout(pnlBotonesAccion);
         pnlBotonesAccion.setLayout(pnlBotonesAccionLayout);
@@ -130,6 +165,7 @@ public class JalgorGM extends javax.swing.JFrame {
             .addGroup(pnlBotonesAccionLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlBotonesAccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(btnSalir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnCompilar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnLimpiar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -141,7 +177,9 @@ public class JalgorGM extends javax.swing.JFrame {
                 .addComponent(btnCompilar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(237, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(182, Short.MAX_VALUE))
         );
 
         jtaSalidaJalgor.setColumns(20);
@@ -151,21 +189,9 @@ public class JalgorGM extends javax.swing.JFrame {
 
         lblSalidaJalgor.setText("Salida");
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 100, Short.MAX_VALUE)
-        );
-
         jSplitPane1.setResizeWeight(1.0);
 
         pnlSourceFile.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        pnlSourceFile.setMinimumSize(new java.awt.Dimension(10, 10));
         pnlSourceFile.setPreferredSize(new java.awt.Dimension(347, 348));
 
         jtaSourceFile.setColumns(20);
@@ -190,28 +216,27 @@ public class JalgorGM extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(pnlSourceFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSourceFileLayout.createSequentialGroup()
-                        .addComponent(txtSourceFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                    .addGroup(pnlSourceFileLayout.createSequentialGroup()
+                        .addComponent(txtSourceFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnBuscarSrcFilePath)))
+                        .addComponent(btnBuscarSrcFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         pnlSourceFileLayout.setVerticalGroup(
             pnlSourceFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSourceFileLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlSourceFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnBuscarSrcFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlSourceFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBuscarSrcFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSourceFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
-                .addContainerGap())
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(pnlSourceFile);
 
         pnlOutFile.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        pnlOutFile.setMinimumSize(new java.awt.Dimension(10, 10));
         pnlOutFile.setPreferredSize(new java.awt.Dimension(372, 350));
 
         jtaOutFile.setColumns(20);
@@ -236,18 +261,18 @@ public class JalgorGM extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(pnlOutFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOutFileLayout.createSequentialGroup()
-                        .addComponent(txtOutFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+                    .addGroup(pnlOutFileLayout.createSequentialGroup()
+                        .addComponent(txtOutFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnBuscarOutFilePath)))
+                        .addComponent(btnBuscarOutFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         pnlOutFileLayout.setVerticalGroup(
             pnlOutFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlOutFileLayout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addGroup(pnlOutFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnBuscarOutFilePath)
+                .addContainerGap()
+                .addGroup(pnlOutFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnBuscarOutFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtOutFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
@@ -255,6 +280,8 @@ public class JalgorGM extends javax.swing.JFrame {
         );
 
         jSplitPane1.setRightComponent(pnlOutFile);
+
+        jScrollPane4.setViewportView(jEditorPane1);
 
         mnuJalgor.setText("Jalgor");
         mnuJalgor.addActionListener(new java.awt.event.ActionListener() {
@@ -264,13 +291,28 @@ public class JalgorGM extends javax.swing.JFrame {
         });
 
         mnuCompilar.setText("Compilar");
+        mnuCompilar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuCompilarActionPerformed(evt);
+            }
+        });
         mnuJalgor.add(mnuCompilar);
 
         mnuLimpiarCampos.setText("Limpiar Campos");
+        mnuLimpiarCampos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuLimpiarCamposActionPerformed(evt);
+            }
+        });
         mnuJalgor.add(mnuLimpiarCampos);
         mnuJalgor.add(jSeparator1);
 
         mnuSalir.setText("Salir");
+        mnuSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuSalirActionPerformed(evt);
+            }
+        });
         mnuJalgor.add(mnuSalir);
 
         mnuMenuBar.add(mnuJalgor);
@@ -280,14 +322,29 @@ public class JalgorGM extends javax.swing.JFrame {
         bgrLaf.add(rdbWindowsLaf);
         rdbWindowsLaf.setSelected(true);
         rdbWindowsLaf.setText("Windows");
+        rdbWindowsLaf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdbWindowsLafActionPerformed(evt);
+            }
+        });
         mnuLaf.add(rdbWindowsLaf);
 
         bgrLaf.add(rdbNimbusLaf);
         rdbNimbusLaf.setText("Nimbus");
+        rdbNimbusLaf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdbNimbusLafActionPerformed(evt);
+            }
+        });
         mnuLaf.add(rdbNimbusLaf);
 
         bgrLaf.add(rdbMetalLaf);
         rdbMetalLaf.setText("Metal");
+        rdbMetalLaf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rdbMetalLafActionPerformed(evt);
+            }
+        });
         mnuLaf.add(rdbMetalLaf);
 
         mnuMenuBar.add(mnuLaf);
@@ -295,6 +352,11 @@ public class JalgorGM extends javax.swing.JFrame {
         mnuInfo.setText("?");
 
         mnuAbout.setText("About");
+        mnuAbout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuAboutActionPerformed(evt);
+            }
+        });
         mnuInfo.add(mnuAbout);
 
         mnuMenuBar.add(mnuInfo);
@@ -309,33 +371,29 @@ public class JalgorGM extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblSalidaJalgor)
-                .addContainerGap(819, Short.MAX_VALUE))
+                .addContainerGap(998, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 837, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 1016, Short.MAX_VALUE)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
                         .addComponent(pnlBotonesAccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(8, 8, 8))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(67, 67, 67)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pnlBotonesAccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                    .addComponent(pnlBotonesAccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE))
                 .addGap(23, 23, 23)
                 .addComponent(lblSalidaJalgor)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -347,24 +405,94 @@ public class JalgorGM extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnBuscarSrcFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarSrcFilePathActionPerformed
-        // TODO add your handling code here:
-}//GEN-LAST:event_btnBuscarSrcFilePathActionPerformed
-
     private void btnBuscarOutFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarOutFilePathActionPerformed
         // TODO add your handling code here:
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new FileNameExtensionFilter("archivo cpp [*.cpp]", "cpp"));
+
+        chooser.setSelectedFile(new File("out.cpp"));
+        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
+            txtOutFilePath.setText(chooser.getSelectedFile().getAbsolutePath());
+        }
     }//GEN-LAST:event_btnBuscarOutFilePathActionPerformed
 
     private void mnuJalgorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuJalgorActionPerformed
         // TODO add your handling code here:
-        this.dispose();
+        compilar(txtSourceFilePath.getText(), txtOutFilePath.getText());
     }//GEN-LAST:event_mnuJalgorActionPerformed
 
+    private void mnuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSalirActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_mnuSalirActionPerformed
+
+    private void mnuAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuAboutActionPerformed
+        // TODO add your handling code here:
+        JalgorAbout ja = new JalgorAbout(this, true);
+        ja.setLocationRelativeTo(this);
+        ja.setVisible(true);
+    }//GEN-LAST:event_mnuAboutActionPerformed
+
+    private void btnLimpiarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLimpiarActionPerformed
+        // TODO add your handling code here:
+        limpiar();
+    }//GEN-LAST:event_btnLimpiarActionPerformed
+
+    private void mnuLimpiarCamposActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuLimpiarCamposActionPerformed
+        // TODO add your handling code here:
+        limpiar();
+    }//GEN-LAST:event_mnuLimpiarCamposActionPerformed
+
+    private void btnCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCompilarActionPerformed
+        // TODO add your handling code here:
+        compilar(txtSourceFilePath.getText(), txtOutFilePath.getText());
+    }//GEN-LAST:event_btnCompilarActionPerformed
+
+    private void rdbWindowsLafActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbWindowsLafActionPerformed
+        // TODO add your handling code here:
+        LookAndFeelSelector.setLookAndFeel(LookAndFeelSelector.LAF.WINDOWS);
+        SwingUtilities.updateComponentTreeUI(this);
+        
+    }//GEN-LAST:event_rdbWindowsLafActionPerformed
+
+    private void rdbNimbusLafActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbNimbusLafActionPerformed
+        // TODO add your handling code here:
+        LookAndFeelSelector.setLookAndFeel(LookAndFeelSelector.LAF.NIMBUS);
+        SwingUtilities.updateComponentTreeUI(this);
+    }//GEN-LAST:event_rdbNimbusLafActionPerformed
+
+    private void rdbMetalLafActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbMetalLafActionPerformed
+        // TODO add your handling code here:
+        LookAndFeelSelector.setLookAndFeel(LookAndFeelSelector.LAF.METAL);
+        SwingUtilities.updateComponentTreeUI(this);
+    }//GEN-LAST:event_rdbMetalLafActionPerformed
+
+    private void btnBuscarSrcFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarSrcFilePathActionPerformed
+        // TODO add your handling code here:
+        JFileChooser chooser = new JFileChooser();
+        chooser.setFileFilter(new FileNameExtensionFilter("archivo algor [*.algor]", "algor"));
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            txtSourceFilePath.setText(chooser.getSelectedFile().getAbsolutePath());
+            jtaSourceFile.setText(FileManager.loadFile(new File(txtSourceFilePath.getText())).toString());
+        }
+}//GEN-LAST:event_btnBuscarSrcFilePathActionPerformed
+
+    private void mnuCompilarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuCompilarActionPerformed
+        // TODO add your handling code here:
+        compilar(txtSourceFilePath.getText(), txtOutFilePath.getText());
+    }//GEN-LAST:event_mnuCompilarActionPerformed
+
+    private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_btnSalirActionPerformed
+
     /**
-    * @param args the command line arguments
-    */
+     * @param args the command line arguments
+     */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
+
             public void run() {
                 new JalgorGM().setVisible(true);
             }
@@ -372,21 +500,78 @@ public class JalgorGM extends javax.swing.JFrame {
     }
 
     private void limpiar() {
+        txtSourceFilePath.setText("path archivo fuente");
+        txtOutFilePath.setText("path archivo salida");
+        jtaSourceFile.setText("");
+        jtaOutFile.setText("");
+        jtaSalidaJalgor.setText("");
     }
 
     private void compilar(String sourceFilePath, String outFilePath) {
-    }
+        try {
+            JalgorInterpreter ji = new JalgorInterpreter(sourceFilePath, outFilePath);
+            ji.start();
 
+            if (JalgorInterpreter.getErrores().size() > 0 || ji.hayErrorEnLineaCodigo()) {
+                StringBuilder sbErrores = new StringBuilder();
+                for (InterpreterError ie : JalgorInterpreter.getErrores()) {
+                    sbErrores.append(ie.getMensaje()).append(System.getProperty("line.separator"));
+                }
+                if (sbErrores.length() > 0) {
+                    sbErrores.append(System.getProperty("line.separator"));
+                }
+                sbErrores.append(ji.getCodeLineErrors());
+                jtaSalidaJalgor.setText(sbErrores.toString());
+
+
+                // formatting source textarea
+                class JtaUtils  {
+
+                    //Document doc = jtaSourceFile.getDocument();
+                    public String getLineText(int lineNumber) {
+                        try {
+                            
+                            int startIndex = jtaSourceFile.getLineStartOffset(lineNumber);
+                            int endIndex = jtaSourceFile.getLineEndOffset(lineNumber);
+                            java.lang.String line = jtaSourceFile.getText().substring(startIndex, endIndex - startIndex);
+                            return line;
+                        } catch (BadLocationException ex) {
+                            return "";
+                        }
+                    }
+                }
+                JtaUtils jtaUtils = new JtaUtils();
+                Pattern pat = Pattern.compile("\\d+");
+                Matcher mat = null;
+                for (String line : ji.getCodeLineErrors().toString().split(System.getProperty("line.separator"))) {
+                    mat = pat.matcher(line);
+                    //int numLine = (mat.find(0) ? Integer.parseInt(line.substring(mat.start(), mat.end())) : 0);
+                    int numLine = (mat.find(0) ? Integer.parseInt(mat.group()) - 1 : 0);
+                    JOptionPane.showMessageDialog(this, jtaUtils.getLineText(numLine));
+                    break;
+                }
+                return;
+            }
+            jtaOutFile.setText(FileManager.loadFile(new File(outFilePath)).toString());
+            jtaSalidaJalgor.setText("Archivo " + outFilePath + " creado exitosamente");
+        } catch (InvalidFileNameException ex) {
+            Logger.getLogger(JalgorGM.class.getName()).log(Level.SEVERE, null, ex);
+            jtaSalidaJalgor.setText(ex.getMessage());
+        }
+
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgrLaf;
     private javax.swing.JButton btnBuscarOutFilePath;
     private javax.swing.JButton btnBuscarSrcFilePath;
     private javax.swing.JButton btnCompilar;
     private javax.swing.JButton btnLimpiar;
-    private javax.swing.JPanel jPanel1;
+    private javax.swing.JButton btnSalir;
+    private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTextArea jtaOutFile;
@@ -413,5 +598,4 @@ public class JalgorGM extends javax.swing.JFrame {
     private javax.swing.JTextField txtOutFilePath;
     private javax.swing.JTextField txtSourceFilePath;
     // End of variables declaration//GEN-END:variables
-
 }

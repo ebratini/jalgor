@@ -112,7 +112,7 @@ public class JalgorInterpreter {
         }
     }
 
-    private boolean hayErrorEnLineaCodigo() {
+    public boolean hayErrorEnLineaCodigo() {
         boolean hayError = false;
         for (CodeLine cl : codeLines) {
             if (cl.getErrores().size() > 0) {
@@ -123,12 +123,37 @@ public class JalgorInterpreter {
         return hayError;
     }
 
-    private void printCodeLineErrors() {
+    public void printCodeLineErrors() {
+        System.out.println(getCodeLineErrors().toString());
+    }
+
+    public StringBuilder getCodeLineErrors() {
+        StringBuilder sbCodeLneErrors = new StringBuilder();
         for (CodeLine cl : codeLines) {
             for (InterpreterError ie : cl.getErrores()) {
-                System.out.format("%-3d %s", cl.getLineNumber(), ie.getMensaje());
+                sbCodeLneErrors.append(String.format("Linea: %-3d %s", cl.getLineNumber(), ie.getMensaje()));
             }
         }
+        return sbCodeLneErrors;
+    }
+
+    public StringBuilder getParsedStatements() {
+        StringBuilder sbParsedStatements = new StringBuilder();
+
+        // lo constante
+        sbParsedStatements.append("#include <iostream>").append(System.getProperty("line.separator"));
+        sbParsedStatements.append("using namespace std;").append(System.getProperty("line.separator"));
+        sbParsedStatements.append(System.getProperty("line.separator"));
+
+        for (Statement stm : statements) {
+            sbParsedStatements.append(stm.getParsedValue()).append(System.getProperty("line.separator"));
+            if (stm instanceof ProgramaStatement) {
+                for (Statement prgStm : ((ProgramaStatement) stm).getBlockStatements()) {
+                    sbParsedStatements.append(prgStm.getParsedValue()).append(System.getProperty("line.separator"));
+                }
+            }
+        }
+        return sbParsedStatements;
     }
 
     public void start() {
@@ -141,20 +166,7 @@ public class JalgorInterpreter {
         as.go();
         if (!getStatements().contains(null) && !hayErrorEnLineaCodigo()) {
             // imprime archivo
-            StringBuilder fileContent = new StringBuilder();
-            // lo constante
-            fileContent.append("#include <iostream>").append(System.getProperty("line.separator"));
-            fileContent.append("using namespace std;").append(System.getProperty("line.separator"));
-            fileContent.append(System.getProperty("line.separator"));
-
-            for (Statement stm : statements) {
-                fileContent.append(stm.getParsedValue()).append(System.getProperty("line.separator"));
-                if (stm instanceof ProgramaStatement) {
-                    for (Statement prgStm : ((ProgramaStatement) stm).getBlockStatements()) {
-                        fileContent.append(prgStm.getParsedValue()).append(System.getProperty("line.separator"));
-                    }
-                }
-            }
+            StringBuilder fileContent = getParsedStatements();
             FileManager.writeToFile(fileContent, new File(outFilePath), false);
             System.out.println("Archivo " + outFilePath + " creado exitosamente");
         } else {

@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import org.uasd.jalgor.business.InvalidCommandLineParamException;
 import org.uasd.jalgor.business.InvalidFileNameException;
 import org.uasd.jalgor.business.JalgorInterpreter;
@@ -61,16 +60,18 @@ public class UIJalgor {
         UIJalgor uiJalgor = new UIJalgor();
         uiJalgor.initJalgor(args);
     }
-    
+
     private void initJalgor(String[] args) {
         try {
-            /*if (args.length < 2) {
+            if (args.length < 1) {
                 startGraphicMode();
                 return;
-            }*/
-            String[] params = JOptionPane.showInputDialog("Digite parametros de archivo entrada y salida separados por ;").split(";");
-            args = new String[]{"-i", params[0], "-o", params[1]};
+            }
             validarEntrada(args);
+            if (!getCmdLneArgs().get("-gui").equals("0")) {
+                startGraphicMode();
+                return;
+            }
             try {
                 new JalgorInterpreter(cmdLneArgs.get("-i"), cmdLneArgs.get("-o")).start();
             } catch (InvalidFileNameException ex) {
@@ -104,35 +105,35 @@ public class UIJalgor {
     }
 
     private void validarEntrada(String[] args) throws InvalidCommandLineParamException {
-        if (args.length >= 2) {
-            if ((args.length % 2) != 0) {
-                String excMessage = "Una excepcion de tipo InvalidCommandLineParamException ha ocurrido.\n";
-                excMessage += "Revise el numero de argumentos enviados\n";
-                printCmdLneArgDesc();
-                throw new InvalidCommandLineParamException(excMessage);
-            } else {
-                for (int i = 0, j = 1; i < args.length; i += 2, j += 2) {
-                    if (args[i].equalsIgnoreCase("-i")) {
-                        if (!new File(args[j]).exists()) {
-                            String excMessage = "Una excepcion de tipo InvalidCommandLineParamException ha ocurrido.\n";
-                            excMessage += "Verifique el nombre/existencia de archivo\n";
-                            throw new InvalidCommandLineParamException(excMessage);
-                        }
-                    }
-
-                    if (cmdLneArgs.containsKey(args[i].toLowerCase())) {
-                        cmdLneArgs.put(args[i], args[j]);
-                    } else {
+        //if (args.length >= 2) {
+        if ((args.length % 2) != 0) {
+            String excMessage = "Una excepcion de tipo InvalidCommandLineParamException ha ocurrido.\n";
+            excMessage += "Revise el numero de argumentos enviados\n";
+            printCmdLneArgDesc();
+            throw new InvalidCommandLineParamException(excMessage);
+        } else {
+            for (int i = 0, j = 1; i < args.length; i += 2, j += 2) {
+                if (args[i].equalsIgnoreCase("-i")) {
+                    if (!new File(args[j]).exists()) {
                         String excMessage = "Una excepcion de tipo InvalidCommandLineParamException ha ocurrido.\n";
-                        excMessage += "Linea de comando no reconocida.\n";
-                        excMessage += "Opciones Validas : " + Arrays.asList(cmdLneArgs.keySet()) + "\nHelp:\n" + getAvailableCmdLneOps();
+                        excMessage += "Verifique el nombre/existencia de archivo\n";
                         throw new InvalidCommandLineParamException(excMessage);
                     }
                 }
+
+                if (cmdLneArgs.containsKey(args[i].toLowerCase())) {
+                    cmdLneArgs.put(args[i], args[j]);
+                } else {
+                    String excMessage = "Una excepcion de tipo InvalidCommandLineParamException ha ocurrido.\n";
+                    excMessage += "Linea de comando no reconocida.\n";
+                    excMessage += "Opciones Validas : " + Arrays.asList(cmdLneArgs.keySet()) + "\nHelp:\n" + getAvailableCmdLneOps();
+                    throw new InvalidCommandLineParamException(excMessage);
+                }
             }
         }
+        //}
     }
-    
+
     private void startGraphicMode() {
         JalgorGM jgm = new JalgorGM();
         jgm.setLocationByPlatform(true);
