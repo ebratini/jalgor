@@ -90,9 +90,7 @@ public class JalgorInterpreter {
         String[] lines = sbCodeLines.toString().split(System.getProperty("line.separator"));
         int i = 1;
         for (String line : lines) {
-            if (line.length() > 0 && !line.trim().isEmpty()) {
-                codeLines.add(new CodeLine(i++, line));
-            }
+            codeLines.add(new CodeLine(i++, line));
         }
     }
 
@@ -128,7 +126,7 @@ public class JalgorInterpreter {
     private void printCodeLineErrors() {
         for (CodeLine cl : codeLines) {
             for (InterpreterError ie : cl.getErrores()) {
-                System.out.format("%d %s", cl.getLineNumber(), ie.getMensaje());
+                System.out.format("%-3d %s", cl.getLineNumber(), ie.getMensaje());
             }
         }
     }
@@ -144,16 +142,21 @@ public class JalgorInterpreter {
         if (!getStatements().contains(null) && !hayErrorEnLineaCodigo()) {
             // imprime archivo
             StringBuilder fileContent = new StringBuilder();
+            // lo constante
+            fileContent.append("#include <iostream>").append(System.getProperty("line.separator"));
+            fileContent.append("using namespace std;").append(System.getProperty("line.separator"));
+            fileContent.append(System.getProperty("line.separator"));
+
             for (Statement stm : statements) {
+                fileContent.append(stm.getParsedValue()).append(System.getProperty("line.separator"));
                 if (stm instanceof ProgramaStatement) {
                     for (Statement prgStm : ((ProgramaStatement) stm).getBlockStatements()) {
-                        fileContent.append(prgStm.toString()).append(System.getProperty("line.separator"));
+                        fileContent.append(prgStm.getParsedValue()).append(System.getProperty("line.separator"));
                     }
-                } else {
-                    fileContent.append(stm.toString()).append(System.getProperty("line.separator"));
                 }
             }
             FileManager.writeToFile(fileContent, new File(outFilePath), false);
+            System.out.println("Archivo " + outFilePath + " creado exitosamente");
         } else {
             // imprime errores
             if (errores.size() > 0) {

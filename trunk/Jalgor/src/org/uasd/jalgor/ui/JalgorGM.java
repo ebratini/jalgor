@@ -38,6 +38,8 @@ public class JalgorGM extends javax.swing.JFrame {
 
     /** Creates new form JalgorGM */
     public JalgorGM() {
+        LookAndFeelSelector.setLookAndFeel(LookAndFeelSelector.LAF.WINDOWS);
+        setLocationByPlatform(true);
         initComponents();
     }
 
@@ -50,38 +52,45 @@ public class JalgorGM extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        bgrLaf = new javax.swing.ButtonGroup();
         statusPanel = new javax.swing.JPanel();
         javax.swing.JSeparator statusPanelSeparator = new javax.swing.JSeparator();
         statusMessageLabel = new javax.swing.JLabel();
         statusAnimationLabel = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jTextField1 = new javax.swing.JTextField();
-        btnBuscar = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea2 = new javax.swing.JTextArea();
-        jTextField2 = new javax.swing.JTextField();
-        btnBuscar1 = new javax.swing.JButton();
-        jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        pnlBotonesAccion = new javax.swing.JPanel();
+        btnCompilar = new javax.swing.JButton();
+        btnLimpiar = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        jTextArea3 = new javax.swing.JTextArea();
-        jLabel1 = new javax.swing.JLabel();
-        jMenuBar1 = new javax.swing.JMenuBar();
-        jMenu1 = new javax.swing.JMenu();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem5 = new javax.swing.JMenuItem();
+        jtaSalidaJalgor = new javax.swing.JTextArea();
+        lblSalidaJalgor = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
+        jSplitPane1 = new javax.swing.JSplitPane();
+        pnlSourceFile = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jtaSourceFile = new javax.swing.JTextArea();
+        txtSourceFilePath = new javax.swing.JTextField();
+        btnBuscarSrcFilePath = new javax.swing.JButton();
+        pnlOutFile = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jtaOutFile = new javax.swing.JTextArea();
+        txtOutFilePath = new javax.swing.JTextField();
+        btnBuscarOutFilePath = new javax.swing.JButton();
+        mnuMenuBar = new javax.swing.JMenuBar();
+        mnuJalgor = new javax.swing.JMenu();
+        mnuCompilar = new javax.swing.JMenuItem();
+        mnuLimpiarCampos = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
-        jMenuItem6 = new javax.swing.JMenuItem();
-        jMenu2 = new javax.swing.JMenu();
-        jRadioButtonMenuItem1 = new javax.swing.JRadioButtonMenuItem();
-        jRadioButtonMenuItem2 = new javax.swing.JRadioButtonMenuItem();
-        jRadioButtonMenuItem3 = new javax.swing.JRadioButtonMenuItem();
-        jMenu3 = new javax.swing.JMenu();
-        jMenuItem7 = new javax.swing.JMenuItem();
+        mnuSalir = new javax.swing.JMenuItem();
+        mnuLaf = new javax.swing.JMenu();
+        rdbWindowsLaf = new javax.swing.JRadioButtonMenuItem();
+        rdbNimbusLaf = new javax.swing.JRadioButtonMenuItem();
+        rdbMetalLaf = new javax.swing.JRadioButtonMenuItem();
+        mnuInfo = new javax.swing.JMenu();
+        mnuAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Jalgor: Algorithm Interpreter");
+        setResizable(false);
 
         statusAnimationLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
 
@@ -89,11 +98,11 @@ public class JalgorGM extends javax.swing.JFrame {
         statusPanel.setLayout(statusPanelLayout);
         statusPanelLayout.setHorizontalGroup(
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
+            .addComponent(statusPanelSeparator, javax.swing.GroupLayout.DEFAULT_SIZE, 857, Short.MAX_VALUE)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(statusMessageLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 755, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 837, Short.MAX_VALUE)
                 .addComponent(statusAnimationLabel)
                 .addContainerGap())
         );
@@ -108,110 +117,189 @@ public class JalgorGM extends javax.swing.JFrame {
                 .addGap(3, 3, 3))
         );
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        pnlBotonesAccion.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        jTextField1.setText("path archivo fuente");
+        btnCompilar.setText("Compilar");
 
-        btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/searchglass_vflip.gif"))); // NOI18N
-        btnBuscar.setBorder(null);
-        btnBuscar.setEnabled(false);
-        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarActionPerformed(evt);
-            }
-        });
+        btnLimpiar.setText("Limpiar");
 
-        jTextArea2.setColumns(20);
-        jTextArea2.setRows(5);
-        jScrollPane2.setViewportView(jTextArea2);
+        javax.swing.GroupLayout pnlBotonesAccionLayout = new javax.swing.GroupLayout(pnlBotonesAccion);
+        pnlBotonesAccion.setLayout(pnlBotonesAccionLayout);
+        pnlBotonesAccionLayout.setHorizontalGroup(
+            pnlBotonesAccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlBotonesAccionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlBotonesAccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(btnCompilar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnLimpiar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnlBotonesAccionLayout.setVerticalGroup(
+            pnlBotonesAccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlBotonesAccionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnCompilar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(237, Short.MAX_VALUE))
+        );
 
-        jTextField2.setText("path archivo salida");
+        jtaSalidaJalgor.setColumns(20);
+        jtaSalidaJalgor.setEditable(false);
+        jtaSalidaJalgor.setRows(5);
+        jScrollPane3.setViewportView(jtaSalidaJalgor);
 
-        btnBuscar1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/searchglass_vflip.gif"))); // NOI18N
-        btnBuscar1.setBorder(null);
-        btnBuscar1.setEnabled(false);
-        btnBuscar1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscar1ActionPerformed(evt);
-            }
-        });
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
-        jButton1.setText("Compilar");
-
-        jButton2.setText("Limpiar");
+        lblSalidaJalgor.setText("Salida");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
-                        .addContainerGap(17, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addContainerGap(17, Short.MAX_VALUE))))
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(192, Short.MAX_VALUE))
+            .addGap(0, 100, Short.MAX_VALUE)
         );
 
-        jTextArea3.setColumns(20);
-        jTextArea3.setRows(5);
-        jScrollPane3.setViewportView(jTextArea3);
+        jSplitPane1.setResizeWeight(1.0);
 
-        jLabel1.setText("Salida");
+        pnlSourceFile.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnlSourceFile.setMinimumSize(new java.awt.Dimension(10, 10));
+        pnlSourceFile.setPreferredSize(new java.awt.Dimension(347, 348));
 
-        jMenu1.setText("Jalgor");
+        jtaSourceFile.setColumns(20);
+        jtaSourceFile.setRows(5);
+        jScrollPane1.setViewportView(jtaSourceFile);
 
-        jMenuItem4.setText("Compilar");
-        jMenu1.add(jMenuItem4);
+        txtSourceFilePath.setText("path archivo fuente");
 
-        jMenuItem5.setText("Limpiar Campos");
-        jMenu1.add(jMenuItem5);
-        jMenu1.add(jSeparator1);
+        btnBuscarSrcFilePath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/searchglass_vflip.gif"))); // NOI18N
+        btnBuscarSrcFilePath.setBorder(null);
+        btnBuscarSrcFilePath.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarSrcFilePathActionPerformed(evt);
+            }
+        });
 
-        jMenuItem6.setText("Salir");
-        jMenu1.add(jMenuItem6);
+        javax.swing.GroupLayout pnlSourceFileLayout = new javax.swing.GroupLayout(pnlSourceFile);
+        pnlSourceFile.setLayout(pnlSourceFileLayout);
+        pnlSourceFileLayout.setHorizontalGroup(
+            pnlSourceFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlSourceFileLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlSourceFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSourceFileLayout.createSequentialGroup()
+                        .addComponent(txtSourceFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnBuscarSrcFilePath)))
+                .addContainerGap())
+        );
+        pnlSourceFileLayout.setVerticalGroup(
+            pnlSourceFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlSourceFileLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlSourceFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnBuscarSrcFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSourceFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
-        jMenuBar1.add(jMenu1);
+        jSplitPane1.setLeftComponent(pnlSourceFile);
 
-        jMenu2.setText("L&F");
+        pnlOutFile.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pnlOutFile.setMinimumSize(new java.awt.Dimension(10, 10));
+        pnlOutFile.setPreferredSize(new java.awt.Dimension(372, 350));
 
-        jRadioButtonMenuItem1.setSelected(true);
-        jRadioButtonMenuItem1.setText("Nimbus");
-        jMenu2.add(jRadioButtonMenuItem1);
+        jtaOutFile.setColumns(20);
+        jtaOutFile.setRows(5);
+        jScrollPane2.setViewportView(jtaOutFile);
 
-        jRadioButtonMenuItem2.setSelected(true);
-        jRadioButtonMenuItem2.setText("Metal");
-        jMenu2.add(jRadioButtonMenuItem2);
+        txtOutFilePath.setText("path archivo salida");
 
-        jRadioButtonMenuItem3.setSelected(true);
-        jRadioButtonMenuItem3.setText("Windows");
-        jMenu2.add(jRadioButtonMenuItem3);
+        btnBuscarOutFilePath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/searchglass_vflip.gif"))); // NOI18N
+        btnBuscarOutFilePath.setBorder(null);
+        btnBuscarOutFilePath.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarOutFilePathActionPerformed(evt);
+            }
+        });
 
-        jMenuBar1.add(jMenu2);
+        javax.swing.GroupLayout pnlOutFileLayout = new javax.swing.GroupLayout(pnlOutFile);
+        pnlOutFile.setLayout(pnlOutFileLayout);
+        pnlOutFileLayout.setHorizontalGroup(
+            pnlOutFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlOutFileLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlOutFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOutFileLayout.createSequentialGroup()
+                        .addComponent(txtOutFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnBuscarOutFilePath)))
+                .addContainerGap())
+        );
+        pnlOutFileLayout.setVerticalGroup(
+            pnlOutFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlOutFileLayout.createSequentialGroup()
+                .addGap(14, 14, 14)
+                .addGroup(pnlOutFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnBuscarOutFilePath)
+                    .addComponent(txtOutFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
-        jMenu3.setText("?");
+        jSplitPane1.setRightComponent(pnlOutFile);
 
-        jMenuItem7.setText("About");
-        jMenu3.add(jMenuItem7);
+        mnuJalgor.setText("Jalgor");
+        mnuJalgor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuJalgorActionPerformed(evt);
+            }
+        });
 
-        jMenuBar1.add(jMenu3);
+        mnuCompilar.setText("Compilar");
+        mnuJalgor.add(mnuCompilar);
 
-        setJMenuBar(jMenuBar1);
+        mnuLimpiarCampos.setText("Limpiar Campos");
+        mnuJalgor.add(mnuLimpiarCampos);
+        mnuJalgor.add(jSeparator1);
+
+        mnuSalir.setText("Salir");
+        mnuJalgor.add(mnuSalir);
+
+        mnuMenuBar.add(mnuJalgor);
+
+        mnuLaf.setText("L&F");
+
+        bgrLaf.add(rdbWindowsLaf);
+        rdbWindowsLaf.setSelected(true);
+        rdbWindowsLaf.setText("Windows");
+        mnuLaf.add(rdbWindowsLaf);
+
+        bgrLaf.add(rdbNimbusLaf);
+        rdbNimbusLaf.setText("Nimbus");
+        mnuLaf.add(rdbNimbusLaf);
+
+        bgrLaf.add(rdbMetalLaf);
+        rdbMetalLaf.setText("Metal");
+        mnuLaf.add(rdbMetalLaf);
+
+        mnuMenuBar.add(mnuLaf);
+
+        mnuInfo.setText("?");
+
+        mnuAbout.setText("About");
+        mnuInfo.add(mnuAbout);
+
+        mnuMenuBar.add(mnuInfo);
+
+        setJMenuBar(mnuMenuBar);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -220,65 +308,57 @@ public class JalgorGM extends javax.swing.JFrame {
             .addComponent(statusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(737, Short.MAX_VALUE))
+                .addComponent(lblSalidaJalgor)
+                .addContainerGap(819, Short.MAX_VALUE))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane1))
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnBuscar1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jScrollPane2))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 837, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(pnlBotonesAccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(14, 14, 14)
+                        .addGap(67, 67, 67)
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, 24, Short.MAX_VALUE)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(btnBuscar1)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel1)
+                            .addComponent(pnlBotonesAccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(23, 23, 23)
+                .addComponent(lblSalidaJalgor)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+    private void btnBuscarSrcFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarSrcFilePathActionPerformed
         // TODO add your handling code here:
-}//GEN-LAST:event_btnBuscarActionPerformed
+}//GEN-LAST:event_btnBuscarSrcFilePathActionPerformed
 
-    private void btnBuscar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscar1ActionPerformed
+    private void btnBuscarOutFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarOutFilePathActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnBuscar1ActionPerformed
+    }//GEN-LAST:event_btnBuscarOutFilePathActionPerformed
+
+    private void mnuJalgorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuJalgorActionPerformed
+        // TODO add your handling code here:
+        this.dispose();
+    }//GEN-LAST:event_mnuJalgorActionPerformed
 
     /**
     * @param args the command line arguments
@@ -291,36 +371,47 @@ public class JalgorGM extends javax.swing.JFrame {
         });
     }
 
+    private void limpiar() {
+    }
+
+    private void compilar(String sourceFilePath, String outFilePath) {
+    }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnBuscar;
-    private javax.swing.JButton btnBuscar1;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JMenuItem jMenuItem4;
-    private javax.swing.JMenuItem jMenuItem5;
-    private javax.swing.JMenuItem jMenuItem6;
-    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.ButtonGroup bgrLaf;
+    private javax.swing.JButton btnBuscarOutFilePath;
+    private javax.swing.JButton btnBuscarSrcFilePath;
+    private javax.swing.JButton btnCompilar;
+    private javax.swing.JButton btnLimpiar;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem1;
-    private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem2;
-    private javax.swing.JRadioButtonMenuItem jRadioButtonMenuItem3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea jTextArea3;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JTextArea jtaOutFile;
+    private javax.swing.JTextArea jtaSalidaJalgor;
+    private javax.swing.JTextArea jtaSourceFile;
+    private javax.swing.JLabel lblSalidaJalgor;
+    private javax.swing.JMenuItem mnuAbout;
+    private javax.swing.JMenuItem mnuCompilar;
+    private javax.swing.JMenu mnuInfo;
+    private javax.swing.JMenu mnuJalgor;
+    private javax.swing.JMenu mnuLaf;
+    private javax.swing.JMenuItem mnuLimpiarCampos;
+    private javax.swing.JMenuBar mnuMenuBar;
+    private javax.swing.JMenuItem mnuSalir;
+    private javax.swing.JPanel pnlBotonesAccion;
+    private javax.swing.JPanel pnlOutFile;
+    private javax.swing.JPanel pnlSourceFile;
+    private javax.swing.JRadioButtonMenuItem rdbMetalLaf;
+    private javax.swing.JRadioButtonMenuItem rdbNimbusLaf;
+    private javax.swing.JRadioButtonMenuItem rdbWindowsLaf;
     private javax.swing.JLabel statusAnimationLabel;
     private javax.swing.JLabel statusMessageLabel;
     private javax.swing.JPanel statusPanel;
+    private javax.swing.JTextField txtOutFilePath;
+    private javax.swing.JTextField txtSourceFilePath;
     // End of variables declaration//GEN-END:variables
 
 }
