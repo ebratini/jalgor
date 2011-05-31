@@ -26,9 +26,7 @@ package org.uasd.jalgor.model;
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.AnalizadorLexico;
 import org.uasd.jalgor.business.AnalizadorSemantico;
-import org.uasd.jalgor.business.AnalizadorSintactico;
 import org.uasd.jalgor.business.InterpreterError;
-import org.uasd.jalgor.business.JalgorInterpreter;
 
 /**
  *

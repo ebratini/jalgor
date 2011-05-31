@@ -37,6 +37,7 @@ public class AnalizadorSintactico {
 
     // TODO: crear metodo que construye expresiones y arbol binario
     private AnalizadorLexico al = new AnalizadorLexico();
+    private List<CodeLine> codeLines = new ArrayList<CodeLine>();
     private List<String> errores = new ArrayList<String>();
     private int currLinePos = 0;
     private int ambitoStatementSeq;
@@ -67,10 +68,20 @@ public class AnalizadorSintactico {
         return errores;
     }
 
-    public void go() {
+    public List<CodeLine> getCodeLines() {
+        return codeLines;
+    }
+
+    public void setCodeLines(List<CodeLine> codeLines) {
+        this.codeLines = codeLines;
+    }
+    
+    public List<Statement> collectStatements() {
+        List<Statement> statements = new ArrayList<Statement>();
         while (hasNextCodeLine()) {
-            JalgorInterpreter.getStatements().add(analizeCodeLine());
+            statements.add(analizeCodeLine());
         }
+        return statements;
     }
 
     private boolean hasNextCodeLine() {
@@ -82,8 +93,8 @@ public class AnalizadorSintactico {
 
     private CodeLine getNextCodeLine() {
         CodeLine codeLine = null;
-        if (currLinePos < JalgorInterpreter.getCodeLines().size()) {
-            codeLine = JalgorInterpreter.getCodeLines().get(currLinePos);
+        if (currLinePos < codeLines.size()) {
+            codeLine = codeLines.get(currLinePos);
             while (codeLine.getOrigValue().trim().isEmpty()) {
                 currLinePos++;
                 codeLine = getNextCodeLine();
@@ -102,9 +113,9 @@ public class AnalizadorSintactico {
     }
 
     // metodo para hallar la sentencia programa
-    private ProgramaStatement searchProgramaStatement() {
+    private ProgramaStatement searchProgramaStatement(List<Statement> statements) {
         ProgramaStatement ps = null;
-        for (Statement stm : JalgorInterpreter.getStatements()) {
+        for (Statement stm : statements) {
             if (stm.getTipoSatement().equals(Statement.Keyword.PROGRAMA)) {
                 ps = (ProgramaStatement) stm;
                 break;

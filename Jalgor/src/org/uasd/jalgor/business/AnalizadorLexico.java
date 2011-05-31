@@ -60,7 +60,6 @@ public class AnalizadorLexico {
             case ' ':
             case '\t':
                 // mover el indice hasta que el char sea diferente de espacio o tab
-                //while (chrCodeLine[currPos] == ' ' || chrCodeLine[currPos] == '\t') {
                 while (currChar == ' ' || currChar == '\t') {
                     //currPos++;
                     currChar = getNextChar();
@@ -76,11 +75,6 @@ public class AnalizadorLexico {
                     token = getNextToken();
                     break;
                 }
-                /*if (currChar == '/' && (hasNextChar() && chrCodeLine[currPos + 1] == '/')) {
-                    token = new ComentarioToken();
-                    currPos += 2;
-                    break;
-                }*/
                 token = new OperadorAritmetico(Operador.getOpNames().get(String.valueOf(currChar)));
                 //currPos++;
                 break;
@@ -161,7 +155,7 @@ public class AnalizadorLexico {
                 while ((Character.isLetterOrDigit(currChar) || currChar == '_') && currChar != '\0') {
                     var.append(currChar);
                     //currPos++;
-                    currChar = getNextChar();// chrCodeLine[currPos];
+                    currChar = getNextChar();
                 }
                 if (var.toString().equals("com")) {
                    token = new ComentarioToken();
