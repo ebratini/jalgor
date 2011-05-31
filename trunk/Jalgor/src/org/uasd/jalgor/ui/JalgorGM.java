@@ -50,7 +50,6 @@ public class JalgorGM extends javax.swing.JFrame {
 
     /** Creates new form JalgorGM */
     public JalgorGM() {
-        LookAndFeelSelector.setLookAndFeel(LookAndFeelSelector.LAF.WINDOWS);
         setLocationByPlatform(true);
         initComponents();
     }

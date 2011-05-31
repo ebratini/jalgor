@@ -29,7 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JOptionPane;
 import org.uasd.jalgor.business.InvalidCommandLineParamException;
 import org.uasd.jalgor.business.InvalidFileNameException;
 import org.uasd.jalgor.business.JalgorInterpreter;
@@ -134,6 +133,7 @@ public class UIJalgor {
     }
 
     private void startGraphicMode() {
+        LookAndFeelSelector.setLookAndFeel(LookAndFeelSelector.LAF.WINDOWS);
         JalgorGM jgm = new JalgorGM();
         jgm.setLocationByPlatform(true);
         jgm.setVisible(true);
