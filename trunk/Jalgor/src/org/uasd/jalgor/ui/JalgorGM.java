@@ -34,13 +34,9 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.text.BadLocationException;
 import org.uasd.jalgor.business.InterpreterError;
 import org.uasd.jalgor.business.InvalidFileNameException;
 import org.uasd.jalgor.business.JalgorInterpreter;
@@ -137,6 +133,7 @@ public class JalgorGM extends javax.swing.JFrame {
         pnlBotonesAccion.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         btnCompilar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/traductor65x65.png"))); // NOI18N
+        btnCompilar.setToolTipText("Compilar Archivo Fuente");
         btnCompilar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCompilarActionPerformed(evt);
@@ -144,6 +141,7 @@ public class JalgorGM extends javax.swing.JFrame {
         });
 
         btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/escoba_35x35.png"))); // NOI18N
+        btnLimpiar.setToolTipText("Limpiar Campos");
         btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnLimpiarActionPerformed(evt);
@@ -151,6 +149,7 @@ public class JalgorGM extends javax.swing.JFrame {
         });
 
         btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/salir2_35x35.png"))); // NOI18N
+        btnSalir.setToolTipText("Salir de Aplicacion");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalirActionPerformed(evt);
@@ -165,8 +164,8 @@ public class JalgorGM extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(pnlBotonesAccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(btnCompilar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 58, Short.MAX_VALUE)
-                    .addComponent(btnLimpiar, javax.swing.GroupLayout.Alignment.LEADING, 0, 0, Short.MAX_VALUE)
-                    .addComponent(btnSalir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 36, Short.MAX_VALUE))
+                    .addComponent(btnLimpiar, javax.swing.GroupLayout.Alignment.LEADING, 0, 58, Short.MAX_VALUE)
+                    .addComponent(btnSalir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 58, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlBotonesAccionLayout.setVerticalGroup(
@@ -177,8 +176,8 @@ public class JalgorGM extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(194, Short.MAX_VALUE))
+                .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(191, Short.MAX_VALUE))
         );
 
         jtaSalidaJalgor.setColumns(20);
@@ -212,25 +211,21 @@ public class JalgorGM extends javax.swing.JFrame {
         pnlSourceFileLayout.setHorizontalGroup(
             pnlSourceFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSourceFileLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlSourceFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
-                    .addGroup(pnlSourceFileLayout.createSequentialGroup()
-                        .addComponent(txtSourceFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnBuscarSrcFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                .addComponent(txtSourceFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, 298, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(btnBuscarSrcFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE)
         );
         pnlSourceFileLayout.setVerticalGroup(
             pnlSourceFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSourceFileLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlSourceFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlSourceFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnBuscarSrcFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtSourceFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE))
         );
 
         jSplitPane1.setLeftComponent(pnlSourceFile);
@@ -261,26 +256,22 @@ public class JalgorGM extends javax.swing.JFrame {
         pnlOutFile.setLayout(pnlOutFileLayout);
         pnlOutFileLayout.setHorizontalGroup(
             pnlOutFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlOutFileLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(pnlOutFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
-                    .addGroup(pnlOutFileLayout.createSequentialGroup()
-                        .addComponent(txtOutFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, 313, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnBuscarOutFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlOutFileLayout.createSequentialGroup()
+                .addComponent(txtOutFilePath, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(btnBuscarOutFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 368, Short.MAX_VALUE)
         );
         pnlOutFileLayout.setVerticalGroup(
             pnlOutFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlOutFileLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlOutFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(pnlOutFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnBuscarOutFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtOutFilePath, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 315, Short.MAX_VALUE))
         );
 
         jSplitPane1.setRightComponent(pnlOutFile);
@@ -516,9 +507,8 @@ public class JalgorGM extends javax.swing.JFrame {
             JalgorInterpreter ji = new JalgorInterpreter(sourceFilePath, outFilePath);
             if (jtaSourceFile.getText().length() < 1) {
                 jtaSourceFile.setText(FileManager.loadFile(new File(txtSourceFilePath.getText())).toString());
-            }
+        }
             ji.start();
-
             if (JalgorInterpreter.getErrores().size() > 0 || ji.hayErrorEnLineaCodigo()) {
                 StringBuilder sbErrores = new StringBuilder();
                 for (InterpreterError ie : JalgorInterpreter.getErrores()) {
@@ -532,12 +522,11 @@ public class JalgorGM extends javax.swing.JFrame {
                 return;
             }
             jtaOutFile.setText(FileManager.loadFile(new File(outFilePath)).toString());
-            jtaSalidaJalgor.setText("Archivo " + outFilePath + " creado exitosamente");
+            jtaSalidaJalgor.setText("Success!");
         } catch (InvalidFileNameException ex) {
             Logger.getLogger(JalgorGM.class.getName()).log(Level.SEVERE, null, ex);
             jtaSalidaJalgor.setText(ex.getMessage());
         }
-
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgrLaf;

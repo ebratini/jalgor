@@ -24,7 +24,6 @@
 package org.uasd.jalgor.business;
 
 import java.util.Collections;
-import java.util.LinkedList;
 import org.uasd.jalgor.model.Variable;
 
 /**

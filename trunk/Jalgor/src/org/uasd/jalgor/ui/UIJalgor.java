@@ -105,7 +105,6 @@ public class UIJalgor {
     }
 
     private void validarEntrada(String[] args) throws InvalidCommandLineParamException {
-        //if (args.length >= 2) {
         if ((args.length % 2) != 0) {
             String excMessage = "Una excepcion de tipo InvalidCommandLineParamException ha ocurrido.\n";
             excMessage += "Revise el numero de argumentos enviados\n";
@@ -131,7 +130,6 @@ public class UIJalgor {
                 }
             }
         }
-        //}
     }
 
     private void startGraphicMode() {

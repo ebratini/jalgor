@@ -36,9 +36,9 @@ public class JalgorInterpreter {
 
     private String sourceFilePath;
     private String outFilePath;
-    private static StringBuilder sbCodeLines;
-    private static List<CodeLine> codeLines = new ArrayList<CodeLine>();
-    private static List<Statement> statements = new ArrayList<Statement>();
+    private StringBuilder sbCodeLines;
+    private List<CodeLine> codeLines = new ArrayList<CodeLine>();
+    private List<Statement> statements = new ArrayList<Statement>();
     private static List<Variable> variables = new ArrayList<Variable>();
     private static List<InterpreterError> errores = new ArrayList<InterpreterError>();
     private AnalizadorSintactico as = new AnalizadorSintactico(new AnalizadorLexico());
@@ -51,7 +51,7 @@ public class JalgorInterpreter {
         validateOutFileName(outFilePath);
         this.sourceFilePath = sourceFilePath;
         this.outFilePath = outFilePath;
-        JalgorInterpreter.sbCodeLines = FileManager.loadFile(new File(sourceFilePath));
+        this.sbCodeLines = FileManager.loadFile(new File(sourceFilePath));
     }
 
     public String getOutFilePath() {
@@ -62,11 +62,11 @@ public class JalgorInterpreter {
         return sourceFilePath;
     }
 
-    public static StringBuilder getSbCodeLines() {
+    public StringBuilder getSbCodeLines() {
         return sbCodeLines;
     }
 
-    public static List<Statement> getStatements() {
+    public List<Statement> getStatements() {
         return statements;
     }
 
@@ -78,12 +78,12 @@ public class JalgorInterpreter {
         return errores;
     }
 
-    public static List<CodeLine> getCodeLines() {
+    public List<CodeLine> getCodeLines() {
         return codeLines;
     }
 
-    public static void setCodeLines(List<CodeLine> codeLines) {
-        JalgorInterpreter.codeLines = codeLines;
+    public void setCodeLines(List<CodeLine> codeLines) {
+        this.codeLines = codeLines;
     }
 
     private void initCodeLines() {
@@ -92,6 +92,7 @@ public class JalgorInterpreter {
         for (String line : lines) {
             codeLines.add(new CodeLine(i++, line));
         }
+        as.setCodeLines(codeLines);
     }
 
     private void validateSourceFileName(String sourceFname) throws InvalidFileNameException {
@@ -163,12 +164,12 @@ public class JalgorInterpreter {
             return;
         }
         initCodeLines();
-        as.go();
-        if (!getStatements().contains(null) && !hayErrorEnLineaCodigo()) {
+        statements.addAll(as.collectStatements());
+        if (!statements.contains(null) && !hayErrorEnLineaCodigo()) {
             // imprime archivo
             StringBuilder fileContent = getParsedStatements();
             FileManager.writeToFile(fileContent, new File(outFilePath), false);
-            System.out.println("Archivo " + outFilePath + " creado exitosamente");
+            System.out.println("Success!");
         } else {
             // imprime errores
             if (errores.size() > 0) {

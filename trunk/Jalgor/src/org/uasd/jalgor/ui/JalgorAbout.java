@@ -62,6 +62,7 @@ public class JalgorAbout extends javax.swing.JDialog {
         javax.swing.JLabel lblAuthor = new javax.swing.JLabel();
         javax.swing.JLabel lblContributors = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
+        btnVerLicencia = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("About: Jalgor");
@@ -93,6 +94,8 @@ public class JalgorAbout extends javax.swing.JDialog {
             }
         });
 
+        btnVerLicencia.setText("Licencia");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -115,7 +118,9 @@ public class JalgorAbout extends javax.swing.JDialog {
                                 .addComponent(lblContributors, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(appDescLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap(404, Short.MAX_VALUE)
+                        .addContainerGap(329, Short.MAX_VALUE)
+                        .addComponent(btnVerLicencia)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1)))
                 .addContainerGap())
         );
@@ -140,7 +145,9 @@ public class JalgorAbout extends javax.swing.JDialog {
                             .addComponent(vendorLabel1)
                             .addComponent(lblContributors, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(btnVerLicencia))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -170,6 +177,7 @@ public class JalgorAbout extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnVerLicencia;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     // End of variables declaration//GEN-END:variables
