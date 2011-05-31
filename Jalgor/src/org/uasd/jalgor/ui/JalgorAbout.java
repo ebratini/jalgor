@@ -70,7 +70,7 @@ public class JalgorAbout extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("About: Jalgor");
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/imagenes/traductor2.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/images/traductor.png")));
         setResizable(false);
 
         appTitleLabel.setFont(appTitleLabel.getFont().deriveFont(appTitleLabel.getFont().getStyle() | java.awt.Font.BOLD, appTitleLabel.getFont().getSize()+4));
@@ -102,7 +102,7 @@ public class JalgorAbout extends javax.swing.JDialog {
 
         lblLicense.setText("<html>MIT License<br>http://www.opensource.org/licenses/mit-license.php</html>");
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/traductor_165x165.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/traductor_165x165.png"))); // NOI18N
 
         lblLicenseTtl1.setFont(lblLicenseTtl1.getFont().deriveFont(lblLicenseTtl1.getFont().getStyle() | java.awt.Font.BOLD));
         lblLicenseTtl1.setText("Repo:");
