@@ -102,7 +102,7 @@ public class JalgorGM extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Jalgor: Algorithm Interpreter");
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/imagenes/traductor2.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/images/traductor.png")));
         setResizable(false);
 
         statusAnimationLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -132,7 +132,7 @@ public class JalgorGM extends javax.swing.JFrame {
 
         pnlBotonesAccion.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        btnCompilar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/traductor_55x55.png"))); // NOI18N
+        btnCompilar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/traductor_55x55.png"))); // NOI18N
         btnCompilar.setToolTipText("Compilar Archivo Fuente");
         btnCompilar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -140,7 +140,7 @@ public class JalgorGM extends javax.swing.JFrame {
             }
         });
 
-        btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/escoba_35x35.png"))); // NOI18N
+        btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/escoba_35x35.png"))); // NOI18N
         btnLimpiar.setToolTipText("Limpiar Campos");
         btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -148,7 +148,7 @@ public class JalgorGM extends javax.swing.JFrame {
             }
         });
 
-        btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/salir2_35x35.png"))); // NOI18N
+        btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/salir2_35x35.png"))); // NOI18N
         btnSalir.setToolTipText("Salir de Aplicacion");
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -198,7 +198,7 @@ public class JalgorGM extends javax.swing.JFrame {
 
         txtSourceFilePath.setText("path archivo fuente");
 
-        btnBuscarSrcFilePath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/searchglass_vflip.gif"))); // NOI18N
+        btnBuscarSrcFilePath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/searchglass_vflip.gif"))); // NOI18N
         btnBuscarSrcFilePath.setBorder(null);
         btnBuscarSrcFilePath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -244,7 +244,7 @@ public class JalgorGM extends javax.swing.JFrame {
             }
         });
 
-        btnBuscarOutFilePath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/searchglass_vflip.gif"))); // NOI18N
+        btnBuscarOutFilePath.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/searchglass_vflip.gif"))); // NOI18N
         btnBuscarOutFilePath.setBorder(null);
         btnBuscarOutFilePath.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
