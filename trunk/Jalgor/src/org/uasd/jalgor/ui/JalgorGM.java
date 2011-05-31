@@ -102,7 +102,7 @@ public class JalgorGM extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Jalgor: Algorithm Interpreter");
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/imagenes/traductor2.JPG")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/imagenes/traductor2.png")));
         setResizable(false);
 
         statusAnimationLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -132,7 +132,7 @@ public class JalgorGM extends javax.swing.JFrame {
 
         pnlBotonesAccion.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        btnCompilar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/traductor65x65.png"))); // NOI18N
+        btnCompilar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/traductor_55x55.png"))); // NOI18N
         btnCompilar.setToolTipText("Compilar Archivo Fuente");
         btnCompilar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

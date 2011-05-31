@@ -55,82 +55,80 @@ public class JalgorAbout extends javax.swing.JDialog {
 
         lblAppLogo = new javax.swing.JLabel();
         javax.swing.JLabel appTitleLabel = new javax.swing.JLabel();
-        javax.swing.JLabel appDescLabel = new javax.swing.JLabel();
+        javax.swing.JLabel appDescLabel2 = new javax.swing.JLabel();
         javax.swing.JLabel appDescLabel1 = new javax.swing.JLabel();
-        javax.swing.JLabel vendorLabel = new javax.swing.JLabel();
-        javax.swing.JLabel vendorLabel1 = new javax.swing.JLabel();
+        javax.swing.JLabel lblAuthorTtl = new javax.swing.JLabel();
+        javax.swing.JLabel lblContributorsTtl = new javax.swing.JLabel();
         javax.swing.JLabel lblAuthor = new javax.swing.JLabel();
         javax.swing.JLabel lblContributors = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        javax.swing.JLabel lblLicence = new javax.swing.JLabel();
-        javax.swing.JLabel lblLicenceValue = new javax.swing.JLabel();
+        btnCerrar = new javax.swing.JButton();
+        javax.swing.JLabel lblLicenseTtl = new javax.swing.JLabel();
+        javax.swing.JLabel lblLicense = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("About: Jalgor");
         setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/imagenes/traductor2.JPG")));
+        setResizable(false);
 
         lblAppLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/traductor_165x165.png"))); // NOI18N
 
         appTitleLabel.setFont(appTitleLabel.getFont().deriveFont(appTitleLabel.getFont().getStyle() | java.awt.Font.BOLD, appTitleLabel.getFont().getSize()+4));
         appTitleLabel.setText("Jalgor");
 
-        appDescLabel.setText("<html>Basic algorithm interpreter that produce .cpp files ready to compile.</html>");
+        appDescLabel2.setText("<html>Basic algorithm interpreter that produce .cpp files ready to compile.</html>");
 
         appDescLabel1.setText("Algorithm Interpreter");
 
-        vendorLabel.setFont(vendorLabel.getFont().deriveFont(vendorLabel.getFont().getStyle() | java.awt.Font.BOLD));
-        vendorLabel.setText("Author:");
+        lblAuthorTtl.setFont(lblAuthorTtl.getFont().deriveFont(lblAuthorTtl.getFont().getStyle() | java.awt.Font.BOLD));
+        lblAuthorTtl.setText("Author:");
 
-        vendorLabel1.setFont(vendorLabel1.getFont().deriveFont(vendorLabel1.getFont().getStyle() | java.awt.Font.BOLD));
-        vendorLabel1.setText("Contributors:");
+        lblContributorsTtl.setFont(lblContributorsTtl.getFont().deriveFont(lblContributorsTtl.getFont().getStyle() | java.awt.Font.BOLD));
+        lblContributorsTtl.setText("Contributors:");
 
         lblAuthor.setText("Edwin Bratini <edwin.bratini@gmail.com>");
 
         lblContributors.setText("<html>Rafael Recio &lt;rafaelreciog@gmail.com&gt;<br>Eury Martinez &lt;eury.martinez@gmail.com&gt;</html>");
 
-        jButton1.setText("Cerrar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnCerrar.setText("Cerrar");
+        btnCerrar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnCerrarActionPerformed(evt);
             }
         });
 
-        lblLicence.setFont(lblLicence.getFont().deriveFont(lblLicence.getFont().getStyle() | java.awt.Font.BOLD));
-        lblLicence.setText("License:");
+        lblLicenseTtl.setFont(lblLicenseTtl.getFont().deriveFont(lblLicenseTtl.getFont().getStyle() | java.awt.Font.BOLD));
+        lblLicenseTtl.setText("License:");
 
-        lblLicenceValue.setText("MIT License");
+        lblLicense.setText("<html>MIT License<br>http://www.opensource.org/licenses/mit-license.php</html>");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(lblAppLogo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblAppLogo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblLicence)
-                            .addComponent(vendorLabel)
-                            .addComponent(vendorLabel1))
-                        .addGap(13, 13, 13)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblAuthor, javax.swing.GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
+                            .addComponent(appDescLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblLicenceValue)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
-                                .addComponent(jButton1))
-                            .addComponent(lblContributors, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(10, 10, 10))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(appTitleLabel)
-                        .addGap(259, 259, 259))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(appDescLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
-                        .addContainerGap())))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(171, 171, 171)
-                .addComponent(appDescLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)
+                                .addComponent(appTitleLabel)
+                                .addGap(259, 259, 259))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblLicenseTtl)
+                                    .addComponent(lblAuthorTtl)
+                                    .addComponent(lblContributorsTtl))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblLicense, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblContributors, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblAuthor, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)))
+                            .addComponent(appDescLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 340, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addContainerGap(448, Short.MAX_VALUE)
+                        .addComponent(btnCerrar)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -139,36 +137,36 @@ public class JalgorAbout extends javax.swing.JDialog {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(lblAppLogo, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(6, 6, 6)
                         .addComponent(appTitleLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(1, 1, 1)
                         .addComponent(appDescLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(appDescLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addComponent(appDescLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(vendorLabel)
+                            .addComponent(lblAuthorTtl)
                             .addComponent(lblAuthor, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(vendorLabel1)
-                            .addComponent(lblContributors, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(lblContributorsTtl)
+                            .addComponent(lblContributors, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblLicense, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblLicenseTtl))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblLicenceValue, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblLicence))
-                    .addComponent(jButton1))
+                .addComponent(btnCerrar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
         // TODO add your handling code here:
         this.dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnCerrarActionPerformed
 
     /**
     * @param args the command line arguments
@@ -188,7 +186,7 @@ public class JalgorAbout extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btnCerrar;
     private javax.swing.JLabel lblAppLogo;
     // End of variables declaration//GEN-END:variables
 
