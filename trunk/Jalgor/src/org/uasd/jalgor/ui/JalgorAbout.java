@@ -67,7 +67,7 @@ public class JalgorAbout extends javax.swing.JDialog {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("About: Jalgor");
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/imagenes/traductor2.JPG")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/imagenes/traductor2.png")));
         setResizable(false);
 
         lblAppLogo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/imagenes/traductor_165x165.png"))); // NOI18N
