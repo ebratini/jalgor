@@ -25,7 +25,6 @@ package org.uasd.jalgor.model;
 
 import java.util.LinkedList;
 import org.uasd.jalgor.business.AlgorSintaxException;
-//import org.uasd.jalgor.business.AnalizadorLexico;
 import org.uasd.jalgor.business.InterpreterError;
 import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
 
@@ -45,19 +44,14 @@ public class ProgramaStatement extends Statement {
         super(tipoSatement);
     }
 
-//    public ProgramaStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
-//        super(tipoSatement, al);
-//        parseMe();
-//    }
-
-//    public ProgramaStatement(Keyword tipoSatement, AnalizadorLexico al, int ambito) throws AlgorSintaxException {
-//        super(tipoSatement, al);
-//        this.ambitoSeqId = ambito;
-//        parseMe();
-//    }
-
     public ProgramaStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
+        parseMe();
+    }
+
+    public ProgramaStatement(Keyword tipoSatement, AnalizadorLexico al, int ambito) throws AlgorSintaxException {
+        super(tipoSatement, al);
+        this.ambitoSeqId = ambito;
         parseMe();
     }
 
