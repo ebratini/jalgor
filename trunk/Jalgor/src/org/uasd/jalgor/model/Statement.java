@@ -23,9 +23,9 @@
  */
 package org.uasd.jalgor.model;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.LinkedList;
+import org.uasd.jalgor.business.JalgorInterpreter;
 import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
 import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorSemantico;
 
@@ -74,12 +74,13 @@ public abstract class Statement {
             }
         }
     };
+    private JalgorInterpreter ji;
     private AnalizadorLexico al;
     private AnalizadorSemantico as;
     private String originalValue;
     private String parsedValue;
     // TODO: considerar usar linkedlist en lugar de list
-    private List<Token> tokensStatement = new ArrayList<Token>();
+    private LinkedList<Token> tokensStatement = new LinkedList<Token>();
 
     public Statement() {
     }
@@ -88,10 +89,28 @@ public abstract class Statement {
         this.tipoSatement = tipoSatement;
     }
 
+    public Statement(Keyword tipoSatement, JalgorInterpreter jalgorInterpreter) {
+        this.tipoSatement = tipoSatement;
+        this.ji = jalgorInterpreter;
+    }
+
     public Statement(Keyword tipoSatement, AnalizadorLexico al) {
         this.tipoSatement = tipoSatement;
         this.al = al;
-        originalValue = al.getCodeLine().getOrigValue();
+        this.originalValue = al.getCodeLine().getOrigValue();
+    }
+
+    public Statement(Keyword tipoSatement, AnalizadorLexico al, AnalizadorSemantico as) {
+        this(tipoSatement, al);
+        this.as = as;
+    }
+
+    public JalgorInterpreter getJi() {
+        return ji;
+    }
+
+    public void setJi(JalgorInterpreter ji) {
+        this.ji = ji;
     }
 
     public static HashMap<Keyword, String> getCppReps() {
@@ -146,19 +165,26 @@ public abstract class Statement {
         this.parsedValue = parsedValue;
     }
 
-    public List<Token> getTokensStatement() {
+    public LinkedList<Token> getTokensStatement() {
         return tokensStatement;
     }
 
+    public void setTokensStatement(LinkedList<Token> tokensStatement) {
+        this.tokensStatement = tokensStatement;
+    }
+
     public void addTokenStatement(Token token) {
-        this.tokensStatement.add(token);
+        this.tokensStatement.offer(token);
     }
 
     protected String parse() {
         StringBuilder sbParsedValue = new StringBuilder();
-        sbParsedValue.append(cppReps.get(tipoSatement));
+        sbParsedValue.append(String.format("%s", cppReps.get(tipoSatement)));
+
+        String espacio = " ";
         for (Token tok : this.getTokensStatement()) {
-            sbParsedValue.append(tok.toString()).append(" ");
+            espacio = ((tok.getValue().equals(";") || tok.getValue().equals(",")) ? "" : " ");
+            sbParsedValue.append(String.format("%s%s", espacio, tok.toString()));
         }
         return sbParsedValue.toString().trim();
     }

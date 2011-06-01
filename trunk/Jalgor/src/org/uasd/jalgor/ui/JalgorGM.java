@@ -101,7 +101,7 @@ public class JalgorGM extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Jalgor: Algorithm Interpreter");
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/images/traductor.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/resources/images/traductor_165x165.png")));
         setResizable(false);
 
         statusAnimationLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);

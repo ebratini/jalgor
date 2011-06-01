@@ -23,76 +23,50 @@
  */
 package org.uasd.jalgor.model;
 
-import java.util.LinkedList;
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.InterpreterError;
+import org.uasd.jalgor.business.JalgorInterpreter;
 import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class ProgramaStatement extends Statement {
-
-    private int ambitoSeqId = -1;
-    private LinkedList<Statement> blockStatements = new LinkedList<Statement>();
+public class ProgramaStatement extends BlockStatement {
 
     public ProgramaStatement() throws AlgorSintaxException {
     }
 
-    public ProgramaStatement(Keyword tipoSatement) {
-        super(tipoSatement);
-    }
-
-    public ProgramaStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
-        super(tipoSatement, al);
+    public ProgramaStatement(Keyword tipoSatement, JalgorInterpreter ji) throws AlgorSintaxException {
+        super(tipoSatement, ji);
         parseMe();
     }
 
-    public ProgramaStatement(Keyword tipoSatement, AnalizadorLexico al, int ambito) throws AlgorSintaxException {
-        super(tipoSatement, al);
-        this.ambitoSeqId = ambito;
+    public ProgramaStatement(Keyword tipoSatement, JalgorInterpreter ji, int ambito) throws AlgorSintaxException {
+        super(tipoSatement, ji, ambito);
         parseMe();
     }
 
     private void parseMe() throws AlgorSintaxException {
-        Token token = getAl().getNextToken();
+        AnalizadorLexico al = getJi().getAs().getAl();
+        Token token = al.getNextToken();
         switch (getTipoSatement()) {
             case PROGRAMA:
                 if (!(token instanceof VariableId)) {
                     String msjError = "Identificador esperado";
-                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                    al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
                 addTokenStatement(token);
-                setParsedValue(this.parse());
+
+                StringBuilder sbParsedValue = new StringBuilder();
+                sbParsedValue.append("// ").append(getOriginalValue()).append(System.getProperty("line.separator"));
+                sbParsedValue.append(cppReps.get(getTipoSatement()));
+                setParsedValue(sbParsedValue.toString());
                 break;
             case FIN_PROGRAMA:
-                setParsedValue(super.parse());
+                setParsedValue(parse());
                 break;
         }
-    }
-
-    public LinkedList<Statement> getBlockStatements() {
-        return blockStatements;
-    }
-
-    public void setBlockStatements(LinkedList<Statement> blockStatements) {
-        this.blockStatements = blockStatements;
-    }
-
-    public void addBlockStatement(Statement statement) {
-        this.blockStatements.offer(statement);
-    }
-
-    public int getAmbitoSeqId() {
-        return ambitoSeqId;
-    }
-
-    protected String parse() {
-        StringBuilder sbParsedValue = new StringBuilder();
-        sbParsedValue.append("// ").append(getOriginalValue()).append(System.getProperty("line.separator"));
-        sbParsedValue.append(cppReps.get(getTipoSatement()));
-        return sbParsedValue.toString();
     }
 }

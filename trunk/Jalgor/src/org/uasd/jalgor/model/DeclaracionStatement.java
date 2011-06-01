@@ -23,11 +23,12 @@
  */
 package org.uasd.jalgor.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.InterpreterError;
+import org.uasd.jalgor.business.JalgorInterpreter;
 import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
+import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorSemantico;
 
 /**
  *
@@ -35,32 +36,29 @@ import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
  */
 public class DeclaracionStatement extends Statement {
 
-    private List<Variable> variables = new ArrayList<Variable>();
-
     public DeclaracionStatement() throws AlgorSintaxException {
-    }
-
-    public DeclaracionStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
-        super(tipoSatement, al);
-        parseMe();
     }
 
     public DeclaracionStatement(Keyword tipoSatement, AnalizadorLexico al, List<Variable> variables) throws AlgorSintaxException {
         super(tipoSatement, al);
-        this.variables = variables;
         parseMe();
     }
 
-    public void setVariables(List<Variable> variables) {
-        this.variables = variables;
+    public DeclaracionStatement(Keyword tipoSatement, JalgorInterpreter ji) throws AlgorSintaxException {
+        super(tipoSatement, ji);
+        parseMe();
     }
 
     private void parseMe() throws AlgorSintaxException {
-        Token token = getAl().getNextToken();
-        Token nxtToken = getAl().getNextToken();//token.getSiblingToken();
+        JalgorInterpreter ji = getJi();
+        AnalizadorLexico al = ji.getAs().getAl();
+        AnalizadorSemantico asem = ji.getAs().getAsem();
+
+        Token token = al.getNextToken();//getAl().getNextToken();
+        Token nxtToken = al.getNextToken();//token.getSiblingToken();
         if (!(token instanceof VariableId)) {
             String msjError = "Identificador esperado";
-            getAl().getCodeLine().addError(new InterpreterError(msjError));
+            al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
         if ((!(nxtToken instanceof OperadorAsignacion) && !(nxtToken instanceof SignoPuntuacion))
@@ -68,39 +66,41 @@ public class DeclaracionStatement extends Statement {
                 && (!((SignoPuntuacion) nxtToken).getValue().equals(",") && !((SignoPuntuacion) nxtToken).getValue().equals(";")))) {
 
             String msjError = "Token invalido " + nxtToken.getValue() + "; [;|,|=] esperado";
-            getAl().getCodeLine().addError(new InterpreterError(msjError));
+            al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
-        if (getAs().variableExiste(token.getValue())) {
+        if (asem.variableExiste(token.getValue())) {
             String msjError = "Variable " + token.getValue() + " ya ha sido declarada";
-            getAl().getCodeLine().addError(new InterpreterError(msjError));
+            al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
 
-        variables.add(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), token.getValue()));
+        addTokenStatement(token);
+        addTokenStatement(nxtToken);
+        ji.addVariable(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), token.getValue()));
 
         if (!(nxtToken instanceof OperadorAsignacion)) {
-            while (getAl().hasNextToken()) {
-                Token tok = getAl().getNextToken();
+            while (al.hasNextToken()) {
+                Token tok = al.getNextToken();
                 if (tok instanceof VariableId) {
-                    if (getAs().variableExiste(tok.getValue())) {
+                    if (asem.variableExiste(tok.getValue())) {
                         String msjError = "Variable " + tok.getValue() + " ya ha sido declarada";
-                        getAl().getCodeLine().addError(new InterpreterError(msjError));
+                        al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
-                    variables.add(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), tok.getValue()));
+                    ji.addVariable(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), token.getValue()));
                 }
                 addTokenStatement(tok);
             }
-            if (!getTokensStatement().get(getTokensStatement().size() - 1).getValue().equals(";")) {
+            if (!getTokensStatement().getLast().getValue().equals(";")) {
                 String msjError = "Token invalido al final de linea: " + getTokensStatement().get(getTokensStatement().size() - 1).getValue();
                 msjError += "; [;] esperado";
-                getAl().getCodeLine().addError(new InterpreterError(msjError));
+                al.getCodeLine().addError(new InterpreterError(msjError));
                 throw new AlgorSintaxException(msjError);
             }
             setParsedValue(parse());
         } else if (nxtToken instanceof OperadorAsignacion) {
-            Statement asigStatement = new AsignacionStatement(getTipoSatement(), getAl(), (VariableId) token,
+            Statement asigStatement = new AsignacionStatement(getTipoSatement(), al, (VariableId) token,
                     Variable.TipoVariable.valueOf(getTipoSatement().toString()));
 
             setParsedValue(parse() + " " + asigStatement.getParsedValue());
