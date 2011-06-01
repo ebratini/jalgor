@@ -23,58 +23,43 @@
  */
 package org.uasd.jalgor.model;
 
+import java.util.LinkedList;
+import org.uasd.jalgor.business.JalgorInterpreter;
+
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public abstract class Token {
+public class BlockStatement extends Statement {
 
-    public enum TipoToken {
+    private int ambitoSeqId = -1;
+    private LinkedList<Statement> blockStatements = new LinkedList<Statement>();
 
-        CONSTANTE, OPERADOR, VARIABLEID, SIGNOPUNTUACION, KEYWORD, EXPRESION, COMENTARIO
-    };
-    private TipoToken tipoToken;
-    private String value;
-    private Token siblingToken;
-
-    public Token() {
+    public BlockStatement() {
     }
 
-    public Token(TipoToken tipoToken) {
-        this.tipoToken = tipoToken;
+    public BlockStatement(Keyword tipoSatement, JalgorInterpreter jalgorInterpreter) {
+        super(tipoSatement, jalgorInterpreter);
     }
 
-    public Token(TipoToken tipoToken, String value) {
-        this(tipoToken);
-        this.value = value;
+    public BlockStatement(Keyword tipoSatement, JalgorInterpreter jalgorInterpreter, int ambito) {
+        this(tipoSatement, jalgorInterpreter);
+        this.ambitoSeqId = ambito;
     }
 
-    public TipoToken getTipoToken() {
-        return tipoToken;
+    public LinkedList<Statement> getBlockStatements() {
+        return blockStatements;
     }
 
-    public void setTipoToken(TipoToken tipoToken) {
-        this.tipoToken = tipoToken;
+    public void setBlockStatements(LinkedList<Statement> blockStatements) {
+        this.blockStatements = blockStatements;
     }
 
-    public Token getSiblingToken() {
-        return siblingToken;
+    public void addBlockStatement(Statement statement) {
+        this.blockStatements.offer(statement);
     }
 
-    public void setSiblingToken(Token siblingToken) {
-        this.siblingToken = siblingToken;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    @Override
-    public String toString() {
-        return this.value;
+    public int getAmbitoSeqId() {
+        return ambitoSeqId;
     }
 }

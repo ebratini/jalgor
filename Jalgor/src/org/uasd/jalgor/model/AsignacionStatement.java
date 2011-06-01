@@ -25,7 +25,9 @@ package org.uasd.jalgor.model;
 
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.InterpreterError;
+import org.uasd.jalgor.business.JalgorInterpreter;
 import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
+import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorSemantico;
 
 /**
  *
@@ -33,6 +35,7 @@ import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
  */
 public class AsignacionStatement extends Statement {
 
+    //private JalgorInterpreter ji;
     private Token idVariable;
     private Variable.TipoVariable tipoVariable;
 
@@ -46,7 +49,16 @@ public class AsignacionStatement extends Statement {
         parseMe();
     }
 
+    public AsignacionStatement(Keyword tipoSatement, JalgorInterpreter ji) throws AlgorSintaxException {
+        super(tipoSatement, ji);
+        parseMe();
+    }
+
     private void parseMe() throws AlgorSintaxException {
+        JalgorInterpreter ji = getJi();
+        AnalizadorLexico al = ji.getAs().getAl();
+        AnalizadorSemantico asem = ji.getAs().getAsem();
+        
         this.addTokenStatement(idVariable);
         Token token = getAl().getNextToken();
         if (!(token instanceof OperadorAsignacion)) {

@@ -65,6 +65,14 @@ public class JalgorInterpreter {
         return sourceFilePath;
     }
 
+    public AnalizadorSintactico getAs() {
+        return as;
+    }
+
+    public void setAs(AnalizadorSintactico as) {
+        this.as = as;
+    }
+    
     public StringBuilder getSbCodeLines() {
         return sbCodeLines;
     }
@@ -75,6 +83,10 @@ public class JalgorInterpreter {
 
     public List<Variable> getVariables() {
         return variables;
+    }
+
+    public void addVariable(Variable var) {
+        this.variables.add(var);
     }
 
     public List<InterpreterError> getErrores() {
@@ -149,9 +161,9 @@ public class JalgorInterpreter {
 
         for (Statement stm : statements) {
             sbParsedStatements.append(stm.getParsedValue()).append(System.getProperty("line.separator"));
-            if (stm instanceof ProgramaStatement) {
-                for (Statement prgStm : ((ProgramaStatement) stm).getBlockStatements()) {
-                    sbParsedStatements.append(prgStm.getParsedValue()).append(System.getProperty("line.separator"));
+            if (stm instanceof BlockStatement) {
+                for (Statement innerStm : ((BlockStatement) stm).getBlockStatements()) {
+                    sbParsedStatements.append(String.format("%s%s", innerStm.getParsedValue(), System.getProperty("line.separator")));
                 }
             }
         }
@@ -205,6 +217,14 @@ public class JalgorInterpreter {
 
         public AnalizadorLexico getAl() {
             return al;
+        }
+
+        public AnalizadorSemantico getAsem() {
+            return asem;
+        }
+
+        public void setAsem(AnalizadorSemantico asem) {
+            this.asem = asem;
         }
 
         public int getCurrLinePos() {
@@ -313,7 +333,7 @@ public class JalgorInterpreter {
                                 ambitoStatements.offer(getNextAmbitoStmSeq());
                                 isPrgStmSet = true;
 
-                                statement = new ProgramaStatement(tipoKeyword, al);
+                                statement = new ProgramaStatement(tipoKeyword, JalgorInterpreter.this);
                                 Statement prgStm = null;
                                 while (hasNextCodeLine() && !(prgStm instanceof ProgramaStatement && prgStm.getTipoSatement().equals(Statement.Keyword.FIN_PROGRAMA))) {
                                     prgStm = analizeCodeLine();
@@ -342,12 +362,12 @@ public class JalgorInterpreter {
                                     al.getCodeLine().addError(new InterpreterError(msjError));
                                     throw new AlgorSintaxException(msjError);
                                 }
-                                statement = new ProgramaStatement(tipoKeyword, al);
+                                statement = new ProgramaStatement(tipoKeyword, JalgorInterpreter.this);
                                 isFinPrgStmSet = true;
                                 break;
                             case NUM:
                             case ALFA:
-                                statement = new DeclaracionStatement(tipoKeyword, al);
+                                statement = new DeclaracionStatement(tipoKeyword, JalgorInterpreter.this);//new DeclaracionStatement(tipoKeyword, al);
                                 break;
                             case LEE:
                                 statement = new LeeStatement(tipoKeyword, al);
