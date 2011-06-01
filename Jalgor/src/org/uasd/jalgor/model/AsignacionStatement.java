@@ -24,11 +24,8 @@
 package org.uasd.jalgor.model;
 
 import org.uasd.jalgor.business.AlgorSintaxException;
-import org.uasd.jalgor.business.AnalizadorLexico;
-import org.uasd.jalgor.business.AnalizadorSemantico;
-import org.uasd.jalgor.business.AnalizadorSintactico;
 import org.uasd.jalgor.business.InterpreterError;
-import org.uasd.jalgor.business.JalgorInterpreter;
+import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
 
 /**
  *
@@ -39,15 +36,14 @@ public class AsignacionStatement extends Statement {
     private Token idVariable;
     private Variable.TipoVariable tipoVariable;
 
-    public AsignacionStatement(Keyword tipoSatement, AnalizadorLexico al, VariableId idVariable, Variable.TipoVariable tipoVariable)
-            throws AlgorSintaxException {
+    public AsignacionStatement() throws AlgorSintaxException {
+    }
+
+    public AsignacionStatement(Keyword tipoSatement, AnalizadorLexico al, VariableId idVariable, Variable.TipoVariable tipoVariable) throws AlgorSintaxException {
         super(tipoSatement, al);
         this.idVariable = idVariable;
         this.tipoVariable = tipoVariable;
         parseMe();
-    }
-
-    public AsignacionStatement() throws AlgorSintaxException {
     }
 
     private void parseMe() throws AlgorSintaxException {
@@ -83,7 +79,7 @@ public class AsignacionStatement extends Statement {
                 while (getAl().hasNextToken()) {
                     Token tok = getAl().getNextToken();
                     if (tok instanceof ConstanteNumerica
-                            || (tok instanceof VariableId && AnalizadorSemantico.variableExiste(tok.getValue()))
+                            || (tok instanceof VariableId && getAs().variableExiste(tok.getValue()))
                             || tok instanceof OperadorAritmetico || (tok instanceof SignoPuntuacion && tok.getValue().equals(";"))) {
                         this.addTokenStatement(tok);
                     } else {

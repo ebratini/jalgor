@@ -23,11 +23,11 @@
  */
 package org.uasd.jalgor.model;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.uasd.jalgor.business.AlgorSintaxException;
-import org.uasd.jalgor.business.AnalizadorLexico;
-import org.uasd.jalgor.business.AnalizadorSemantico;
 import org.uasd.jalgor.business.InterpreterError;
-import org.uasd.jalgor.business.JalgorInterpreter;
+import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
 
 /**
  *
@@ -35,12 +35,24 @@ import org.uasd.jalgor.business.JalgorInterpreter;
  */
 public class DeclaracionStatement extends Statement {
 
+    private List<Variable> variables = new ArrayList<Variable>();
+
     public DeclaracionStatement() throws AlgorSintaxException {
     }
 
     public DeclaracionStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
         parseMe();
+    }
+
+    public DeclaracionStatement(Keyword tipoSatement, AnalizadorLexico al, List<Variable> variables) throws AlgorSintaxException {
+        super(tipoSatement, al);
+        this.variables = variables;
+        parseMe();
+    }
+
+    public void setVariables(List<Variable> variables) {
+        this.variables = variables;
     }
 
     private void parseMe() throws AlgorSintaxException {
@@ -59,24 +71,24 @@ public class DeclaracionStatement extends Statement {
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
-        if (AnalizadorSemantico.variableExiste(token.getValue())) {
+        if (getAs().variableExiste(token.getValue())) {
             String msjError = "Variable " + token.getValue() + " ya ha sido declarada";
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
 
-        JalgorInterpreter.getVariables().add(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), token.getValue()));
+        variables.add(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), token.getValue()));
 
         if (!(nxtToken instanceof OperadorAsignacion)) {
             while (getAl().hasNextToken()) {
                 Token tok = getAl().getNextToken();
                 if (tok instanceof VariableId) {
-                    if (AnalizadorSemantico.variableExiste(tok.getValue())) {
+                    if (getAs().variableExiste(tok.getValue())) {
                         String msjError = "Variable " + tok.getValue() + " ya ha sido declarada";
                         getAl().getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
-                    JalgorInterpreter.getVariables().add(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), tok.getValue()));
+                    variables.add(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), tok.getValue()));
                 }
                 addTokenStatement(tok);
             }

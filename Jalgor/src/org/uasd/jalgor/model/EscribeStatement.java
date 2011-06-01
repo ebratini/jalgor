@@ -24,9 +24,8 @@
 package org.uasd.jalgor.model;
 
 import org.uasd.jalgor.business.AlgorSintaxException;
-import org.uasd.jalgor.business.AnalizadorLexico;
-import org.uasd.jalgor.business.AnalizadorSemantico;
 import org.uasd.jalgor.business.InterpreterError;
+import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
 
 /**
  *
@@ -34,13 +33,13 @@ import org.uasd.jalgor.business.InterpreterError;
  */
 public class EscribeStatement extends Statement {
 
+    public EscribeStatement() throws AlgorSintaxException {
+        super(Keyword.ESCRIBE);
+    }
+
     public EscribeStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
         parseMe();
-    }
-
-    public EscribeStatement() throws AlgorSintaxException {
-        super(Keyword.ESCRIBE);
     }
 
     private void parseMe() throws AlgorSintaxException {
@@ -50,7 +49,7 @@ public class EscribeStatement extends Statement {
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
-        if (token instanceof VariableId && !AnalizadorSemantico.variableExiste(token.getValue())) {
+        if (token instanceof VariableId && !getAs().variableExiste(token.getValue())) {
             String msjError = "Variable " + token.getValue() + " no ha sido declarada";
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
@@ -65,7 +64,7 @@ public class EscribeStatement extends Statement {
                 getAl().getCodeLine().addError(new InterpreterError(msjError));
                 throw new AlgorSintaxException(msjError);
             }
-            if (tok instanceof VariableId && !AnalizadorSemantico.variableExiste(token.getValue())) {
+            if (tok instanceof VariableId && !getAs().variableExiste(token.getValue())) {
                 String msjError = "Variable " + tok.getValue() + " no ha sido declarada";
                 getAl().getCodeLine().addError(new InterpreterError(msjError));
                 throw new AlgorSintaxException(msjError);

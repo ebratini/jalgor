@@ -25,8 +25,11 @@ package org.uasd.jalgor.business;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import org.uasd.jalgor.model.*;
+import org.uasd.jalgor.model.Variable.TipoVariable;
 
 /**
  *
@@ -39,9 +42,9 @@ public class JalgorInterpreter {
     private StringBuilder sbCodeLines;
     private List<CodeLine> codeLines = new ArrayList<CodeLine>();
     private List<Statement> statements = new ArrayList<Statement>();
-    private static List<Variable> variables = new ArrayList<Variable>();
-    private static List<InterpreterError> errores = new ArrayList<InterpreterError>();
-    private AnalizadorSintactico as = new AnalizadorSintactico(new AnalizadorLexico());
+    private List<Variable> variables = new ArrayList<Variable>();
+    private List<InterpreterError> errores = new ArrayList<InterpreterError>();
+    private AnalizadorSintactico as = new AnalizadorSintactico();
 
     public JalgorInterpreter() {
     }
@@ -70,11 +73,11 @@ public class JalgorInterpreter {
         return statements;
     }
 
-    public static List<Variable> getVariables() {
+    public List<Variable> getVariables() {
         return variables;
     }
 
-    public static List<InterpreterError> getErrores() {
+    public List<InterpreterError> getErrores() {
         return errores;
     }
 
@@ -92,7 +95,6 @@ public class JalgorInterpreter {
         for (String line : lines) {
             codeLines.add(new CodeLine(i++, line));
         }
-        as.setCodeLines(codeLines);
     }
 
     private void validateSourceFileName(String sourceFname) throws InvalidFileNameException {
@@ -120,7 +122,6 @@ public class JalgorInterpreter {
                 hayError = true;
             }
         }
-
         return hayError;
     }
 
@@ -176,6 +177,453 @@ public class JalgorInterpreter {
                 printErrores();
             }
             printCodeLineErrors();
+        }
+    }
+
+    // Analizador Sintactico
+    public class AnalizadorSintactico {
+
+        // TODO: crear metodo que construye expresiones y arbol binario
+        private AnalizadorLexico al = new AnalizadorLexico();
+        private AnalizadorSemantico asem = new AnalizadorSemantico();
+        private int currLinePos = 0;
+        private int ambitoStatementSeq;
+        private LinkedList<Integer> ambitoStatements = new LinkedList<Integer>();
+        private boolean isPrgStmSet = false;
+        private boolean isFinPrgStmSet = false;
+
+        public AnalizadorSintactico() {
+        }
+
+        public AnalizadorSintactico(AnalizadorLexico al) {
+            this.al = al;
+        }
+
+        public void setAl(AnalizadorLexico al) {
+            this.al = al;
+        }
+
+        public AnalizadorLexico getAl() {
+            return al;
+        }
+
+        public int getCurrLinePos() {
+            return currLinePos;
+        }
+
+        public List<Statement> collectStatements() {
+            List<Statement> statements = new ArrayList<Statement>();
+            while (hasNextCodeLine()) {
+                statements.add(analizeCodeLine());
+            }
+            return statements;
+        }
+
+        private boolean hasNextCodeLine() {
+            int prevPos = currLinePos;
+            boolean hasIt = (getNextCodeLine() != null);
+            currLinePos = prevPos;
+            return hasIt;
+        }
+
+        private CodeLine getNextCodeLine() {
+            CodeLine codeLine = null;
+            if (currLinePos < codeLines.size()) {
+                codeLine = codeLines.get(currLinePos);
+                while (codeLine.getOrigValue().trim().isEmpty()) {
+                    currLinePos++;
+                    codeLine = getNextCodeLine();
+                }
+            }
+            //currLinePos++;
+            return codeLine;
+        }
+
+        private int getNextAmbitoStmSeq() {
+            return ambitoStatementSeq++;
+        }
+
+        public LinkedList<Integer> getAmbitoStatements() {
+            return ambitoStatements;
+        }
+
+        // metodo para hallar la sentencia programa
+        private ProgramaStatement searchProgramaStatement(List<Statement> statements) {
+            ProgramaStatement ps = null;
+            for (Statement stm : statements) {
+                if (stm.getTipoSatement().equals(Statement.Keyword.PROGRAMA)) {
+                    ps = (ProgramaStatement) stm;
+                    break;
+                }
+            }
+            return ps;
+        }
+
+        // este metodo sirve para obtener las sentencias por linea de codigo
+        public Statement analizeCodeLine() {
+            al.resetCodeLine(getNextCodeLine());
+            currLinePos++;
+            Token token = al.getNextToken();
+            Statement statement = null;
+            try {
+                if (token instanceof ComentarioToken) {
+                    statement = new ComentarioStatement(Statement.Keyword.COMENTARIO, al);
+                } else if (token instanceof KeywordToken || token instanceof VariableId) {
+
+                    // verificando si el ambito del token es el correcto (entre sentencias programa y fin_programa)
+                    // si no esta, se lanza una excepcion
+                    if (!isPrgStmSet && !token.getValue().equalsIgnoreCase("programa")) {
+                        String msjError = "Token: " + token.getValue() + " invalido. ";
+                        msjError += "[programa] esperado\n";
+                        al.getCodeLine().addError(new InterpreterError(msjError));
+                        throw new AlgorSintaxException(msjError);
+                    }
+                    if (token instanceof VariableId) {
+                        if (token.getSiblingToken() instanceof OperadorAsignacion) {
+
+                            /* si la sentencia es de asignacion (variable seguida de op de asignacion)
+                             * reviso si ya ha sido declarada, sino se lanza una excepcion
+                             */
+                            Variable var = asem.searchVariable(token.getValue());
+                            if (var != null) {
+                                TipoVariable tipoVariable = var.getTipoVariable(); // JalgorInterpreter.getVariables().get(token.getValue()).getTipoVariable();
+                                statement = new AsignacionStatement(Statement.Keyword.ASIGNACION, al, (VariableId) token, tipoVariable);
+                            } else {
+                                String msjError = "variable " + token.getValue() + " no declarada\n";
+                                al.getCodeLine().addError(new InterpreterError(msjError));
+                                throw new AlgorSintaxException(msjError);
+                            }
+                        } else {
+                            String msjError = "[=] esperado\n";
+                            al.getCodeLine().addError(new InterpreterError(msjError));
+                            throw new AlgorSintaxException(msjError);
+                        }
+                    } else if (token instanceof KeywordToken) {
+                        Statement.Keyword tipoKeyword = Statement.getKeywordMatcher().get(token.getValue().toLowerCase());
+                        switch (tipoKeyword) {
+
+                            case PROGRAMA:
+                                // ver si ya existe la sentencia fin_programa en la lista de sentencias de JI
+                                if (isPrgStmSet) {
+                                    String msjError = "Token: " + token.getValue() + " invalido.\n";
+                                    al.getCodeLine().addError(new InterpreterError(msjError));
+                                    throw new AlgorSintaxException(msjError);
+                                }
+
+                                ambitoStatements.offer(getNextAmbitoStmSeq());
+                                isPrgStmSet = true;
+
+                                statement = new ProgramaStatement(tipoKeyword, al);
+                                Statement prgStm = null;
+                                while (hasNextCodeLine() && !(prgStm instanceof ProgramaStatement && prgStm.getTipoSatement().equals(Statement.Keyword.FIN_PROGRAMA))) {
+                                    prgStm = analizeCodeLine();
+                                    ((ProgramaStatement) statement).addBlockStatement(prgStm);
+                                }
+                                // si llego hasta aqui es porque es un fin de sentencia,
+                                // para manejar el ambito, hacer un poll a la pila de ambito
+                                ambitoStatements.pollLast();
+
+                                // validar que/ se halla salido del bucle por sentencia fin_programa y no por fin de archivo
+                                if (((ProgramaStatement) statement).getBlockStatements().getLast().getTipoSatement() != Statement.Keyword.FIN_PROGRAMA) {
+                                    String msjError = "Sentencia [fin_programa] esperado\n";
+                                    al.getCodeLine().addError(new InterpreterError(msjError));
+                                    throw new AlgorSintaxException(msjError);
+                                }
+                                break;
+                            case FIN_PROGRAMA:
+                                if (!isPrgStmSet) {
+                                    String msjError = "Token: " + token.getValue() + " invalido. ";
+                                    msjError += "[programa] esperado\n";
+                                    al.getCodeLine().addError(new InterpreterError(msjError));
+                                    throw new AlgorSintaxException(msjError);
+                                }
+                                if (isFinPrgStmSet) {
+                                    String msjError = "Token: " + token.getValue() + " invalido.\n";
+                                    al.getCodeLine().addError(new InterpreterError(msjError));
+                                    throw new AlgorSintaxException(msjError);
+                                }
+                                statement = new ProgramaStatement(tipoKeyword, al);
+                                isFinPrgStmSet = true;
+                                break;
+                            case NUM:
+                            case ALFA:
+                                statement = new DeclaracionStatement(tipoKeyword, al);
+                                break;
+                            case LEE:
+                                statement = new LeeStatement(tipoKeyword, al);
+                                break;
+                            case ESCRIBE:
+                                statement = new EscribeStatement(tipoKeyword, al);
+                                break;
+                            case SI:
+                                // agregar ambito de sentencia
+                                ambitoStatements.offer(getNextAmbitoStmSeq());
+
+                                statement = new CondicionStatement(tipoKeyword, al);
+                                Statement condSt = null;
+                                while (hasNextCodeLine() && !(condSt instanceof CondicionStatement && condSt.getTipoSatement().equals(Statement.Keyword.FIN_SI))) {
+                                    condSt = analizeCodeLine();
+                                    ((CondicionStatement) statement).addBlockStatement(condSt);
+                                }
+                                // si llego hasta aqui es porque es un fin de sentencia,
+                                // para manejar el ambito, hacer un poll a la pila de ambito
+                                ambitoStatements.pollLast();
+                                // validar que se halla salido del bucle por sentencia fin_si y no por fin de archivo
+                                break;
+                            case SINO:
+                                statement = new CondicionStatement(tipoKeyword, al);
+                                break;
+                            case FIN_SI:
+                                statement = new CondicionStatement(tipoKeyword, al);
+                                break;
+                            case MIENTRAS:
+                                // TODO: validar y agregar ambito de sentencia
+                                ambitoStatements.offer(getNextAmbitoStmSeq());
+
+                                statement = new MientrasStatement(tipoKeyword, al);
+                                Statement bucleSt = analizeCodeLine();
+                                do {
+                                    ((MientrasStatement) statement).addBlockStatement(bucleSt);
+                                } while (hasNextCodeLine() && (!(bucleSt instanceof MientrasStatement)) && bucleSt.getTipoSatement().equals(Statement.Keyword.FIN_MIENTRAS));
+                                // TODO: si llego hasta aqui es porque es un fin de sentencia, para manejar el ambito, hacer un poll a la pila
+                                // de ambito
+
+                                // validar y dar un poll al ambito de sentencia
+                                ambitoStatements.poll();
+                                break;
+                            case FIN_MIENTRAS:
+                                statement = new MientrasStatement(tipoKeyword, al);
+                                break;
+                        }
+                    }
+                } else if (token != null) {
+                    String msjError = "Mal comienzo de linea de codigo\n";
+                    al.getCodeLine().addError(new InterpreterError(msjError));
+                    throw new AlgorSintaxException(msjError);
+                }
+            } catch (AlgorSintaxException ase) {
+            }
+            return statement;
+        }
+    }
+
+    // Analizador Lexico
+    public class AnalizadorLexico {
+
+        private int currPos;
+        private CodeLine codeLine;
+        private char[] chrCodeLine;
+
+        public AnalizadorLexico() {
+        }
+
+        public AnalizadorLexico(CodeLine codeLine) {
+            this.codeLine = codeLine;
+            initChrCodeLine();
+        }
+
+        private void initChrCodeLine() {
+            if (codeLine != null) {
+                chrCodeLine = codeLine.getOrigValue().toCharArray();
+            }
+        }
+
+        public Token getNextToken() {
+            Token token = null;
+            if (!hasNextChar()) {
+                return null;
+            }
+            char currChar = chrCodeLine[currPos];
+            switch (currChar) {
+                // TODO: posibilidad de crear un token espacio para mantener formato igual al fuente original
+                case ' ':
+                case '\t':
+                    // mover el indice hasta que el char sea diferente de espacio o tab
+                    while (currChar == ' ' || currChar == '\t') {
+                        //currPos++;
+                        currChar = getNextChar();
+                    }
+                    token = getNextToken();
+                    break;
+                case '-':
+                case '+':
+                case '*':
+                case '/':
+                    if (currChar == '-' && (hasNextChar()
+                            && (chrCodeLine[currPos + 1] == '.' || Character.isDigit(chrCodeLine[currPos + 1])))) {
+                        token = getNextToken();
+                        break;
+                    }
+                    token = new OperadorAritmetico(Operador.getOpNames().get(String.valueOf(currChar)));
+                    //currPos++;
+                    break;
+                case '&':
+                case '|':
+                case '^':
+                case '~':
+                    token = new OperadorBooleano(Operador.getOpNames().get(String.valueOf(currChar)));
+                    //currPos++;
+                    break;
+                case '<':
+                case '>':
+                case '!':
+                    if (chrCodeLine[currPos] == '=') {
+                        token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(currChar + chrCodeLine[currPos + 1])));
+                        currPos += 2;
+                    } else {
+                        token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(currChar)));
+                        //currPos++;
+                    }
+                    break;
+                case '=':
+                    if (chrCodeLine[currPos + 1] == '=') {
+                        token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(currChar + chrCodeLine[currPos + 1])));
+                        currPos += 2;
+                    } else {
+                        token = new OperadorAsignacion(Operador.getOpNames().get(String.valueOf(currChar)));
+                        //currPos++;
+                    }
+                    break;
+                case ';':
+                case '(':
+                case ')':
+                case ',':
+                    token = new SignoPuntuacion(String.valueOf(currChar));
+                    currPos++;
+                    break;
+                case '.':
+                case '0':
+                case '1':
+                case '2':
+                case '3':
+                case '4':
+                case '5':
+                case '6':
+                case '7':
+                case '8':
+                case '9':
+                    StringBuilder num = new StringBuilder();
+                    // si es un numero negativo
+                    if (chrCodeLine[currPos - 1] == '-') {
+                        num.append("-");
+                    }
+                    if (currChar == '.') {
+                        num.append(".");
+                        currChar = getNextChar();
+                    }
+                    while (hasNextChar() && Character.isDigit(currChar)) {
+                        num.append(currChar);
+                        currChar = getNextChar();
+                    }
+                    token = new ConstanteNumerica(num.toString());
+                    currPos++;
+                    break;
+                case '"':
+                    StringBuilder str = new StringBuilder();
+                    currChar = getNextChar();
+                    while (hasNextChar() && currChar != '"') {
+                        str.append(currChar);
+                        currChar = getNextChar();
+                    }
+                    token = new ConstanteAlfanumerica(str.toString());
+                    //currPos += 2;
+                    break;
+                default:
+                    StringBuilder var = new StringBuilder();
+                    //currChar = chrCodeLine[currPos];
+                    while ((Character.isLetterOrDigit(currChar) || currChar == '_') && currChar != '\0') {
+                        var.append(currChar);
+                        //currPos++;
+                        currChar = getNextChar();
+                    }
+                    if (var.toString().equals("com")) {
+                        token = new ComentarioToken();
+                        break;
+                    }
+                    if (Statement.keywordMatcher.containsKey(var.toString().toLowerCase())) {
+                        token = new KeywordToken(var.toString());
+                    } else {
+                        token = new VariableId(var.toString());
+                    }
+                    //currPos++;
+                    break;
+            }
+
+            /*if (token != null) {
+            int prevPos = currPos;
+            token.setSiblingToken(getNextToken());
+            currPos = prevPos;
+            }*/
+            return token;
+        }
+
+        public char[] getChrCodeLine() {
+            return chrCodeLine;
+        }
+
+        public CodeLine getCodeLine() {
+            return codeLine;
+        }
+
+        private boolean hasNextChar() {
+            if (currPos < chrCodeLine.length) {
+                return true;
+            }
+            return false;
+        }
+
+        private char getNextChar() {
+            char nxtChar = '\0';
+            currPos++;
+            if (hasNextChar()) {
+                nxtChar = chrCodeLine[currPos];
+            }
+            return nxtChar;
+        }
+
+        public boolean hasNextToken() {
+            int prevPos = currPos;
+            boolean hasIt = (getNextToken() != null);
+            currPos = prevPos;
+            return hasIt;
+        }
+
+        public void resetCodeLine(CodeLine codeLine) {
+            this.codeLine = codeLine;
+            currPos = 0;
+            initChrCodeLine();
+        }
+    }
+
+    // Analizador Semantico
+    public class AnalizadorSemantico {
+
+        public boolean variableExiste(String variableId) {
+            boolean existe = false;
+            Variable var = new Variable(variableId, -1);
+            for (Integer ambito : as.getAmbitoStatements()) {
+                var.setAmbito(ambito);
+                if (variables.contains(var)) {
+                    existe = true;
+                    break;
+                }
+            }
+            return existe;
+        }
+
+        public Variable searchVariable(String variableId) {
+            Variable variable = null;
+            Variable searchedVar = null;
+            for (Integer ambito : as.getAmbitoStatements()) {
+                searchedVar = new Variable(variableId, ambito);
+                int idx = Collections.binarySearch(variables, searchedVar, Collections.reverseOrder());
+
+                if (idx >= 0) {
+                    variable = variables.get(idx);
+                    break;
+                }
+            }
+            return variable;
         }
     }
 }
