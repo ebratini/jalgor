@@ -24,9 +24,8 @@
 package org.uasd.jalgor.model;
 
 import org.uasd.jalgor.business.AlgorSintaxException;
-import org.uasd.jalgor.business.AnalizadorLexico;
-import org.uasd.jalgor.business.AnalizadorSemantico;
 import org.uasd.jalgor.business.InterpreterError;
+import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
 
 /**
  *
@@ -40,6 +39,7 @@ public class LeeStatement extends Statement {
 
     public LeeStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
+        parseMe();
     }
 
     private void parseMe() throws AlgorSintaxException {
@@ -50,7 +50,7 @@ public class LeeStatement extends Statement {
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
-        if (!AnalizadorSemantico.variableExiste(token.getValue())) {
+        if (!getAs().variableExiste(token.getValue())) {
             String msjError = "Variable " + token.getValue() + " no ha sido declarada";
             getAl().getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);

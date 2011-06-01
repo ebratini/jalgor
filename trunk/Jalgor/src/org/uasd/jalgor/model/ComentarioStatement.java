@@ -21,11 +21,10 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.uasd.jalgor.model;
 
 import org.uasd.jalgor.business.AlgorSintaxException;
-import org.uasd.jalgor.business.AnalizadorLexico;
+import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
 
 /**
  *
@@ -33,11 +32,11 @@ import org.uasd.jalgor.business.AnalizadorLexico;
  */
 public class ComentarioStatement extends Statement {
 
+    public ComentarioStatement() {
+    }
+
     public ComentarioStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
         setParsedValue(parse() + getOriginalValue().replaceFirst("com", ""));
-    }
-
-    public ComentarioStatement() {
     }
 }

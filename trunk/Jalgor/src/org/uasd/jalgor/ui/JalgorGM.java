@@ -439,7 +439,7 @@ public class JalgorGM extends javax.swing.JFrame {
         // TODO add your handling code here:
         LookAndFeelSelector.setLookAndFeel(LookAndFeelSelector.LAF.WINDOWS);
         SwingUtilities.updateComponentTreeUI(this);
-        
+
     }//GEN-LAST:event_rdbWindowsLafActionPerformed
 
     private void rdbNimbusLafActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbNimbusLafActionPerformed
@@ -506,11 +506,11 @@ public class JalgorGM extends javax.swing.JFrame {
             JalgorInterpreter ji = new JalgorInterpreter(sourceFilePath, outFilePath);
             if (jtaSourceFile.getText().length() < 1) {
                 jtaSourceFile.setText(FileManager.loadFile(new File(txtSourceFilePath.getText())).toString());
-        }
+            }
             ji.start();
-            if (JalgorInterpreter.getErrores().size() > 0 || ji.hayErrorEnLineaCodigo()) {
+            if (ji.getErrores().size() > 0 || ji.hayErrorEnLineaCodigo()) {
                 StringBuilder sbErrores = new StringBuilder();
-                for (InterpreterError ie : JalgorInterpreter.getErrores()) {
+                for (InterpreterError ie : ji.getErrores()) {
                     sbErrores.append(ie.getMensaje()).append(System.getProperty("line.separator"));
                 }
                 if (sbErrores.length() > 0) {

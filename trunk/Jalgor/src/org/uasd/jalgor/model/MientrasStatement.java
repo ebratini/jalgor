@@ -25,9 +25,8 @@ package org.uasd.jalgor.model;
 
 import java.util.LinkedList;
 import org.uasd.jalgor.business.AlgorSintaxException;
-import org.uasd.jalgor.business.AnalizadorLexico;
-import org.uasd.jalgor.business.AnalizadorSemantico;
 import org.uasd.jalgor.business.InterpreterError;
+import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
 
 /**
  *
@@ -38,6 +37,9 @@ public class MientrasStatement extends Statement {
     private int ambitoSeqId = -1;
     private LinkedList<Statement> blockStatements = new LinkedList<Statement>();
 
+    public MientrasStatement() throws AlgorSintaxException {
+    }
+
     public MientrasStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
         super(tipoSatement, al);
         parseMe();
@@ -47,9 +49,6 @@ public class MientrasStatement extends Statement {
         super(tipoSatement, al);
         this.ambitoSeqId = ambito;
         parseMe();
-    }
-
-    public MientrasStatement() throws AlgorSintaxException {
     }
 
     public LinkedList<Statement> getBlockStatements() {
@@ -77,7 +76,7 @@ public class MientrasStatement extends Statement {
                     getAl().getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
-                if (token instanceof VariableId && !AnalizadorSemantico.variableExiste(token.getValue())) {
+                if (token instanceof VariableId && !getAs().variableExiste(token.getValue())) {
                     String msjError = "Variable " + token.getValue() + " no ha sido declarada";
                     getAl().getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
@@ -92,7 +91,7 @@ public class MientrasStatement extends Statement {
                         getAl().getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
-                    if (tok instanceof VariableId && !AnalizadorSemantico.variableExiste(token.getValue())) {
+                    if (tok instanceof VariableId && !getAs().variableExiste(token.getValue())) {
                         String msjError = "Variable " + tok.getValue() + " no ha sido declarada";
                         getAl().getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);

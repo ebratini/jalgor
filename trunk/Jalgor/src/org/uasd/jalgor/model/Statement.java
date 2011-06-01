@@ -26,7 +26,8 @@ package org.uasd.jalgor.model;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import org.uasd.jalgor.business.AnalizadorLexico;
+import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
+import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorSemantico;
 
 /**
  *
@@ -74,9 +75,9 @@ public abstract class Statement {
         }
     };
     private AnalizadorLexico al;
+    private AnalizadorSemantico as;
     private String originalValue;
     private String parsedValue;
-
     // TODO: considerar usar linkedlist en lugar de list
     private List<Token> tokensStatement = new ArrayList<Token>();
 
@@ -99,6 +100,14 @@ public abstract class Statement {
 
     public static void setCppReps(HashMap<Keyword, String> cppReps) {
         Statement.cppReps = cppReps;
+    }
+
+    public AnalizadorSemantico getAs() {
+        return as;
+    }
+
+    public void setAs(AnalizadorSemantico as) {
+        this.as = as;
     }
 
     public Keyword getTipoSatement() {
