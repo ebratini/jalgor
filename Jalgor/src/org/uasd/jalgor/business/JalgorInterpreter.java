@@ -162,17 +162,23 @@ public class JalgorInterpreter {
         return sbDefaultParsed;
     }
 
+    private StringBuilder getParsedStm(Statement stm) {
+        StringBuilder sbParsedStatement = new StringBuilder();
+        if (stm instanceof BlockStatement) {
+            sbParsedStatement.append(stm.getParsedValue()).append(System.getProperty("line.separator"));
+            for (Statement innerStm : ((BlockStatement) stm).getBlockStatements()) {
+                sbParsedStatement.append(getParsedStm(innerStm));
+            }
+        } else {
+            sbParsedStatement.append(stm.getParsedValue()).append(System.getProperty("line.separator"));
+        }
+        return sbParsedStatement;
+    }
+
     public StringBuilder getParsedStatements() {
         StringBuilder sbParsedStatements = getDefaultHeader();
-
-        // TODO: tengo que usar recursividad para imprimir los inner statements de los inner statements y demas
         for (Statement stm : statements) {
-            sbParsedStatements.append(stm.getParsedValue()).append(System.getProperty("line.separator"));
-            if (stm instanceof BlockStatement) {
-                for (Statement innerStm : ((BlockStatement) stm).getBlockStatements()) {
-                    sbParsedStatements.append(String.format("%s%s", innerStm.getParsedValue(), System.getProperty("line.separator")));
-                }
-            }
+            sbParsedStatements.append(getParsedStm(stm));
         }
         return sbParsedStatements;
     }

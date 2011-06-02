@@ -495,7 +495,7 @@ public class JalgorGM extends javax.swing.JFrame {
     }
 
     private void indentarSalida(String style) {
-        String astyle = "";
+        String styler = "";
         String pathFileToStyle = txtOutFilePath.getText();
         if (txtOutFilePath.getText().length() < 1) {
             return;
@@ -503,11 +503,11 @@ public class JalgorGM extends javax.swing.JFrame {
         try {
             String osPath = System.getProperty("java.library.path");
             if (osPath.toLowerCase().contains("astyle")) {
-                astyle = "astyle.exe";
+                styler = "astyle.exe";
             } else {
-                astyle = astyle = getClass().getResource("/resources/utils/astyle/bin/AStyle.exe").toURI().getPath();
+                styler = styler = getClass().getResource("/resources/utils/astyle/bin/AStyle.exe").toURI().getPath();
             }
-            Runtime.getRuntime().exec(String.format("%s --style=%s -p \"%s\"", astyle, style, pathFileToStyle)).waitFor();
+            Runtime.getRuntime().exec(String.format("%s --style=%s -p \"%s\"", styler, style, pathFileToStyle)).waitFor();
         } catch (IOException ex) {
             Logger.getLogger(JalgorGM.class.getName()).log(Level.SEVERE, null, ex);
         } catch (URISyntaxException use) {
