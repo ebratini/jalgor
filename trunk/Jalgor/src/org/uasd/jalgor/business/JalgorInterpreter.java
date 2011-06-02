@@ -72,7 +72,7 @@ public class JalgorInterpreter {
     public void setAs(AnalizadorSintactico as) {
         this.as = as;
     }
-    
+
     public StringBuilder getSbCodeLines() {
         return sbCodeLines;
     }
@@ -145,20 +145,27 @@ public class JalgorInterpreter {
         StringBuilder sbCodeLneErrors = new StringBuilder();
         for (CodeLine cl : codeLines) {
             for (InterpreterError ie : cl.getErrores()) {
-                sbCodeLneErrors.append(String.format("Linea: %-3d %s", cl.getLineNumber(), ie.getMensaje()));
+                sbCodeLneErrors.append(String.format("Linea: %-3d %s\n", cl.getLineNumber(), ie.getMensaje()));
             }
         }
         return sbCodeLneErrors;
     }
 
-    public StringBuilder getParsedStatements() {
-        StringBuilder sbParsedStatements = new StringBuilder();
+    private StringBuilder getDefaultHeader() {
+        StringBuilder sbDefaultParsed = new StringBuilder();
 
         // lo constante
-        sbParsedStatements.append("#include <iostream>").append(System.getProperty("line.separator"));
-        sbParsedStatements.append("using namespace std;").append(System.getProperty("line.separator"));
-        sbParsedStatements.append(System.getProperty("line.separator"));
+        sbDefaultParsed.append("#include <iostream>").append(System.getProperty("line.separator"));
+        sbDefaultParsed.append("using namespace std;").append(System.getProperty("line.separator"));
+        sbDefaultParsed.append(System.getProperty("line.separator"));
 
+        return sbDefaultParsed;
+    }
+
+    public StringBuilder getParsedStatements() {
+        StringBuilder sbParsedStatements = getDefaultHeader();
+
+        // TODO: tengo que usar recursividad para imprimir los inner statements de los inner statements y demas
         for (Statement stm : statements) {
             sbParsedStatements.append(stm.getParsedValue()).append(System.getProperty("line.separator"));
             if (stm instanceof BlockStatement) {
@@ -294,7 +301,7 @@ public class JalgorInterpreter {
                     // si no esta, se lanza una excepcion
                     if (!isPrgStmSet && !token.getValue().equalsIgnoreCase("programa")) {
                         String msjError = "Token: " + token.getValue() + " invalido. ";
-                        msjError += "[programa] esperado\n";
+                        msjError += "[programa] esperado";
                         al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
@@ -310,12 +317,12 @@ public class JalgorInterpreter {
                                 TipoVariable tipoVariable = var.getTipoVariable(); // JalgorInterpreter.getVariables().get(token.getValue()).getTipoVariable();
                                 statement = new AsignacionStatement(Statement.Keyword.ASIGNACION, JalgorInterpreter.this, (VariableId) token, tipoVariable);
                             } else {
-                                String msjError = "variable " + token.getValue() + " no declarada\n";
+                                String msjError = "variable " + token.getValue() + " no declarada";
                                 al.getCodeLine().addError(new InterpreterError(msjError));
                                 throw new AlgorSintaxException(msjError);
                             }
                         } else {
-                            String msjError = "[=] esperado\n";
+                            String msjError = "[=] esperado";
                             al.getCodeLine().addError(new InterpreterError(msjError));
                             throw new AlgorSintaxException(msjError);
                         }
@@ -326,7 +333,7 @@ public class JalgorInterpreter {
                             case PROGRAMA:
                                 // ver si ya existe la sentencia fin_programa en la lista de sentencias de JI
                                 if (isPrgStmSet) {
-                                    String msjError = "Token: " + token.getValue() + " invalido.\n";
+                                    String msjError = "Token: " + token.getValue() + " invalido.";
                                     al.getCodeLine().addError(new InterpreterError(msjError));
                                     throw new AlgorSintaxException(msjError);
                                 }
@@ -346,7 +353,7 @@ public class JalgorInterpreter {
 
                                 // validar que/ se halla salido del bucle por sentencia fin_programa y no por fin de archivo
                                 if (((ProgramaStatement) statement).getBlockStatements().getLast().getTipoSatement() != Statement.Keyword.FIN_PROGRAMA) {
-                                    String msjError = "Sentencia [fin_programa] esperado\n";
+                                    String msjError = "Sentencia [fin_programa] esperado";
                                     al.getCodeLine().addError(new InterpreterError(msjError));
                                     throw new AlgorSintaxException(msjError);
                                 }
@@ -354,12 +361,12 @@ public class JalgorInterpreter {
                             case FIN_PROGRAMA:
                                 if (!isPrgStmSet) {
                                     String msjError = "Token: " + token.getValue() + " invalido. ";
-                                    msjError += "[programa] esperado\n";
+                                    msjError += "[programa] esperado";
                                     al.getCodeLine().addError(new InterpreterError(msjError));
                                     throw new AlgorSintaxException(msjError);
                                 }
                                 if (isFinPrgStmSet) {
-                                    String msjError = "Token: " + token.getValue() + " invalido.\n";
+                                    String msjError = "Token: " + token.getValue() + " invalido.";
                                     al.getCodeLine().addError(new InterpreterError(msjError));
                                     throw new AlgorSintaxException(msjError);
                                 }
@@ -398,22 +405,17 @@ public class JalgorInterpreter {
                                 statement = new CondicionStatement(tipoKeyword, al);
                                 break;
                             case MIENTRAS:
-                                // TODO: validar y agregar ambito de sentencia
                                 ambitoStatements.offer(getNextAmbitoStmSeq());
-
-                                statement = new MientrasStatement(tipoKeyword, al);
-                                Statement bucleSt = analizeCodeLine();
-                                do {
+                                statement = new MientrasStatement(tipoKeyword, JalgorInterpreter.this);
+                                Statement bucleSt = null;
+                                while (hasNextCodeLine() && !(bucleSt instanceof MientrasStatement && bucleSt.getTipoSatement().equals(Statement.Keyword.FIN_MIENTRAS))) {
+                                    bucleSt = analizeCodeLine();
                                     ((MientrasStatement) statement).addBlockStatement(bucleSt);
-                                } while (hasNextCodeLine() && (!(bucleSt instanceof MientrasStatement)) && bucleSt.getTipoSatement().equals(Statement.Keyword.FIN_MIENTRAS));
-                                // TODO: si llego hasta aqui es porque es un fin de sentencia, para manejar el ambito, hacer un poll a la pila
-                                // de ambito
-
-                                // validar y dar un poll al ambito de sentencia
-                                ambitoStatements.poll();
+                                }
+                                ambitoStatements.pollLast();
                                 break;
                             case FIN_MIENTRAS:
-                                statement = new MientrasStatement(tipoKeyword, al);
+                                statement = new MientrasStatement(tipoKeyword, JalgorInterpreter.this);
                                 break;
                         }
                     }
@@ -461,7 +463,6 @@ public class JalgorInterpreter {
                 case '\t':
                     // mover el indice hasta que el char sea diferente de espacio o tab
                     while (currChar == ' ' || currChar == '\t') {
-                        //currPos++;
                         currChar = getNextChar();
                     }
                     token = getNextToken();
@@ -483,23 +484,25 @@ public class JalgorInterpreter {
                 case '|':
                 case '^':
                 case '~':
-                    token = new OperadorBooleano(Operador.getOpNames().get(String.valueOf(currChar)));
-                    //currPos++;
+                    token = new OperadorBooleano(Operador.getOpNames().get(String.valueOf(currChar)), String.valueOf(currChar));
+                    currPos++;
                     break;
                 case '<':
                 case '>':
                 case '!':
                     if (chrCodeLine[currPos] == '=') {
-                        token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(currChar + chrCodeLine[currPos + 1])));
+                        token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(currChar) + String.valueOf(chrCodeLine[currPos + 1])),
+                                String.valueOf(currChar) + String.valueOf(chrCodeLine[currPos + 1]));
                         currPos += 2;
                     } else {
-                        token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(currChar)));
-                        //currPos++;
+                        token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(currChar)), String.valueOf(currChar));
+                        currPos++;
                     }
                     break;
                 case '=':
                     if (chrCodeLine[currPos + 1] == '=') {
-                        token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(currChar + chrCodeLine[currPos + 1])));
+                        token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(currChar) + String.valueOf(chrCodeLine[currPos + 1])),
+                                String.valueOf(currChar) + String.valueOf(chrCodeLine[currPos + 1]));
                         currPos += 2;
                     } else {
                         token = new OperadorAsignacion(Operador.getOpNames().get(String.valueOf(currChar)), String.valueOf(currChar));
@@ -510,6 +513,8 @@ public class JalgorInterpreter {
                 case '(':
                 case ')':
                 case ',':
+                case '{':
+                case '}':
                     token = new SignoPuntuacion(String.valueOf(currChar));
                     currPos++;
                     break;
@@ -571,13 +576,6 @@ public class JalgorInterpreter {
                     //currPos++;
                     break;
             }
-
-//            if (token != null) {
-//            int prevPos = currPos;
-//            currChar = getNextChar();
-//            token.setSiblingToken(getNextToken());
-//            //currPos = prevPos;
-//            }
             return token;
         }
 

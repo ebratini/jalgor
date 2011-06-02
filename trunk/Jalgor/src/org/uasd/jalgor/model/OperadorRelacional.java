@@ -29,15 +29,14 @@ package org.uasd.jalgor.model;
  */
 public class OperadorRelacional extends Operador {
 
+    public OperadorRelacional() {
+    }
+
     public OperadorRelacional(TipoOperador tipoOperador) {
         super(tipoOperador);
     }
 
-    public OperadorRelacional() {
-    }
-
-    @Override
-    public String getValue() {
-        return null;
+    public OperadorRelacional(TipoOperador tipoOperador, String value) {
+        super(tipoOperador, value);
     }
 }

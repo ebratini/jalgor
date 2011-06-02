@@ -80,7 +80,6 @@ public abstract class Statement {
     private AnalizadorSemantico as;
     private String originalValue;
     private String parsedValue;
-    // TODO: considerar usar linkedlist en lugar de list
     private LinkedList<Token> tokensStatement = new LinkedList<Token>();
 
     public Statement() {
@@ -93,6 +92,7 @@ public abstract class Statement {
     public Statement(Keyword tipoSatement, JalgorInterpreter jalgorInterpreter) {
         this.tipoSatement = tipoSatement;
         this.ji = jalgorInterpreter;
+        this.originalValue = ji.getAs().getAl().getCodeLine().getOrigValue();
     }
 
     public Statement(Keyword tipoSatement, AnalizadorLexico al) {
@@ -180,12 +180,10 @@ public abstract class Statement {
 
     protected String parse() {
         StringBuilder sbParsedValue = new StringBuilder();
-        sbParsedValue.append(String.format("%s", cppReps.get(tipoSatement)));
+        sbParsedValue.append(String.format("%s ", cppReps.get(tipoSatement)));
 
-        String espacio = " ";
         for (Token tok : this.getTokensStatement()) {
-            espacio = ((tok.getValue().equals(";") || tok.getValue().equals(",")) ? "" : " ");
-            sbParsedValue.append(String.format("%s%s", espacio, tok.toString()));
+            sbParsedValue.append(tok.toString());
         }
         return sbParsedValue.toString().trim();
     }

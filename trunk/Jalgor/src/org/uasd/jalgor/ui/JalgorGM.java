@@ -30,8 +30,12 @@
 package org.uasd.jalgor.ui;
 
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -52,6 +56,7 @@ public class JalgorGM extends javax.swing.JFrame {
     public JalgorGM() {
         setLocationByPlatform(true);
         initComponents();
+        setLafActionHandler();
     }
 
     /** This method is called from within the constructor to
@@ -89,6 +94,7 @@ public class JalgorGM extends javax.swing.JFrame {
         mnuMenuBar = new javax.swing.JMenuBar();
         mnuJalgor = new javax.swing.JMenu();
         mnuCompilar = new javax.swing.JMenuItem();
+        mnuIndentar = new javax.swing.JMenuItem();
         mnuLimpiarCampos = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         mnuSalir = new javax.swing.JMenuItem();
@@ -276,11 +282,6 @@ public class JalgorGM extends javax.swing.JFrame {
         jSplitPane1.setRightComponent(pnlOutFile);
 
         mnuJalgor.setText("Jalgor");
-        mnuJalgor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mnuJalgorActionPerformed(evt);
-            }
-        });
 
         mnuCompilar.setText("Compilar");
         mnuCompilar.addActionListener(new java.awt.event.ActionListener() {
@@ -289,6 +290,14 @@ public class JalgorGM extends javax.swing.JFrame {
             }
         });
         mnuJalgor.add(mnuCompilar);
+
+        mnuIndentar.setText("Indentar Salida");
+        mnuIndentar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mnuIndentarActionPerformed(evt);
+            }
+        });
+        mnuJalgor.add(mnuIndentar);
 
         mnuLimpiarCampos.setText("Limpiar Campos");
         mnuLimpiarCampos.addActionListener(new java.awt.event.ActionListener() {
@@ -314,29 +323,17 @@ public class JalgorGM extends javax.swing.JFrame {
         bgrLaf.add(rdbWindowsLaf);
         rdbWindowsLaf.setSelected(true);
         rdbWindowsLaf.setText("Windows");
-        rdbWindowsLaf.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdbWindowsLafActionPerformed(evt);
-            }
-        });
+        rdbWindowsLaf.setName("windows"); // NOI18N
         mnuLaf.add(rdbWindowsLaf);
 
         bgrLaf.add(rdbNimbusLaf);
         rdbNimbusLaf.setText("Nimbus");
-        rdbNimbusLaf.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdbNimbusLafActionPerformed(evt);
-            }
-        });
+        rdbNimbusLaf.setName("nimbus"); // NOI18N
         mnuLaf.add(rdbNimbusLaf);
 
         bgrLaf.add(rdbMetalLaf);
         rdbMetalLaf.setText("Metal");
-        rdbMetalLaf.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rdbMetalLafActionPerformed(evt);
-            }
-        });
+        rdbMetalLaf.setName("metal"); // NOI18N
         mnuLaf.add(rdbMetalLaf);
 
         mnuMenuBar.add(mnuLaf);
@@ -403,11 +400,6 @@ public class JalgorGM extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btnBuscarOutFilePathActionPerformed
 
-    private void mnuJalgorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuJalgorActionPerformed
-        // TODO add your handling code here:
-        compilar(txtSourceFilePath.getText(), txtOutFilePath.getText());
-    }//GEN-LAST:event_mnuJalgorActionPerformed
-
     private void mnuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuSalirActionPerformed
         // TODO add your handling code here:
         this.dispose();
@@ -435,24 +427,19 @@ public class JalgorGM extends javax.swing.JFrame {
         compilar(txtSourceFilePath.getText(), txtOutFilePath.getText());
     }//GEN-LAST:event_btnCompilarActionPerformed
 
-    private void rdbWindowsLafActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbWindowsLafActionPerformed
-        // TODO add your handling code here:
-        LookAndFeelSelector.setLookAndFeel(LookAndFeelSelector.LAF.WINDOWS);
-        SwingUtilities.updateComponentTreeUI(this);
+    private void setLafActionHandler() {
+        ActionListener lafActionListener = new ActionListener() {
 
-    }//GEN-LAST:event_rdbWindowsLafActionPerformed
-
-    private void rdbNimbusLafActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbNimbusLafActionPerformed
-        // TODO add your handling code here:
-        LookAndFeelSelector.setLookAndFeel(LookAndFeelSelector.LAF.NIMBUS);
-        SwingUtilities.updateComponentTreeUI(this);
-    }//GEN-LAST:event_rdbNimbusLafActionPerformed
-
-    private void rdbMetalLafActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rdbMetalLafActionPerformed
-        // TODO add your handling code here:
-        LookAndFeelSelector.setLookAndFeel(LookAndFeelSelector.LAF.METAL);
-        SwingUtilities.updateComponentTreeUI(this);
-    }//GEN-LAST:event_rdbMetalLafActionPerformed
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                LookAndFeelSelector.setLookAndFeel(LookAndFeelSelector.LAF.valueOf(e.getActionCommand().toUpperCase()));
+                SwingUtilities.updateComponentTreeUI(JalgorGM.this);
+            }
+        };
+        rdbMetalLaf.addActionListener(lafActionListener);
+        rdbNimbusLaf.addActionListener(lafActionListener);
+        rdbWindowsLaf.addActionListener(lafActionListener);
+    }
 
     private void btnBuscarSrcFilePathActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarSrcFilePathActionPerformed
         // TODO add your handling code here:
@@ -481,6 +468,12 @@ public class JalgorGM extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_txtOutFilePathKeyPressed
 
+    private void mnuIndentarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuIndentarActionPerformed
+        // TODO add your handling code here:
+        indentarSalida("java");
+        jtaOutFile.setText(FileManager.loadFile(new File(txtOutFilePath.getText())).toString());
+    }//GEN-LAST:event_mnuIndentarActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -501,12 +494,33 @@ public class JalgorGM extends javax.swing.JFrame {
         jtaSalidaJalgor.setText("");
     }
 
+    private void indentarSalida(String style) {
+        String astyle = "";
+        String pathFileToStyle = txtOutFilePath.getText();
+        if (txtOutFilePath.getText().length() < 1) {
+            return;
+        }
+        try {
+            String osPath = System.getProperty("java.library.path");
+            if (osPath.toLowerCase().contains("astyle")) {
+                astyle = "astyle.exe";
+            } else {
+                astyle = astyle = getClass().getResource("/resources/utils/astyle/bin/AStyle.exe").toURI().getPath();
+            }
+            Runtime.getRuntime().exec(String.format("%s --style=%s -p \"%s\"", astyle, style, pathFileToStyle)).waitFor();
+        } catch (IOException ex) {
+            Logger.getLogger(JalgorGM.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (URISyntaxException use) {
+            Logger.getLogger(JalgorGM.class.getName()).log(Level.SEVERE, null, use);
+        } catch (InterruptedException ie) {
+            Logger.getLogger(JalgorGM.class.getName()).log(Level.SEVERE, null, ie);
+        }
+    }
+
     private void compilar(String sourceFilePath, String outFilePath) {
         try {
             JalgorInterpreter ji = new JalgorInterpreter(sourceFilePath, outFilePath);
-            //if (jtaSourceFile.getText().length() < 1) {
             jtaSourceFile.setText(FileManager.loadFile(new File(txtSourceFilePath.getText())).toString());
-            //}
             ji.start();
             if (ji.getErrores().size() > 0 || ji.hayErrorEnLineaCodigo()) {
                 StringBuilder sbErrores = new StringBuilder();
@@ -545,6 +559,7 @@ public class JalgorGM extends javax.swing.JFrame {
     private javax.swing.JLabel lblSalidaJalgor;
     private javax.swing.JMenuItem mnuAbout;
     private javax.swing.JMenuItem mnuCompilar;
+    private javax.swing.JMenuItem mnuIndentar;
     private javax.swing.JMenu mnuInfo;
     private javax.swing.JMenu mnuJalgor;
     private javax.swing.JMenu mnuLaf;

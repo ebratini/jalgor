@@ -29,15 +29,14 @@ package org.uasd.jalgor.model;
  */
 public class OperadorBooleano extends Operador {
 
+    public OperadorBooleano() {
+    }
+
     public OperadorBooleano(TipoOperador tipoOperador) {
         super(tipoOperador);
     }
 
-    public OperadorBooleano() {
-    }
-
-    @Override
-    public String getValue() {
-        return null;
+    public OperadorBooleano(TipoOperador tipoOperador, String value) {
+        super(tipoOperador, value);
     }
 }
