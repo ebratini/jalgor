@@ -49,7 +49,7 @@ public abstract class Statement {
             put(Keyword.ASIGNACION, "");
             put(Keyword.PROGRAMA, "int main() {");
             put(Keyword.FIN_PROGRAMA, "}");
-            put(Keyword.NUM, "double");
+            put(Keyword.NUM, "float");
             put(Keyword.ALFA, "string");
             put(Keyword.LEE, "cin >>");
             put(Keyword.ESCRIBE, "cout <<");
