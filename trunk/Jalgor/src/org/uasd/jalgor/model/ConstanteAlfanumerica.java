@@ -29,22 +29,11 @@ package org.uasd.jalgor.model;
  */
 public class ConstanteAlfanumerica extends Token {
 
-    private String value;
-
     public ConstanteAlfanumerica() {
         super(TipoToken.CONSTANTE);
     }
 
     public ConstanteAlfanumerica(String value) {
-        this();
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
+        super(TipoToken.CONSTANTE, value);
     }
 }

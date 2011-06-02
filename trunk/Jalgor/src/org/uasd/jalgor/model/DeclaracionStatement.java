@@ -54,10 +54,10 @@ public class DeclaracionStatement extends Statement {
         AnalizadorLexico al = ji.getAs().getAl();
         AnalizadorSemantico asem = ji.getAs().getAsem();
 
-        Token token = al.getNextToken();//getAl().getNextToken();
-        Token nxtToken = al.getNextToken();//token.getSiblingToken();
+        Token token = al.getNextToken();
+        Token nxtToken = al.getNextToken();
         if (!(token instanceof VariableId)) {
-            String msjError = "Identificador esperado";
+            String msjError = "Identificador esperado\n";
             al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
@@ -65,12 +65,12 @@ public class DeclaracionStatement extends Statement {
                 || (nxtToken instanceof SignoPuntuacion
                 && (!((SignoPuntuacion) nxtToken).getValue().equals(",") && !((SignoPuntuacion) nxtToken).getValue().equals(";")))) {
 
-            String msjError = "Token invalido " + nxtToken.getValue() + "; [;|,|=] esperado";
+            String msjError = "Token invalido " + nxtToken.getValue() + "; [;|,|=] esperado\n";
             al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
         if (asem.variableExiste(token.getValue())) {
-            String msjError = "Variable " + token.getValue() + " ya ha sido declarada";
+            String msjError = "Variable " + token.getValue() + " ya ha sido declarada\n";
             al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
@@ -84,26 +84,33 @@ public class DeclaracionStatement extends Statement {
                 Token tok = al.getNextToken();
                 if (tok instanceof VariableId) {
                     if (asem.variableExiste(tok.getValue())) {
-                        String msjError = "Variable " + tok.getValue() + " ya ha sido declarada";
+                        String msjError = "Variable " + tok.getValue() + " ya ha sido declarada\n";
                         al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
-                    ji.addVariable(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), token.getValue()));
+                    ji.addVariable(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), tok.getValue()));
                 }
                 addTokenStatement(tok);
             }
             if (!getTokensStatement().getLast().getValue().equals(";")) {
-                String msjError = "Token invalido al final de linea: " + getTokensStatement().get(getTokensStatement().size() - 1).getValue();
-                msjError += "; [;] esperado";
+                String msjError = String.format("Token invalido al final de linea: %s [;] esperado\n", getTokensStatement().getLast().getValue());
                 al.getCodeLine().addError(new InterpreterError(msjError));
                 throw new AlgorSintaxException(msjError);
             }
             setParsedValue(parse());
         } else if (nxtToken instanceof OperadorAsignacion) {
-            Statement asigStatement = new AsignacionStatement(getTipoSatement(), al, (VariableId) token,
+            Statement asigStatement = new AsignacionStatement(Statement.Keyword.ASIGNACION, ji, (VariableId) token,
                     Variable.TipoVariable.valueOf(getTipoSatement().toString()));
 
+            // remover los token conseguidos para declaracion statements porque ya asigStm los trae
+            getTokensStatement().removeAll(getTokensStatement());
+            
             setParsedValue(parse() + " " + asigStatement.getParsedValue());
+        }
+        if (getParsedValue().indexOf(';') != getParsedValue().lastIndexOf(';')) {
+            String msjError = "Fin de linea invalido. Mas de un identificador de fin de linea encontrado.\n";
+            al.getCodeLine().addError(new InterpreterError(msjError));
+            throw new AlgorSintaxException(msjError);
         }
     }
 }

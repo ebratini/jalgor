@@ -299,7 +299,8 @@ public class JalgorInterpreter {
                         throw new AlgorSintaxException(msjError);
                     }
                     if (token instanceof VariableId) {
-                        if (token.getSiblingToken() instanceof OperadorAsignacion) {
+                        Token nxtToken = al.getNextToken();
+                        if (nxtToken instanceof OperadorAsignacion) {
 
                             /* si la sentencia es de asignacion (variable seguida de op de asignacion)
                              * reviso si ya ha sido declarada, sino se lanza una excepcion
@@ -307,7 +308,7 @@ public class JalgorInterpreter {
                             Variable var = asem.searchVariable(token.getValue());
                             if (var != null) {
                                 TipoVariable tipoVariable = var.getTipoVariable(); // JalgorInterpreter.getVariables().get(token.getValue()).getTipoVariable();
-                                statement = new AsignacionStatement(Statement.Keyword.ASIGNACION, al, (VariableId) token, tipoVariable);
+                                statement = new AsignacionStatement(Statement.Keyword.ASIGNACION, JalgorInterpreter.this, (VariableId) token, tipoVariable);
                             } else {
                                 String msjError = "variable " + token.getValue() + " no declarada\n";
                                 al.getCodeLine().addError(new InterpreterError(msjError));
@@ -370,10 +371,10 @@ public class JalgorInterpreter {
                                 statement = new DeclaracionStatement(tipoKeyword, JalgorInterpreter.this);//new DeclaracionStatement(tipoKeyword, al);
                                 break;
                             case LEE:
-                                statement = new LeeStatement(tipoKeyword, al);
+                                statement = new LeeStatement(tipoKeyword, JalgorInterpreter.this);
                                 break;
                             case ESCRIBE:
-                                statement = new EscribeStatement(tipoKeyword, al);
+                                statement = new EscribeStatement(tipoKeyword, JalgorInterpreter.this);
                                 break;
                             case SI:
                                 // agregar ambito de sentencia
@@ -471,11 +472,12 @@ public class JalgorInterpreter {
                 case '/':
                     if (currChar == '-' && (hasNextChar()
                             && (chrCodeLine[currPos + 1] == '.' || Character.isDigit(chrCodeLine[currPos + 1])))) {
+                        currChar = getNextChar();
                         token = getNextToken();
                         break;
                     }
-                    token = new OperadorAritmetico(Operador.getOpNames().get(String.valueOf(currChar)));
-                    //currPos++;
+                    token = new OperadorAritmetico(Operador.getOpNames().get(String.valueOf(currChar)), String.valueOf(currChar));
+                    currPos++;
                     break;
                 case '&':
                 case '|':
@@ -500,8 +502,8 @@ public class JalgorInterpreter {
                         token = new OperadorRelacional(Operador.getOpNames().get(String.valueOf(currChar + chrCodeLine[currPos + 1])));
                         currPos += 2;
                     } else {
-                        token = new OperadorAsignacion(Operador.getOpNames().get(String.valueOf(currChar)));
-                        //currPos++;
+                        token = new OperadorAsignacion(Operador.getOpNames().get(String.valueOf(currChar)), String.valueOf(currChar));
+                        currPos++;
                     }
                     break;
                 case ';':
@@ -536,17 +538,18 @@ public class JalgorInterpreter {
                         currChar = getNextChar();
                     }
                     token = new ConstanteNumerica(num.toString());
-                    currPos++;
                     break;
                 case '"':
                     StringBuilder str = new StringBuilder();
+                    str.append(currChar);
                     currChar = getNextChar();
                     while (hasNextChar() && currChar != '"') {
                         str.append(currChar);
                         currChar = getNextChar();
                     }
+                    str.append(currChar);
                     token = new ConstanteAlfanumerica(str.toString());
-                    //currPos += 2;
+                    currPos++;
                     break;
                 default:
                     StringBuilder var = new StringBuilder();
@@ -560,7 +563,7 @@ public class JalgorInterpreter {
                         token = new ComentarioToken();
                         break;
                     }
-                    if (Statement.keywordMatcher.containsKey(var.toString().toLowerCase())) {
+                    if (Statement.keywordMatcher.containsKey(var.toString())) {
                         token = new KeywordToken(var.toString());
                     } else {
                         token = new VariableId(var.toString());
@@ -569,11 +572,12 @@ public class JalgorInterpreter {
                     break;
             }
 
-            /*if (token != null) {
-            int prevPos = currPos;
-            token.setSiblingToken(getNextToken());
-            currPos = prevPos;
-            }*/
+//            if (token != null) {
+//            int prevPos = currPos;
+//            currChar = getNextChar();
+//            token.setSiblingToken(getNextToken());
+//            //currPos = prevPos;
+//            }
             return token;
         }
 
@@ -636,7 +640,7 @@ public class JalgorInterpreter {
             Variable searchedVar = null;
             for (Integer ambito : as.getAmbitoStatements()) {
                 searchedVar = new Variable(variableId, ambito);
-                int idx = Collections.binarySearch(variables, searchedVar, Collections.reverseOrder());
+                int idx = Collections.binarySearch(variables, searchedVar);
 
                 if (idx >= 0) {
                     variable = variables.get(idx);

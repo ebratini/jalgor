@@ -504,9 +504,9 @@ public class JalgorGM extends javax.swing.JFrame {
     private void compilar(String sourceFilePath, String outFilePath) {
         try {
             JalgorInterpreter ji = new JalgorInterpreter(sourceFilePath, outFilePath);
-            if (jtaSourceFile.getText().length() < 1) {
-                jtaSourceFile.setText(FileManager.loadFile(new File(txtSourceFilePath.getText())).toString());
-            }
+            //if (jtaSourceFile.getText().length() < 1) {
+            jtaSourceFile.setText(FileManager.loadFile(new File(txtSourceFilePath.getText())).toString());
+            //}
             ji.start();
             if (ji.getErrores().size() > 0 || ji.hayErrorEnLineaCodigo()) {
                 StringBuilder sbErrores = new StringBuilder();

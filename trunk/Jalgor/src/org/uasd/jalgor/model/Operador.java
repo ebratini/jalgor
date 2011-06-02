@@ -70,6 +70,11 @@ public abstract class Operador extends Token {
         this.tipoOperador = tipoOperador;
     }
 
+    public Operador(TipoOperador tipoOperador, String value) {
+        super(TipoToken.OPERADOR, value);
+        this.tipoOperador = tipoOperador;
+    }
+
     public TipoOperador getTipoOperador() {
         return tipoOperador;
     }
@@ -81,7 +86,4 @@ public abstract class Operador extends Token {
     public static HashMap<String, TipoOperador> getOpNames() {
         return opNames;
     }
-
-    @Override
-    public abstract String getValue();
 }
