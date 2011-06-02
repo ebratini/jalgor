@@ -55,7 +55,8 @@ public class MientrasStatement extends BlockStatement {
         Token token = al.getNextToken();
         switch (getTipoSatement()) {
             case MIENTRAS:
-                if (!(token instanceof VariableId) && !(token instanceof ConstanteAlfanumerica) && !(token instanceof ConstanteNumerica)) {
+                if (!(token instanceof VariableId) && !(token instanceof ConstanteAlfanumerica) && !(token instanceof ConstanteNumerica)
+                        && !(token instanceof SignoPuntuacion && token.getValue().equals("("))) {
                     String msjError = "[Identificador|Constante (alfa)numerica] esperado";
                     al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
@@ -66,6 +67,10 @@ public class MientrasStatement extends BlockStatement {
                     throw new AlgorSintaxException(msjError);
                 }
 
+                if (!token.getValue().equals("(")) {
+                    addTokenStatement(new SignoPuntuacion("("));
+                }
+                
                 addTokenStatement(token);
 
                 while (al.hasNextToken()) {
@@ -83,6 +88,9 @@ public class MientrasStatement extends BlockStatement {
                     addTokenStatement(tok);
                 }
 
+                if (!getTokensStatement().getLast().getValue().equals(")")) {
+                    addTokenStatement(new SignoPuntuacion(")"));
+                }
                 addTokenStatement(new SignoPuntuacion("{"));
                 setParsedValue(parse());
                 break;

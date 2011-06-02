@@ -77,6 +77,7 @@ public class JalgorGM extends javax.swing.JFrame {
         btnCompilar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
+        btnIndentar = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jtaSalidaJalgor = new javax.swing.JTextArea();
         lblSalidaJalgor = new javax.swing.JLabel();
@@ -161,28 +162,40 @@ public class JalgorGM extends javax.swing.JFrame {
             }
         });
 
+        btnIndentar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/code-indent_35x35.png"))); // NOI18N
+        btnIndentar.setToolTipText("Indentar Salida");
+        btnIndentar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIndentarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlBotonesAccionLayout = new javax.swing.GroupLayout(pnlBotonesAccion);
         pnlBotonesAccion.setLayout(pnlBotonesAccionLayout);
         pnlBotonesAccionLayout.setHorizontalGroup(
             pnlBotonesAccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlBotonesAccionLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlBotonesAccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnCompilar, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 58, Short.MAX_VALUE)
-                    .addComponent(btnLimpiar, javax.swing.GroupLayout.Alignment.LEADING, 0, 58, Short.MAX_VALUE)
-                    .addComponent(btnSalir, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 58, Short.MAX_VALUE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnlBotonesAccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlBotonesAccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(btnCompilar, javax.swing.GroupLayout.PREFERRED_SIZE, 58, Short.MAX_VALUE)
+                        .addComponent(btnIndentar, javax.swing.GroupLayout.PREFERRED_SIZE, 58, Short.MAX_VALUE))
+                    .addComponent(btnLimpiar, 0, 0, Short.MAX_VALUE)
+                    .addComponent(btnSalir, 0, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
         pnlBotonesAccionLayout.setVerticalGroup(
             pnlBotonesAccionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlBotonesAccionLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnCompilar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnIndentar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnLimpiar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnSalir, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(191, Short.MAX_VALUE))
+                .addContainerGap(340, Short.MAX_VALUE))
         );
 
         jtaSalidaJalgor.setColumns(20);
@@ -356,32 +369,30 @@ public class JalgorGM extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(statusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblSalidaJalgor)
-                .addContainerGap(796, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(jSplitPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnlBotonesAccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblSalidaJalgor)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jSplitPane1, javax.swing.GroupLayout.Alignment.LEADING)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(pnlBotonesAccion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(statusPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlBotonesAccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblSalidaJalgor)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(lblSalidaJalgor)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(pnlBotonesAccion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(statusPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -471,8 +482,12 @@ public class JalgorGM extends javax.swing.JFrame {
     private void mnuIndentarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnuIndentarActionPerformed
         // TODO add your handling code here:
         indentarSalida("java");
-        jtaOutFile.setText(FileManager.loadFile(new File(txtOutFilePath.getText())).toString());
     }//GEN-LAST:event_mnuIndentarActionPerformed
+
+    private void btnIndentarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIndentarActionPerformed
+        // TODO add your handling code here:
+        indentarSalida("java");
+    }//GEN-LAST:event_btnIndentarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -507,7 +522,8 @@ public class JalgorGM extends javax.swing.JFrame {
             } else {
                 styler = styler = getClass().getResource("/resources/utils/astyle/bin/AStyle.exe").toURI().getPath();
             }
-            Runtime.getRuntime().exec(String.format("%s --style=%s -p \"%s\"", styler, style, pathFileToStyle)).waitFor();
+            Runtime.getRuntime().exec(String.format("%s --style=%s -p -H \"%s\"", styler, style, pathFileToStyle)).waitFor();
+            jtaOutFile.setText(FileManager.loadFile(new File(txtOutFilePath.getText())).toString());
         } catch (IOException ex) {
             Logger.getLogger(JalgorGM.class.getName()).log(Level.SEVERE, null, ex);
         } catch (URISyntaxException use) {
@@ -546,6 +562,7 @@ public class JalgorGM extends javax.swing.JFrame {
     private javax.swing.JButton btnBuscarOutFilePath;
     private javax.swing.JButton btnBuscarSrcFilePath;
     private javax.swing.JButton btnCompilar;
+    private javax.swing.JButton btnIndentar;
     private javax.swing.JButton btnLimpiar;
     private javax.swing.JButton btnSalir;
     private javax.swing.JScrollPane jScrollPane1;

@@ -217,6 +217,9 @@ public class JalgorInterpreter {
         private boolean isPrgStmSet = false;
         private boolean isFinPrgStmSet = false;
 
+        private boolean ifOpened = false;
+        private boolean ifClosed = false;
+
         public AnalizadorSintactico() {
         }
 
@@ -390,25 +393,50 @@ public class JalgorInterpreter {
                                 statement = new EscribeStatement(tipoKeyword, JalgorInterpreter.this);
                                 break;
                             case SI:
-                                // agregar ambito de sentencia
+                                ifOpened = true;
+                                ifClosed = false;
                                 ambitoStatements.offer(getNextAmbitoStmSeq());
 
-                                statement = new CondicionStatement(tipoKeyword, al);
-                                Statement condSt = null;
-                                while (hasNextCodeLine() && !(condSt instanceof CondicionStatement && condSt.getTipoSatement().equals(Statement.Keyword.FIN_SI))) {
-                                    condSt = analizeCodeLine();
-                                    ((CondicionStatement) statement).addBlockStatement(condSt);
+                                statement = new CondicionStatement(tipoKeyword, JalgorInterpreter.this);
+                                Statement ifCondSt = null;
+                                while (hasNextCodeLine() && !(ifCondSt instanceof CondicionStatement && (ifCondSt.getTipoSatement().equals(Statement.Keyword.SINO) || ifCondSt.getTipoSatement().equals(Statement.Keyword.FIN_SI)))) {
+                                    ifCondSt = analizeCodeLine();
+                                    ((CondicionStatement) statement).addBlockStatement(ifCondSt);
+                                }
+                                // si llego hasta aqui es porque es un fin de sentencia,
+                                // para manejar el ambito, hacer un poll a la pila de ambito
+                                ambitoStatements.pollLast();
+                                break;
+                            case SINO:
+                                if (!ifOpened) {
+                                    String msjError = "Token: " + token.getValue() + " invalido. ";
+                                    msjError += "[si] esperado";
+                                    al.getCodeLine().addError(new InterpreterError(msjError));
+                                    throw new AlgorSintaxException(msjError);
+                                }
+                                ambitoStatements.offer(getNextAmbitoStmSeq());
+
+                                statement = new CondicionStatement(tipoKeyword, JalgorInterpreter.this);
+                                Statement elseCondSt = null;
+                                while (hasNextCodeLine() && !(elseCondSt instanceof CondicionStatement && elseCondSt.getTipoSatement().equals(Statement.Keyword.FIN_SI))) {
+                                    elseCondSt = analizeCodeLine();
+                                    ((CondicionStatement) statement).addBlockStatement(elseCondSt);
                                 }
                                 // si llego hasta aqui es porque es un fin de sentencia,
                                 // para manejar el ambito, hacer un poll a la pila de ambito
                                 ambitoStatements.pollLast();
                                 // validar que se halla salido del bucle por sentencia fin_si y no por fin de archivo
                                 break;
-                            case SINO:
-                                statement = new CondicionStatement(tipoKeyword, al);
-                                break;
                             case FIN_SI:
-                                statement = new CondicionStatement(tipoKeyword, al);
+                                if (!ifOpened) {
+                                    String msjError = "Token: " + token.getValue() + " invalido. ";
+                                    msjError += "[si] esperado";
+                                    al.getCodeLine().addError(new InterpreterError(msjError));
+                                    throw new AlgorSintaxException(msjError);
+                                }
+                                statement = new CondicionStatement(tipoKeyword, JalgorInterpreter.this);
+                                ifClosed = true;
+                                //ifOpened = false;
                                 break;
                             case MIENTRAS:
                                 ambitoStatements.offer(getNextAmbitoStmSeq());

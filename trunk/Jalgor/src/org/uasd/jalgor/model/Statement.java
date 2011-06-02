@@ -55,7 +55,7 @@ public abstract class Statement {
             put(Keyword.ESCRIBE, "cout <<");
             put(Keyword.SI, "if");
             put(Keyword.ENTONCES, "{");
-            put(Keyword.SINO, "else");
+            put(Keyword.SINO, "}else{");
             put(Keyword.FIN_SI, "}");
             put(Keyword.MIENTRAS, "while");
             put(Keyword.FIN_MIENTRAS, "}");
