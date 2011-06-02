@@ -512,6 +512,12 @@ public class JalgorGM extends javax.swing.JFrame {
     private void indentarSalida(String style) {
         String styler = "";
         String pathFileToStyle = txtOutFilePath.getText();
+        File outFile = new File(pathFileToStyle);
+        
+        if (!outFile.exists()) {
+            jtaSalidaJalgor.setText("no existe tal archivo\n");
+            return;
+        }
         if (txtOutFilePath.getText().length() < 1) {
             return;
         }
@@ -523,6 +529,7 @@ public class JalgorGM extends javax.swing.JFrame {
                 styler = styler = getClass().getResource("/resources/utils/astyle/bin/AStyle.exe").toURI().getPath();
             }
             Runtime.getRuntime().exec(String.format("%s --style=%s -p -H \"%s\"", styler, style, pathFileToStyle)).waitFor();
+
             jtaOutFile.setText(FileManager.loadFile(new File(txtOutFilePath.getText())).toString());
         } catch (IOException ex) {
             Logger.getLogger(JalgorGM.class.getName()).log(Level.SEVERE, null, ex);
