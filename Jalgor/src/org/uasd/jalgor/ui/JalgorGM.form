@@ -10,9 +10,6 @@
           <Properties>
             <Property name="text" type="java.lang.String" value="Jalgor"/>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuJalgorActionPerformed"/>
-          </Events>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="mnuCompilar">
               <Properties>
@@ -20,6 +17,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuCompilarActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="mnuIndentar">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Indentar Salida"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="mnuIndentarActionPerformed"/>
               </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="mnuLimpiarCampos">
@@ -54,10 +59,8 @@
                 </Property>
                 <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Windows"/>
+                <Property name="name" type="java.lang.String" value="windows" noResource="true"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rdbWindowsLafActionPerformed"/>
-              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JRadioButtonMenuItem" name="rdbNimbusLaf">
               <Properties>
@@ -65,10 +68,8 @@
                   <ComponentRef name="bgrLaf"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Nimbus"/>
+                <Property name="name" type="java.lang.String" value="nimbus" noResource="true"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rdbNimbusLafActionPerformed"/>
-              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JRadioButtonMenuItem" name="rdbMetalLaf">
               <Properties>
@@ -76,10 +77,8 @@
                   <ComponentRef name="bgrLaf"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="Metal"/>
+                <Property name="name" type="java.lang.String" value="metal" noResource="true"/>
               </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="rdbMetalLafActionPerformed"/>
-              </Events>
             </MenuItem>
           </SubComponents>
         </Menu>

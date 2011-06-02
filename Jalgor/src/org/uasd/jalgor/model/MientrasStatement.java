@@ -23,93 +23,75 @@
  */
 package org.uasd.jalgor.model;
 
-import java.util.LinkedList;
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.InterpreterError;
+import org.uasd.jalgor.business.JalgorInterpreter;
 import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
+import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorSemantico;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class MientrasStatement extends Statement {
-
-    private int ambitoSeqId = -1;
-    private LinkedList<Statement> blockStatements = new LinkedList<Statement>();
+public class MientrasStatement extends BlockStatement {
 
     public MientrasStatement() throws AlgorSintaxException {
     }
 
-    public MientrasStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
-        super(tipoSatement, al);
+    public MientrasStatement(Keyword tipoSatement, JalgorInterpreter ji) throws AlgorSintaxException {
+        super(tipoSatement, ji);
         parseMe();
     }
 
-    public MientrasStatement(Keyword tipoSatement, AnalizadorLexico al, int ambito) throws AlgorSintaxException {
-        super(tipoSatement, al);
-        this.ambitoSeqId = ambito;
+    public MientrasStatement(Keyword tipoSatement, JalgorInterpreter ji, int ambito) throws AlgorSintaxException {
+        super(tipoSatement, ji, ambito);
         parseMe();
-    }
-
-    public LinkedList<Statement> getBlockStatements() {
-        return blockStatements;
-    }
-
-    public void setBlockStatements(LinkedList<Statement> blockStatements) {
-        this.blockStatements = blockStatements;
-    }
-
-    public void addBlockStatement(Statement statement) {
-        this.blockStatements.offer(statement);
-    }
-
-    public int getAmbitoSeqId() {
-        return ambitoSeqId;
     }
 
     private void parseMe() throws AlgorSintaxException {
-        Token token = getAl().getNextToken();
+        AnalizadorLexico al = getJi().getAs().getAl();
+        AnalizadorSemantico asem = getJi().getAs().getAsem();
+
+        Token token = al.getNextToken();
         switch (getTipoSatement()) {
             case MIENTRAS:
                 if (!(token instanceof VariableId) && !(token instanceof ConstanteAlfanumerica) && !(token instanceof ConstanteNumerica)) {
                     String msjError = "[Identificador|Constante (alfa)numerica] esperado";
-                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                    al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
-                if (token instanceof VariableId && !getAs().variableExiste(token.getValue())) {
+                if (token instanceof VariableId && !asem.variableExiste(token.getValue())) {
                     String msjError = "Variable " + token.getValue() + " no ha sido declarada";
-                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                    al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
 
                 addTokenStatement(token);
 
-                while (getAl().hasNextToken()) {
-                    Token tok = getAl().getNextToken();
-                    if (token instanceof KeywordToken) {
+                while (al.hasNextToken()) {
+                    Token tok = al.getNextToken();
+                    if (tok instanceof KeywordToken) {
                         String msjError = "Token invalido: " + tok.getValue();
-                        getAl().getCodeLine().addError(new InterpreterError(msjError));
+                        al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
-                    if (tok instanceof VariableId && !getAs().variableExiste(token.getValue())) {
+                    if (tok instanceof VariableId && !asem.variableExiste(tok.getValue())) {
                         String msjError = "Variable " + tok.getValue() + " no ha sido declarada";
-                        getAl().getCodeLine().addError(new InterpreterError(msjError));
+                        al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
                     addTokenStatement(tok);
                 }
 
-                // TODO: el parse para estos dos tipos de statement es diferente
+                addTokenStatement(new SignoPuntuacion("{"));
                 setParsedValue(parse());
                 break;
             case FIN_MIENTRAS:
                 if (token != null) {
                     String msjError = "Token invalido " + token.getValue();
-                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                    al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
-
-                // TODO: el parse para estos dos tipos de statement es diferente
                 setParsedValue(parse());
                 break;
         }
