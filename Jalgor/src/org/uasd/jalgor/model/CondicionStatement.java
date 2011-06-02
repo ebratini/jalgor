@@ -23,94 +23,86 @@
  */
 package org.uasd.jalgor.model;
 
-import java.util.LinkedList;
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.InterpreterError;
+import org.uasd.jalgor.business.JalgorInterpreter;
 import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
+import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorSemantico;
 
 /**
  *
  * @author Edwin Bratini <edwin.bratini@gmail.com>
  */
-public class CondicionStatement extends Statement {
-
-    private int ambitoSeqId = -1;
-    private LinkedList<Statement> blockStatements = new LinkedList<Statement>();
+public class CondicionStatement extends BlockStatement {
 
     public CondicionStatement() throws AlgorSintaxException {
     }
 
-    public CondicionStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
-        super(tipoSatement, al);
+    public CondicionStatement(Keyword tipoSatement, JalgorInterpreter ji) throws AlgorSintaxException {
+        super(tipoSatement, ji);
         parseMe();
     }
 
-    public CondicionStatement(Keyword tipoSatement, AnalizadorLexico al, int ambito) throws AlgorSintaxException {
-        super(tipoSatement, al);
-        this.ambitoSeqId = ambito;
+    public CondicionStatement(Keyword tipoSatement, JalgorInterpreter ji, int ambito) throws AlgorSintaxException {
+        super(tipoSatement, ji, ambito);
         parseMe();
-    }
-
-    public LinkedList<Statement> getBlockStatements() {
-        return blockStatements;
-    }
-
-    public void setBlockStatements(LinkedList<Statement> blockStatements) {
-        this.blockStatements = blockStatements;
-    }
-
-    public void addBlockStatement(Statement statement) {
-        this.blockStatements.offer(statement);
-    }
-
-    public int getAmbitoSeqId() {
-        return ambitoSeqId;
     }
 
     private void parseMe() throws AlgorSintaxException {
-        Token token = getAl().getNextToken();
+        AnalizadorLexico al = getJi().getAs().getAl();
+        AnalizadorSemantico asem = getJi().getAs().getAsem();
+
+        Token token = al.getNextToken();
         switch (getTipoSatement()) {
             case SI:
-                if (!(token instanceof VariableId) && !(token instanceof ConstanteAlfanumerica) && !(token instanceof ConstanteNumerica)) {
+                if (!(token instanceof VariableId) && !(token instanceof ConstanteAlfanumerica) && !(token instanceof ConstanteNumerica)
+                        && !(token instanceof SignoPuntuacion && token.getValue().equals("("))) {
                     String msjError = "[Identificador|Constante (alfa)numerica] esperado";
-                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                    al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
-                if (token instanceof VariableId && !getAs().variableExiste(token.getValue())) {
+                if (token instanceof VariableId && !asem.variableExiste(token.getValue())) {
                     String msjError = "Variable " + token.getValue() + " no ha sido declarada";
-                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                    al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
 
+                if (!token.getValue().equals("(")) {
+                    addTokenStatement(new SignoPuntuacion("("));
+                }
                 addTokenStatement(token);
 
-                while (getAl().hasNextToken()) {
-                    Token tok = getAl().getNextToken();
+                while (al.hasNextToken()) {
+                    Token tok = al.getNextToken();
                     if (token instanceof KeywordToken) {
                         String msjError = "Token invalido: " + tok.getValue();
-                        getAl().getCodeLine().addError(new InterpreterError(msjError));
+                        al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
-                    if (tok instanceof VariableId && !getAs().variableExiste(token.getValue())) {
+                    if (tok instanceof VariableId && !asem.variableExiste(tok.getValue())) {
                         String msjError = "Variable " + tok.getValue() + " no ha sido declarada";
-                        getAl().getCodeLine().addError(new InterpreterError(msjError));
+                        al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
+                    }
+                    if (tok.getValue().equals("entonces") && !al.hasNextToken() && !getTokensStatement().getLast().getValue().equals(")")) {
+                        addTokenStatement(new SignoPuntuacion(")"));
                     }
                     addTokenStatement(tok);
                 }
-
-                // TODO: el parse para estos dos tipos de statement es diferente
+                if (!getTokensStatement().getLast().getValue().equals("entonces")) {
+                        String msjError = "Token invalido: al final de sentencia. [entonces] esperado";
+                        al.getCodeLine().addError(new InterpreterError(msjError));
+                        throw new AlgorSintaxException(msjError);
+                }
                 setParsedValue(parse());
                 break;
             case SINO:
             case FIN_SI:
                 if (token != null) {
                     String msjError = "Token invalido " + token.getValue();
-                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                    al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
-
-                // TODO: el parse para estos dos tipos de statement es diferente
                 setParsedValue(parse());
                 break;
         }
