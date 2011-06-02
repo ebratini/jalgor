@@ -29,15 +29,14 @@ package org.uasd.jalgor.model;
  */
 public class OperadorAritmetico extends Operador {
 
+    public OperadorAritmetico() {
+    }
+
     public OperadorAritmetico(TipoOperador tipoOperador) {
         super(tipoOperador);
     }
 
-    public OperadorAritmetico() {
-    }
-
-    @Override
-    public String getValue() {
-        return null;
+    public OperadorAritmetico(TipoOperador tipoOperador, String value) {
+        super(tipoOperador, value);
     }
 }

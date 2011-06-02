@@ -25,7 +25,9 @@ package org.uasd.jalgor.model;
 
 import org.uasd.jalgor.business.AlgorSintaxException;
 import org.uasd.jalgor.business.InterpreterError;
+import org.uasd.jalgor.business.JalgorInterpreter;
 import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
+import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorSemantico;
 
 /**
  *
@@ -36,29 +38,33 @@ public class LeeStatement extends Statement {
     public LeeStatement() throws AlgorSintaxException {
         super(Keyword.LEE);
     }
-
-    public LeeStatement(Keyword tipoSatement, AnalizadorLexico al) throws AlgorSintaxException {
-        super(tipoSatement, al);
+    
+    public LeeStatement(Keyword tipoSatement, JalgorInterpreter ji) throws AlgorSintaxException {
+        super(tipoSatement, ji);
         parseMe();
     }
 
     private void parseMe() throws AlgorSintaxException {
-        Token token = getAl().getNextToken();
-        Token nxtToken = token.getSiblingToken();
+        JalgorInterpreter ji = getJi();
+        AnalizadorLexico al = ji.getAs().getAl();
+        AnalizadorSemantico asem = ji.getAs().getAsem();
+        
+        Token token = al.getNextToken();
+        Token nxtToken = al.getNextToken();
         if (!(token instanceof VariableId)) {
-            String msjError = "Identificador esperado";
-            getAl().getCodeLine().addError(new InterpreterError(msjError));
+            String msjError = "Identificador esperado\n";
+            al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
-        if (!getAs().variableExiste(token.getValue())) {
-            String msjError = "Variable " + token.getValue() + " no ha sido declarada";
-            getAl().getCodeLine().addError(new InterpreterError(msjError));
+        if (!asem.variableExiste(token.getValue())) {
+            String msjError = "Variable " + token.getValue() + " no ha sido declarada\n";
+            al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
         if (!(nxtToken instanceof SignoPuntuacion)
                 || (nxtToken instanceof SignoPuntuacion && (!((SignoPuntuacion) nxtToken).getValue().equals(";")))) {
-            String msjError = "[;] esperado";
-            getAl().getCodeLine().addError(new InterpreterError(msjError));
+            String msjError = "[;] esperado\n";
+            al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
 
@@ -66,5 +72,10 @@ public class LeeStatement extends Statement {
         addTokenStatement(nxtToken);
 
         setParsedValue(parse());
+        if (getParsedValue().indexOf(';') != getParsedValue().lastIndexOf(';')) {
+            String msjError = "Fin de linea invalido. Mas de un identificador de fin de linea encontrado.\n";
+            al.getCodeLine().addError(new InterpreterError(msjError));
+            throw new AlgorSintaxException(msjError);
+        }
     }
 }

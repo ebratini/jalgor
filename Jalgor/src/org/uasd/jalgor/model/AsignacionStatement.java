@@ -35,18 +35,10 @@ import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorSemantico;
  */
 public class AsignacionStatement extends Statement {
 
-    //private JalgorInterpreter ji;
     private Token idVariable;
     private Variable.TipoVariable tipoVariable;
 
     public AsignacionStatement() throws AlgorSintaxException {
-    }
-
-    public AsignacionStatement(Keyword tipoSatement, AnalizadorLexico al, VariableId idVariable, Variable.TipoVariable tipoVariable) throws AlgorSintaxException {
-        super(tipoSatement, al);
-        this.idVariable = idVariable;
-        this.tipoVariable = tipoVariable;
-        parseMe();
     }
 
     public AsignacionStatement(Keyword tipoSatement, JalgorInterpreter ji) throws AlgorSintaxException {
@@ -54,65 +46,65 @@ public class AsignacionStatement extends Statement {
         parseMe();
     }
 
+    public AsignacionStatement(Keyword tipoSatement, JalgorInterpreter ji, VariableId idVariable, Variable.TipoVariable tipoVariable) throws AlgorSintaxException {
+        super(tipoSatement, ji);
+        this.idVariable = idVariable;
+        this.tipoVariable = tipoVariable;
+        parseMe();
+    }
+
     private void parseMe() throws AlgorSintaxException {
-        JalgorInterpreter ji = getJi();
-        AnalizadorLexico al = ji.getAs().getAl();
-        AnalizadorSemantico asem = ji.getAs().getAsem();
-        
-        this.addTokenStatement(idVariable);
-        Token token = getAl().getNextToken();
-        if (!(token instanceof OperadorAsignacion)) {
-            String msjError = "Token invalido: " + token.getValue() + "; [=] esperado";
-            getAl().getCodeLine().addError(new InterpreterError(msjError));
-            throw new AlgorSintaxException(msjError);
-        }
-        this.addTokenStatement(token);
+        AnalizadorLexico al = getJi().getAs().getAl();
+        AnalizadorSemantico asem = getJi().getAs().getAsem();
+
+        addTokenStatement(idVariable);
+        addTokenStatement(new OperadorAsignacion(Operador.TipoOperador.ASIG, "="));
         switch (tipoVariable) {
             case ALFA:
-                while (getAl().hasNextToken()) {
-                    Token tok = getAl().getNextToken();
+                while (al.hasNextToken()) {
+                    Token tok = al.getNextToken();
                     if (tok instanceof ConstanteAlfanumerica || tok instanceof VariableId
                             || (tok instanceof OperadorAritmetico && ((OperadorAritmetico) tok).getTipoOperador().equals(Operador.TipoOperador.SUMA))
                             || (tok instanceof SignoPuntuacion && tok.getValue().equals(";"))) {
                         this.addTokenStatement(tok);
                     } else {
-                        String msjError = "Token invalido: " + tok.getValue();
-                        getAl().getCodeLine().addError(new InterpreterError(msjError));
+                        String msjError = String.format("Token invalido: %s\n", tok.getValue());
+                        al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
                 }
-                if (!getTokensStatement().get(getTokensStatement().size() - 1).getValue().equals(";")) {
-                    String msjError = "Token invalido al final de linea: " + getTokensStatement().get(getTokensStatement().size() - 1).getValue();
-                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                if (!getTokensStatement().getLast().getValue().equals(";")) {
+                    String msjError = String.format("Token invalido al final de linea: %s\n", getTokensStatement().getLast().getValue());
+                    al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
                 break;
             case NUM:
-                while (getAl().hasNextToken()) {
-                    Token tok = getAl().getNextToken();
+                while (al.hasNextToken()) {
+                    Token tok = al.getNextToken();
                     if (tok instanceof ConstanteNumerica
-                            || (tok instanceof VariableId && getAs().variableExiste(tok.getValue()))
+                            || (tok instanceof VariableId && asem.variableExiste(tok.getValue()))
                             || tok instanceof OperadorAritmetico || (tok instanceof SignoPuntuacion && tok.getValue().equals(";"))) {
-                        this.addTokenStatement(tok);
+                        addTokenStatement(tok);
                     } else {
-                        String msjError = "Token invalido: " + tok.getValue();
-                        getAl().getCodeLine().addError(new InterpreterError(msjError));
+                        String msjError = String.format("Token invalido: %s\n", tok.getValue());
+                        al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
                 }
-                if (!getTokensStatement().get(getTokensStatement().size() - 1).getValue().equals(";")) {
-                    String msjError = "Token invalido al final de linea: " + getTokensStatement().get(getTokensStatement().size() - 1).getValue();
-                    getAl().getCodeLine().addError(new InterpreterError(msjError));
+                if (!getTokensStatement().getLast().getValue().equals(";")) {
+                    String msjError = String.format("Token invalido al final de linea: %s\n", getTokensStatement().getLast().getValue());
+                    al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
                 break;
         }
 
         setParsedValue(parse());
-    }
-
-    @Override
-    public String toString() {
-        return getParsedValue();
+        if (getParsedValue().indexOf(';') != getParsedValue().lastIndexOf(';')) {
+            String msjError = "Fin de linea invalido. Mas de un identificador de fin de linea encontrado.\n";
+            al.getCodeLine().addError(new InterpreterError(msjError));
+            throw new AlgorSintaxException(msjError);
+        }
     }
 }

@@ -21,7 +21,6 @@
  *  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  *  THE SOFTWARE.
  */
-
 package org.uasd.jalgor.model;
 
 /**
@@ -36,10 +35,8 @@ public class OperadorAsignacion extends Operador {
     public OperadorAsignacion(TipoOperador tipoOperador) {
         super(tipoOperador);
     }
-    
-    @Override
-    public String getValue() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
+    public OperadorAsignacion(TipoOperador tipoOperador, String value) {
+        super(tipoOperador, value);
+    }
 }

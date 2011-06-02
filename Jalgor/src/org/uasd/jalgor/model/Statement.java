@@ -46,12 +46,13 @@ public abstract class Statement {
 
         {
             put(Keyword.COMENTARIO, "//");
+            put(Keyword.ASIGNACION, "");
             put(Keyword.PROGRAMA, "int main() {");
             put(Keyword.FIN_PROGRAMA, "}");
             put(Keyword.NUM, "double");
             put(Keyword.ALFA, "string");
-            put(Keyword.LEE, "cin>>");
-            put(Keyword.ESCRIBE, "cout<<");
+            put(Keyword.LEE, "cin >>");
+            put(Keyword.ESCRIBE, "cout <<");
             put(Keyword.SI, "if");
             put(Keyword.ENTONCES, "{");
             put(Keyword.SINO, "else");
@@ -209,5 +210,10 @@ public abstract class Statement {
         int hash = 3;
         hash = 17 * hash + (this.tipoSatement != null ? this.tipoSatement.hashCode() : 0);
         return hash;
+    }
+
+    @Override
+    public String toString() {
+        return this.parsedValue;
     }
 }
