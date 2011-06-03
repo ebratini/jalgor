@@ -75,9 +75,9 @@ public class JalgorGM extends javax.swing.JFrame {
         statusAnimationLabel = new javax.swing.JLabel();
         pnlBotonesAccion = new javax.swing.JPanel();
         btnCompilar = new javax.swing.JButton();
+        btnIndentar = new javax.swing.JButton();
         btnLimpiar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
-        btnIndentar = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jtaSalidaJalgor = new javax.swing.JTextArea();
         lblSalidaJalgor = new javax.swing.JLabel();
@@ -146,6 +146,14 @@ public class JalgorGM extends javax.swing.JFrame {
             }
         });
 
+        btnIndentar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/code-indent_35x35.png"))); // NOI18N
+        btnIndentar.setToolTipText("Indentar Salida");
+        btnIndentar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIndentarActionPerformed(evt);
+            }
+        });
+
         btnLimpiar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/escoba_35x35.png"))); // NOI18N
         btnLimpiar.setToolTipText("Limpiar Campos");
         btnLimpiar.addActionListener(new java.awt.event.ActionListener() {
@@ -159,14 +167,6 @@ public class JalgorGM extends javax.swing.JFrame {
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnSalirActionPerformed(evt);
-            }
-        });
-
-        btnIndentar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/resources/images/code-indent_35x35.png"))); // NOI18N
-        btnIndentar.setToolTipText("Indentar Salida");
-        btnIndentar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnIndentarActionPerformed(evt);
             }
         });
 
@@ -522,7 +522,7 @@ public class JalgorGM extends javax.swing.JFrame {
 
             @Override
             public void run() {
-                String styler = "";
+                String styler = null;
                 String pathFileToStyle = txtOutFilePath.getText();
                 File outFile = new File(pathFileToStyle);
 
@@ -542,6 +542,11 @@ public class JalgorGM extends javax.swing.JFrame {
                     }
                 }
 
+                if (styler == null) {
+                    jtaSalidaJalgor.setText("code styler no encontrado\n");
+                    return;
+                }
+                
                 try {
                     Runtime.getRuntime().exec(String.format("%s --style=%s -p -H \"%s\"", styler, style, pathFileToStyle)).waitFor();
                 } catch (InterruptedException ex) {
@@ -556,8 +561,10 @@ public class JalgorGM extends javax.swing.JFrame {
 
     private void compilar(String sourceFilePath, String outFilePath) {
         try {
-            JalgorInterpreter ji = new JalgorInterpreter(sourceFilePath, outFilePath);
             jtaSourceFile.setText(FileManager.loadFile(new File(txtSourceFilePath.getText())).toString());
+            jtaOutFile.setText("");
+            
+            JalgorInterpreter ji = new JalgorInterpreter(sourceFilePath, outFilePath);
             ji.start();
             if (ji.getErrores().size() > 0 || ji.hayErrorEnLineaCodigo()) {
                 StringBuilder sbErrores = new StringBuilder();

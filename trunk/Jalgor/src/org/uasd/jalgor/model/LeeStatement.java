@@ -52,18 +52,18 @@ public class LeeStatement extends Statement {
         Token token = al.getNextToken();
         Token nxtToken = al.getNextToken();
         if (!(token instanceof VariableId)) {
-            String msjError = "Identificador esperado\n";
+            String msjError = "Identificador esperado";
             al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
         if (!asem.variableExiste(token.getValue())) {
-            String msjError = "Variable " + token.getValue() + " no ha sido declarada\n";
+            String msjError = "Variable [" + token.getValue() + "] no ha sido declarada";
             al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
         if (!(nxtToken instanceof SignoPuntuacion)
                 || (nxtToken instanceof SignoPuntuacion && (!((SignoPuntuacion) nxtToken).getValue().equals(";")))) {
-            String msjError = "[;] esperado\n";
+            String msjError = "(;) esperado";
             al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
@@ -73,7 +73,7 @@ public class LeeStatement extends Statement {
 
         setParsedValue(parse());
         if (getParsedValue().indexOf(';') != getParsedValue().lastIndexOf(';')) {
-            String msjError = "Fin de linea invalido. Mas de un identificador de fin de linea encontrado.\n";
+            String msjError = "Fin de linea invalido. Mas de un identificador de fin de linea encontrado.";
             al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }

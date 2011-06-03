@@ -65,6 +65,11 @@ public class ProgramaStatement extends BlockStatement {
                 setParsedValue(sbParsedValue.toString());
                 break;
             case FIN_PROGRAMA:
+                if (token != null) {
+                    String msjError = "Token Invalido: [" + token.getValue() + "]";
+                    al.getCodeLine().addError(new InterpreterError(msjError));
+                    throw new AlgorSintaxException(msjError);
+                }
                 setParsedValue(parse());
                 break;
         }

@@ -57,7 +57,7 @@ public class DeclaracionStatement extends Statement {
         Token token = al.getNextToken();
         Token nxtToken = al.getNextToken();
         if (!(token instanceof VariableId)) {
-            String msjError = "Identificador esperado\n";
+            String msjError = "Identificador esperado";
             al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
@@ -65,12 +65,12 @@ public class DeclaracionStatement extends Statement {
                 || (nxtToken instanceof SignoPuntuacion
                 && (!((SignoPuntuacion) nxtToken).getValue().equals(",") && !((SignoPuntuacion) nxtToken).getValue().equals(";")))) {
 
-            String msjError = "Token invalido " + nxtToken.getValue() + "; [;|,|=] esperado\n";
+            String msjError = "Token invalido [" + nxtToken.getValue() + "]; (;|,|=) esperado";
             al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
         if (asem.variableExiste(token.getValue())) {
-            String msjError = "Variable " + token.getValue() + " ya ha sido declarada\n";
+            String msjError = "Variable [" + token.getValue() + "] ya ha sido declarada";
             al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
@@ -84,7 +84,7 @@ public class DeclaracionStatement extends Statement {
                 Token tok = al.getNextToken();
                 if (tok instanceof VariableId) {
                     if (asem.variableExiste(tok.getValue())) {
-                        String msjError = "Variable " + tok.getValue() + " ya ha sido declarada\n";
+                        String msjError = "Variable [" + tok.getValue() + "] ya ha sido declarada";
                         al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
@@ -93,7 +93,7 @@ public class DeclaracionStatement extends Statement {
                 addTokenStatement(tok);
             }
             if (!getTokensStatement().getLast().getValue().equals(";")) {
-                String msjError = String.format("Token invalido al final de linea: %s [;] esperado\n", getTokensStatement().getLast().getValue());
+                String msjError = String.format("Token invalido al final de linea: [%s] (;) esperado", getTokensStatement().getLast().getValue());
                 al.getCodeLine().addError(new InterpreterError(msjError));
                 throw new AlgorSintaxException(msjError);
             }
@@ -108,7 +108,7 @@ public class DeclaracionStatement extends Statement {
             setParsedValue(parse() + " " + asigStatement.getParsedValue());
         }
         if (getParsedValue().indexOf(';') != getParsedValue().lastIndexOf(';')) {
-            String msjError = "Fin de linea invalido. Mas de un identificador de fin de linea encontrado.\n";
+            String msjError = "Fin de linea invalido. Mas de un identificador de fin de linea encontrado.";
             al.getCodeLine().addError(new InterpreterError(msjError));
             throw new AlgorSintaxException(msjError);
         }
