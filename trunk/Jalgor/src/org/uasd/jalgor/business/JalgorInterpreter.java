@@ -216,7 +216,6 @@ public class JalgorInterpreter {
         private LinkedList<Integer> ambitoStatements = new LinkedList<Integer>();
         private boolean isPrgStmSet = false;
         private boolean isFinPrgStmSet = false;
-
         private boolean ifOpened = false;
         private boolean ifClosed = false;
 
@@ -451,6 +450,10 @@ public class JalgorInterpreter {
                             case FIN_MIENTRAS:
                                 statement = new MientrasStatement(tipoKeyword, JalgorInterpreter.this);
                                 break;
+                            default:
+                                String msjError = "Mal comienzo de linea de codigo\n";
+                                al.getCodeLine().addError(new InterpreterError(msjError));
+                                throw new AlgorSintaxException(msjError);
                         }
                     }
                 } else if (token != null) {
