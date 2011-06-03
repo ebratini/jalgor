@@ -495,6 +495,7 @@ public class JalgorGM extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
 
+            @Override
             public void run() {
                 new JalgorGM().setVisible(true);
             }
@@ -549,12 +550,12 @@ public class JalgorGM extends javax.swing.JFrame {
                 
                 try {
                     Runtime.getRuntime().exec(String.format("%s --style=%s -p -H \"%s\"", styler, style, pathFileToStyle)).waitFor();
+                    jtaOutFile.setText(FileManager.loadFile(new File(txtOutFilePath.getText())).toString());
                 } catch (InterruptedException ex) {
                     Logger.getLogger(JalgorGM.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ioe) {
                     Logger.getLogger(JalgorGM.class.getName()).log(Level.SEVERE, null, ioe);
                 }
-                jtaOutFile.setText(FileManager.loadFile(new File(txtOutFilePath.getText())).toString());
             }
         }.start();
     }
