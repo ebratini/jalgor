@@ -132,6 +132,7 @@ public class JalgorInterpreter {
         for (CodeLine cl : codeLines) {
             if (cl.getErrores().size() > 0) {
                 hayError = true;
+                break;
             }
         }
         return hayError;
@@ -451,13 +452,13 @@ public class JalgorInterpreter {
                                 statement = new MientrasStatement(tipoKeyword, JalgorInterpreter.this);
                                 break;
                             default:
-                                String msjError = "Mal comienzo de linea de codigo\n";
+                                String msjError = "Mal comienzo de linea de codigo";
                                 al.getCodeLine().addError(new InterpreterError(msjError));
                                 throw new AlgorSintaxException(msjError);
                         }
                     }
                 } else if (token != null) {
-                    String msjError = "Mal comienzo de linea de codigo\n";
+                    String msjError = "Mal comienzo de linea de codigo";
                     al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }

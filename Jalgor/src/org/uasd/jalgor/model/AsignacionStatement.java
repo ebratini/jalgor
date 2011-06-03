@@ -68,13 +68,13 @@ public class AsignacionStatement extends Statement {
                             || (tok instanceof SignoPuntuacion && tok.getValue().equals(";"))) {
                         this.addTokenStatement(tok);
                     } else {
-                        String msjError = String.format("Token invalido: %s", tok.getValue());
+                        String msjError = String.format("Token invalido: [%s]", tok.getValue());
                         al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
                 }
                 if (!getTokensStatement().getLast().getValue().equals(";")) {
-                    String msjError = String.format("Token invalido al final de linea: %s", getTokensStatement().getLast().getValue());
+                    String msjError = String.format("Token invalido al final de linea: [%s]", getTokensStatement().getLast().getValue());
                     al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
@@ -83,17 +83,17 @@ public class AsignacionStatement extends Statement {
                 while (al.hasNextToken()) {
                     Token tok = al.getNextToken();
                     if (tok instanceof ConstanteNumerica
-                            || (tok instanceof VariableId && asem.variableExiste(tok.getValue()))
+                            || (tok instanceof VariableId && asem.variableExiste(tok.getValue()) && asem.searchVariable(tok.getValue()).getTipoVariable().equals(tipoVariable.NUM))
                             || tok instanceof OperadorAritmetico || (tok instanceof SignoPuntuacion && tok.getValue().equals(";"))) {
                         addTokenStatement(tok);
                     } else {
-                        String msjError = String.format("Token invalido: %s", tok.getValue());
+                        String msjError = String.format("Token invalido: [%s]", tok.getValue());
                         al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
                 }
                 if (!getTokensStatement().getLast().getValue().equals(";")) {
-                    String msjError = String.format("Token invalido al final de linea: %s", getTokensStatement().getLast().getValue());
+                    String msjError = String.format("Token invalido al final de linea: [%s]", getTokensStatement().getLast().getValue());
                     al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }

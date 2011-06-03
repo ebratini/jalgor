@@ -57,7 +57,7 @@ public class MientrasStatement extends BlockStatement {
             case MIENTRAS:
                 if (!(token instanceof VariableId) && !(token instanceof ConstanteAlfanumerica) && !(token instanceof ConstanteNumerica)
                         && !(token instanceof SignoPuntuacion && token.getValue().equals("("))) {
-                    String msjError = "[Identificador|Constante (alfa)numerica] esperado";
+                    String msjError = "(Identificador|Constante (alfa)numerica) esperado";
                     al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
@@ -76,12 +76,12 @@ public class MientrasStatement extends BlockStatement {
                 while (al.hasNextToken()) {
                     Token tok = al.getNextToken();
                     if (tok instanceof KeywordToken) {
-                        String msjError = "Token invalido: " + tok.getValue();
+                        String msjError = "Token invalido: [" + tok.getValue() + "]";
                         al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
                     if (tok instanceof VariableId && !asem.variableExiste(tok.getValue())) {
-                        String msjError = "Variable " + tok.getValue() + " no ha sido declarada";
+                        String msjError = "Variable [" + tok.getValue() + "] no ha sido declarada";
                         al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
@@ -96,7 +96,7 @@ public class MientrasStatement extends BlockStatement {
                 break;
             case FIN_MIENTRAS:
                 if (token != null) {
-                    String msjError = "Token invalido " + token.getValue();
+                    String msjError = "Token invalido [" + token.getValue() + "]";
                     al.getCodeLine().addError(new InterpreterError(msjError));
                     throw new AlgorSintaxException(msjError);
                 }
