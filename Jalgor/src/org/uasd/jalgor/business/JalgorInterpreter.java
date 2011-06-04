@@ -361,7 +361,8 @@ public class JalgorInterpreter {
                                 ambitoStatements.pollLast();
 
                                 // validar que/ se halla salido del bucle por sentencia fin_programa y no por fin de archivo
-                                if (((ProgramaStatement) statement).getBlockStatements().getLast().getTipoSatement() != Statement.Keyword.FIN_PROGRAMA) {
+                                Statement lastStm = ((ProgramaStatement) statement).getBlockStatements().getLast();
+                                if (lastStm == null || lastStm.getTipoSatement() != Statement.Keyword.FIN_PROGRAMA) {
                                     String msjError = "Sentencia [fin_programa] esperado";
                                     al.getCodeLine().addError(new InterpreterError(msjError));
                                     throw new AlgorSintaxException(msjError);
