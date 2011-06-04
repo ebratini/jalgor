@@ -222,7 +222,6 @@ public class JalgorInterpreter {
         private boolean mientrasOpened = false;
         private boolean mientrasClosed = false;
 
-
         public AnalizadorSintactico() {
         }
 
@@ -463,7 +462,7 @@ public class JalgorInterpreter {
                                 break;
                             case MIENTRAS:
                                 mientrasOpened = true;
-                                
+
                                 ambitoStatements.offer(getNextAmbitoStmSeq());
                                 statement = new MientrasStatement(tipoKeyword, JalgorInterpreter.this);
                                 Statement bucleSt = null;
@@ -476,7 +475,7 @@ public class JalgorInterpreter {
                                 }
                                 ambitoStatements.pollLast();
                                 Statement mientrasLastStm = null;
-                                if (((MientrasStatement) statement).getBlockStatements().size() > 0){
+                                if (((MientrasStatement) statement).getBlockStatements().size() > 0) {
                                     mientrasLastStm = ((MientrasStatement) statement).getBlockStatements().getLast();
                                 }
                                 if (mientrasLastStm == null || !(mientrasLastStm instanceof MientrasStatement)) {
