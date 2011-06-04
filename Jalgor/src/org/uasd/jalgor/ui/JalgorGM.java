@@ -36,6 +36,7 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
@@ -537,7 +538,10 @@ public class JalgorGM extends javax.swing.JFrame {
                     styler = "astyle.exe";
                 } else {
                     try {
-                        styler = getClass().getResource("/resources/utils/astyle/bin/AStyle.exe").toURI().getPath();
+                        URL urlStyler = getClass().getResource("/resources/utils/astyle/bin/AStyle.exe");
+                        if (urlStyler != null) {
+                            styler = urlStyler.toURI().getPath();
+                        }
                     } catch (URISyntaxException ex) {
                         Logger.getLogger(JalgorGM.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -547,7 +551,7 @@ public class JalgorGM extends javax.swing.JFrame {
                     jtaSalidaJalgor.setText("code styler no encontrado\n");
                     return;
                 }
-                
+
                 try {
                     Runtime.getRuntime().exec(String.format("%s --style=%s -f -p -H \"%s\"", styler, style, pathFileToStyle)).waitFor();
                     jtaOutFile.setText(FileManager.loadFile(new File(txtOutFilePath.getText())).toString());
@@ -564,7 +568,7 @@ public class JalgorGM extends javax.swing.JFrame {
         try {
             jtaSourceFile.setText(FileManager.loadFile(new File(txtSourceFilePath.getText())).toString());
             jtaOutFile.setText("");
-            
+
             JalgorInterpreter ji = new JalgorInterpreter(sourceFilePath, outFilePath);
             ji.start();
             if (ji.getErrores().size() > 0 || ji.hayErrorEnLineaCodigo()) {
