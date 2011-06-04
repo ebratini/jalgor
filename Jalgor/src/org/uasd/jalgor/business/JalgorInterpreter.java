@@ -383,7 +383,7 @@ public class JalgorInterpreter {
                                 isFinPrgStmSet = true;
                                 break;
                             case NUM:
-                            case ALFA:
+                            case ALFA: // TODO: lo de ambito de las variables no esta funcionando, arreglar
                                 statement = new DeclaracionStatement(tipoKeyword, JalgorInterpreter.this);//new DeclaracionStatement(tipoKeyword, al);
                                 break;
                             case LEE:
