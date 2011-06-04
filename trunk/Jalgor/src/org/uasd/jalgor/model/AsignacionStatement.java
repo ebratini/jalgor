@@ -88,6 +88,13 @@ public class AsignacionStatement extends Statement {
                         addTokenStatement(tok);
                     } else {
                         String msjError = String.format("Token invalido: [%s]", tok.getValue());
+                        if (tok instanceof VariableId) {
+                            if (!asem.variableExiste(tok.getValue())) {
+                                msjError = "Variable [" + tok.getValue() + "] no existe";
+                            } else {
+                                msjError = "Tipos de variable incompatibles. Numero requerido. Alfabetico encontrado";
+                            }
+                        }
                         al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }

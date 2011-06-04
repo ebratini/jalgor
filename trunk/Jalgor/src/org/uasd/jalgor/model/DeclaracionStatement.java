@@ -77,7 +77,8 @@ public class DeclaracionStatement extends Statement {
 
         addTokenStatement(token);
         addTokenStatement(nxtToken);
-        ji.addVariable(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), token.getValue()));
+        ji.addVariable(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()),
+                token.getValue(), ji.getAs().getAmbitoStatements().getLast()));
 
         if (!(nxtToken instanceof OperadorAsignacion)) {
             while (al.hasNextToken()) {
@@ -88,7 +89,8 @@ public class DeclaracionStatement extends Statement {
                         al.getCodeLine().addError(new InterpreterError(msjError));
                         throw new AlgorSintaxException(msjError);
                     }
-                    ji.addVariable(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()), tok.getValue()));
+                    ji.addVariable(new Variable(Variable.TipoVariable.valueOf(getTipoSatement().toString()),
+                            tok.getValue(), ji.getAs().getAmbitoStatements().getLast()));
                 }
                 addTokenStatement(tok);
             }
