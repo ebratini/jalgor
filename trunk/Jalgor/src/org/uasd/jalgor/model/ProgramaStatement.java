@@ -34,6 +34,8 @@ import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorLexico;
  */
 public class ProgramaStatement extends BlockStatement {
 
+    private boolean opened;
+
     public ProgramaStatement() throws AlgorSintaxException {
     }
 
@@ -45,6 +47,14 @@ public class ProgramaStatement extends BlockStatement {
     public ProgramaStatement(Keyword tipoSatement, JalgorInterpreter ji, int ambito) throws AlgorSintaxException {
         super(tipoSatement, ji, ambito);
         parseMe();
+    }
+
+    public boolean isOpened() {
+        return opened;
+    }
+
+    public void setOpened(boolean opened) {
+        this.opened = opened;
     }
 
     private void parseMe() throws AlgorSintaxException {

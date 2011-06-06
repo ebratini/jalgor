@@ -310,6 +310,8 @@ public class JalgorInterpreter {
 
                     // verificando si el ambito del token es el correcto (entre sentencias programa y fin_programa)
                     // si no esta, se lanza una excepcion
+
+                    // TODO: implementar dentro de objeto statement (miembre opened | closed)
                     if (!isPrgStmSet && !token.getValue().equalsIgnoreCase("programa")) {
                         String msjError = "Token: " + token.getValue() + " invalido. ";
                         msjError += "[programa] esperado";
@@ -360,6 +362,7 @@ public class JalgorInterpreter {
                                 }
                                 // si llego hasta aqui es porque es un fin de sentencia,
                                 // para manejar el ambito, hacer un poll a la pila de ambito
+                                
                                 ambitoStatements.pollLast();
 
                                 // validar que/ se halla salido del bucle por sentencia fin_programa y no por fin de archivo
@@ -387,7 +390,7 @@ public class JalgorInterpreter {
                                 break;
                             case NUM:
                             case ALFA:
-                                statement = new DeclaracionStatement(tipoKeyword, JalgorInterpreter.this);//new DeclaracionStatement(tipoKeyword, al);
+                                statement = new DeclaracionStatement(tipoKeyword, JalgorInterpreter.this);
                                 break;
                             case LEE:
                                 statement = new LeeStatement(tipoKeyword, JalgorInterpreter.this);
@@ -395,25 +398,26 @@ public class JalgorInterpreter {
                             case ESCRIBE:
                                 statement = new EscribeStatement(tipoKeyword, JalgorInterpreter.this);
                                 break;
-                            case SI:
+                            case SI: // TODO: implementar dentro de objeto statement (miembre opened | closed)
                                 ifOpened = true;
+                                //ifClosed = false;
                                 ambitoStatements.offer(getNextAmbitoStmSeq());
 
                                 statement = new CondicionStatement(tipoKeyword, JalgorInterpreter.this);
-                                Statement ifCondSt = (((CondicionStatement) statement).getBlockStatements().size() > 0
-                                        ? ((CondicionStatement) statement).getBlockStatements().getLast() : null);
-                                while (hasNextCodeLine() && !(ifCondSt instanceof CondicionStatement && (ifCondSt.getTipoSatement().equals(Statement.Keyword.SINO) || ifCondSt.getTipoSatement().equals(Statement.Keyword.FIN_SI)))) {
-                                    ifCondSt = analizeCodeLine();
-                                    if (ifCondSt instanceof ProgramaStatement) {
+                                Statement ifBlockStm = null;
+                                while (hasNextCodeLine() && !(ifBlockStm instanceof CondicionStatement && (ifBlockStm.getTipoSatement().equals(Statement.Keyword.FIN_SI)))) {
+                                    ifBlockStm = analizeCodeLine();
+                                    if (ifBlockStm instanceof ProgramaStatement) {
                                         break;
                                     }
-                                    ((CondicionStatement) statement).addBlockStatement(ifCondSt);
+                                    ((CondicionStatement) statement).addBlockStatement(ifBlockStm);
                                 }
                                 // si llego hasta aqui es porque es un fin de sentencia,
                                 // para manejar el ambito, hacer un poll a la pila de ambito
                                 ambitoStatements.pollLast();
-                                Statement siLastStm = ((CondicionStatement) statement).getBlockStatements().getLast();
-                                if (siLastStm == null || !(siLastStm instanceof CondicionStatement)) {
+                                Statement siLastStm = (((CondicionStatement) statement).getBlockStatements().size() > 0
+                                        ? ((CondicionStatement) statement).getBlockStatements().getLast() : null);
+                                if (siLastStm == null || !(siLastStm instanceof CondicionStatement && siLastStm.getTipoSatement().equals(Statement.Keyword.FIN_SI))) {
                                     String msjError = "Sentencia [fin_si | sino] esperado";
                                     al.getCodeLine().addError(new InterpreterError(msjError));
                                     throw new AlgorSintaxException(msjError);
@@ -429,21 +433,29 @@ public class JalgorInterpreter {
                                 ambitoStatements.offer(getNextAmbitoStmSeq());
 
                                 statement = new CondicionStatement(tipoKeyword, JalgorInterpreter.this);
-                                Statement elseCondSt = null;
-                                while (hasNextCodeLine() && !(elseCondSt instanceof CondicionStatement && elseCondSt.getTipoSatement().equals(Statement.Keyword.FIN_SI))) {
-                                    elseCondSt = analizeCodeLine();
-                                    if (elseCondSt instanceof ProgramaStatement) {
+                                Statement elseBlockStm = null;
+                                while (hasNextCodeLine() && !(elseBlockStm instanceof CondicionStatement && elseBlockStm.getTipoSatement().equals(Statement.Keyword.FIN_SI))) {
+                                    elseBlockStm = analizeCodeLine();
+                                    if (elseBlockStm instanceof ProgramaStatement) {
                                         break;
                                     }
-                                    ((CondicionStatement) statement).addBlockStatement(elseCondSt);
+                                    if (elseBlockStm.getTipoSatement().equals(Statement.Keyword.FIN_SI)) {
+                                        break;
+                                    }
+                                    ((CondicionStatement) statement).addBlockStatement(elseBlockStm);
                                 }
                                 // si llego hasta aqui es porque es un fin de sentencia,
                                 // para manejar el ambito, hacer un poll a la pila de ambito
                                 ambitoStatements.pollLast();
                                 // validar que se halla salido del bucle por sentencia fin_si y no por fin de archivo
-                                Statement sinoLastStm = (((CondicionStatement) statement).getBlockStatements().size() > 0
+                                /*Statement sinoLastStm = (((CondicionStatement) statement).getBlockStatements().size() > 0
                                         ? ((CondicionStatement) statement).getBlockStatements().getLast() : null);
                                 if (sinoLastStm == null || sinoLastStm.getTipoSatement() != Statement.Keyword.FIN_SI) {
+                                    String msjError = "Sentencia [fin_si] esperado";
+                                    al.getCodeLine().addError(new InterpreterError(msjError));
+                                    throw new AlgorSintaxException(msjError);
+                                }*/
+                                if (elseBlockStm == null || elseBlockStm.getTipoSatement() != Statement.Keyword.FIN_SI) {
                                     String msjError = "Sentencia [fin_si] esperado";
                                     al.getCodeLine().addError(new InterpreterError(msjError));
                                     throw new AlgorSintaxException(msjError);
@@ -457,12 +469,11 @@ public class JalgorInterpreter {
                                     throw new AlgorSintaxException(msjError);
                                 }
                                 statement = new CondicionStatement(tipoKeyword, JalgorInterpreter.this);
-                                ifClosed = true;
-                                ifOpened = false;
+                                //ifClosed = true;
+                                //ifOpened = false;
                                 break;
-                            case MIENTRAS:
+                            case MIENTRAS: // TODO: implementar dentro de objeto statement (miembre opened | closed)
                                 mientrasOpened = true;
-
                                 ambitoStatements.offer(getNextAmbitoStmSeq());
                                 statement = new MientrasStatement(tipoKeyword, JalgorInterpreter.this);
                                 Statement bucleSt = null;
@@ -492,8 +503,8 @@ public class JalgorInterpreter {
                                     throw new AlgorSintaxException(msjError);
                                 }
                                 statement = new MientrasStatement(tipoKeyword, JalgorInterpreter.this);
-                                mientrasClosed = true;
-                                mientrasOpened = false;
+                                //mientrasClosed = true;
+                                //mientrasOpened = false;
                                 break;
                             default:
                                 String msjError = "Mal comienzo de linea de codigo";
