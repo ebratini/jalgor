@@ -35,6 +35,9 @@ import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorSemantico;
  */
 public class MientrasStatement extends BlockStatement {
 
+    private boolean opened;
+    private boolean closed;
+
     public MientrasStatement() throws AlgorSintaxException {
     }
 
@@ -46,6 +49,22 @@ public class MientrasStatement extends BlockStatement {
     public MientrasStatement(Keyword tipoSatement, JalgorInterpreter ji, int ambito) throws AlgorSintaxException {
         super(tipoSatement, ji, ambito);
         parseMe();
+    }
+
+    public boolean isOpened() {
+        return opened;
+    }
+
+    public void setOpened(boolean opened) {
+        this.opened = opened;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 
     private void parseMe() throws AlgorSintaxException {
@@ -70,7 +89,7 @@ public class MientrasStatement extends BlockStatement {
                 if (!token.getValue().equals("(")) {
                     addTokenStatement(new SignoPuntuacion("("));
                 }
-                
+
                 addTokenStatement(token);
 
                 while (al.hasNextToken()) {

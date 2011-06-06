@@ -35,6 +35,9 @@ import org.uasd.jalgor.business.JalgorInterpreter.AnalizadorSemantico;
  */
 public class CondicionStatement extends BlockStatement {
 
+    private boolean opened;
+    private boolean closed;
+
     public CondicionStatement() throws AlgorSintaxException {
     }
 
@@ -46,6 +49,22 @@ public class CondicionStatement extends BlockStatement {
     public CondicionStatement(Keyword tipoSatement, JalgorInterpreter ji, int ambito) throws AlgorSintaxException {
         super(tipoSatement, ji, ambito);
         parseMe();
+    }
+
+    public boolean isOpened() {
+        return opened;
+    }
+
+    public void setOpened(boolean opened) {
+        this.opened = opened;
+    }
+
+    public boolean isClosed() {
+        return closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
     }
 
     private void parseMe() throws AlgorSintaxException {
@@ -90,9 +109,9 @@ public class CondicionStatement extends BlockStatement {
                     addTokenStatement(tok);
                 }
                 if (!getTokensStatement().getLast().getValue().equals("entonces")) {
-                        String msjError = "Token invalido: al final de sentencia. (entonces) esperado";
-                        al.getCodeLine().addError(new InterpreterError(msjError));
-                        throw new AlgorSintaxException(msjError);
+                    String msjError = "Token invalido: al final de sentencia. (entonces) esperado";
+                    al.getCodeLine().addError(new InterpreterError(msjError));
+                    throw new AlgorSintaxException(msjError);
                 }
                 setParsedValue(parse());
                 break;
