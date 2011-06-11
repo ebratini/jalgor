@@ -217,10 +217,9 @@ public class JalgorInterpreter {
         private LinkedList<Integer> ambitoStatements = new LinkedList<Integer>();
         private boolean isPrgStmSet = false;
         private boolean isFinPrgStmSet = false;
-        private boolean ifOpened = false;
-        private boolean ifClosed = false;
-        private boolean mientrasOpened = false;
-        private boolean mientrasClosed = false;
+
+        LinkedList<Statement> ifStms = new LinkedList<Statement>();
+        LinkedList<Statement> mientrasStms = new LinkedList<Statement>();
 
         public AnalizadorSintactico() {
         }
@@ -398,11 +397,11 @@ public class JalgorInterpreter {
                             case ESCRIBE:
                                 statement = new EscribeStatement(tipoKeyword, JalgorInterpreter.this);
                                 break;
-                            case SI: // TODO: arreglar lo de sentencia de fin de blocke para sacar los bloques cerrados (una especie de pila que se le de un poll hasta vaciarla)
-                                ifOpened = true;
+                            case SI:
                                 ambitoStatements.offer(getNextAmbitoStmSeq());
-
                                 statement = new CondicionStatement(tipoKeyword, JalgorInterpreter.this);
+                                ifStms.offer(statement);
+
                                 Statement ifBlockStm = null;
                                 while (hasNextCodeLine() && !(ifBlockStm instanceof CondicionStatement
                                         && (ifBlockStm.getTipoSatement().equals(Statement.Keyword.SINO) || ifBlockStm.getTipoSatement().equals(Statement.Keyword.FIN_SI)))) {
@@ -423,7 +422,7 @@ public class JalgorInterpreter {
                                 }
                                 break;
                             case SINO:
-                                if (!ifOpened) {
+                                if (ifStms.size() < 1) {
                                     String msjError = "Token: " + token.getValue() + " invalido. ";
                                     msjError += "[si] esperado";
                                     al.getCodeLine().addError(new InterpreterError(msjError));
@@ -450,19 +449,21 @@ public class JalgorInterpreter {
                                     throw new AlgorSintaxException(msjError);
                                 }
                                 break;
-                            case FIN_SI: // TODO: arreglar lo de sentencia de fin de blocke para sacar los bloques cerrados
-                                if (!ifOpened) {
+                            case FIN_SI:
+                                if (ifStms.size() < 1) {
                                     String msjError = "Token: " + token.getValue() + " invalido. ";
                                     msjError += "[si] esperado";
                                     al.getCodeLine().addError(new InterpreterError(msjError));
                                     throw new AlgorSintaxException(msjError);
                                 }
                                 statement = new CondicionStatement(tipoKeyword, JalgorInterpreter.this);
+                                ifStms.pollLast();
                                 break;
                             case MIENTRAS:
-                                mientrasOpened = true;
                                 ambitoStatements.offer(getNextAmbitoStmSeq());
                                 statement = new MientrasStatement(tipoKeyword, JalgorInterpreter.this);
+                                mientrasStms.offer(statement);
+                                
                                 Statement loopBlockStm = null;
                                 while (hasNextCodeLine() && !(loopBlockStm instanceof MientrasStatement && loopBlockStm.getTipoSatement().equals(Statement.Keyword.FIN_MIENTRAS))) {
                                     loopBlockStm = analizeCodeLine();
@@ -479,13 +480,14 @@ public class JalgorInterpreter {
                                 }
                                 break;
                             case FIN_MIENTRAS: // TODO: arreglar lo de sentencia de fin de blocke para sacar los bloques cerrados
-                                if (!mientrasOpened) {
+                                if (mientrasStms.size() < 1) {
                                     String msjError = "Token: " + token.getValue() + " invalido. ";
                                     msjError += "[mientras] esperado";
                                     al.getCodeLine().addError(new InterpreterError(msjError));
                                     throw new AlgorSintaxException(msjError);
                                 }
                                 statement = new MientrasStatement(tipoKeyword, JalgorInterpreter.this);
+                                mientrasStms.pollLast();
                                 break;
                             default:
                                 String msjError = "Mal comienzo de linea de codigo";
