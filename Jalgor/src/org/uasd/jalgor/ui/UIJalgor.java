@@ -67,11 +67,11 @@ public class UIJalgor {
                 startGraphicMode();
                 return;
             }
-            validarEntrada(args);
             if (!getCmdLneArgs().get("-gui").equals("0")) {
                 startGraphicMode();
                 return;
             }
+            validarEntrada(args);
             try {
                 new JalgorInterpreter(cmdLneArgs.get("-i"), cmdLneArgs.get("-o")).start();
             } catch (InvalidFileNameException ex) {
