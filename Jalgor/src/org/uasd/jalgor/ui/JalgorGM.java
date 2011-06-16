@@ -570,7 +570,7 @@ public class JalgorGM extends javax.swing.JFrame {
             jtaOutFile.setText("");
             File inputFile = new File(txtSourceFilePath.getText());
             if (!inputFile.exists()) {
-                jtaSalidaJalgor.setText("Archivo: [" + inputFile.getAbsolutePath() + "] no existe\n");
+                jtaSalidaJalgor.setText("Archivo: [" + sourceFilePath + "] no existe\n");
                 return;
             }
             jtaSourceFile.setText(FileManager.loadFile(inputFile).toString());

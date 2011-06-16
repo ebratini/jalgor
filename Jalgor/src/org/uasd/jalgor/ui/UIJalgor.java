@@ -115,7 +115,7 @@ public class UIJalgor {
                 if (args[i].equalsIgnoreCase("-i")) {
                     if (!new File(args[j]).exists()) {
                         String excMessage = "Una excepcion de tipo InvalidCommandLineParamException ha ocurrido.\n";
-                        excMessage += "Verifique el nombre/existencia de archivo\n";
+                        excMessage += "Verifique el nombre/existencia de archivo [" + args[j] + "]\n";
                         throw new InvalidCommandLineParamException(excMessage);
                     }
                 }
