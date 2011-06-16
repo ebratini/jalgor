@@ -566,9 +566,14 @@ public class JalgorGM extends javax.swing.JFrame {
 
     private void compilar(String sourceFilePath, String outFilePath) {
         try {
-            jtaSourceFile.setText(FileManager.loadFile(new File(txtSourceFilePath.getText())).toString());
+            jtaSourceFile.setText("");
             jtaOutFile.setText("");
-
+            File inputFile = new File(txtSourceFilePath.getText());
+            if (!inputFile.exists()) {
+                jtaSalidaJalgor.setText("Archivo: [" + inputFile.getAbsolutePath() + "] no existe\n");
+                return;
+            }
+            jtaSourceFile.setText(FileManager.loadFile(inputFile).toString());
             JalgorInterpreter ji = new JalgorInterpreter(sourceFilePath, outFilePath);
             ji.start();
             if (ji.getErrores().size() > 0 || ji.hayErrorEnLineaCodigo()) {
