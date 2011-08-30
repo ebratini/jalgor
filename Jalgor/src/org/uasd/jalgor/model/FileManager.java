@@ -23,14 +23,23 @@
  */
 package org.uasd.jalgor.model;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Enumeration;
+import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.ZipEntry;
 
 /**
  *
@@ -106,5 +115,67 @@ public class FileManager {
                 Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    public static void copy(String sourcePath, String destPath) {
+        FileReader in = null;
+        FileWriter out = null;
+        try {
+            in = new FileReader(new File(sourcePath));
+            out = new FileWriter(new File(destPath));
+            int c;
+            while ((c = in.read()) != -1) {
+                out.write(c);
+            }
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                in.close();
+                out.close();
+            } catch (IOException ex) {
+                Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    public static void extractJarFile(JarFile jarFile, String destPath) {
+    }
+
+    public static File extractFileFromJar(JarFile jarFile, String destPath, String entryName) {
+        ZipEntry entry = jarFile.getEntry(entryName);
+        File entryFile = new File(destPath, entry.getName());
+
+        new File(entryFile.getParent()).mkdirs();
+
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            in = new BufferedInputStream(jarFile.getInputStream(entry));
+            out = new BufferedOutputStream(new FileOutputStream(entryFile));
+
+            byte[] buffer = new byte[2048];
+            for (;;) {
+                int nBytes = in.read(buffer);
+                if (nBytes <= 0) {
+                    break;
+                }
+                out.write(buffer, 0, nBytes);
+            }
+        } catch (IOException ex) {
+            Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                in.close();
+                out.close();
+            } catch (IOException ex) {
+                Logger.getLogger(FileManager.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return entryFile;
     }
 }
