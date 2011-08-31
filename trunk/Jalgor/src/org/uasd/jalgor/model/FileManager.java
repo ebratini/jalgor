@@ -35,11 +35,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Enumeration;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 /**
  *
@@ -143,6 +143,7 @@ public class FileManager {
     }
 
     public static void extractJarFile(JarFile jarFile, String destPath) {
+        throw new NotImplementedException();
     }
 
     public static File extractFileFromJar(JarFile jarFile, String destPath, String entryName) {
