@@ -35,8 +35,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -538,21 +536,29 @@ public class JalgorGM extends javax.swing.JFrame {
                 if (osPath.toLowerCase().contains("astyle")) {
                     styler = "astyle.exe";
                 } else {
-                    String jarPath = getClass().getProtectionDomain().getCodeSource().getLocation().toString().substring(6);
                     String tmpdir = System.getProperty("java.io.tmpdir");
+                    if (new File(String.format("%s\\Jalgor\\resources\\utils\\astyle\\bin\\AStyle.exe", tmpdir)).exists()) {
+                        styler = String.format("%s\\Jalgor\\resources\\utils\\astyle\\bin\\AStyle.exe", tmpdir);
+                    } else {
+                        // extrayendo el ejecutable que normaliza / estiliza codigo fuente y copiando en directorio temporal de usuario
+                        String currClassPath = getClass().getResource(String.format("%s.class",
+                                getClass().getName().substring(getClass().getName().lastIndexOf(".") + 1))).getPath();
 
-                    FileManager.makeFolder(tmpdir + "Jalgor");
-                    String dest = tmpdir + "\\Jalgor";
-                    File stylerFile = null;
-                    try {
-                        stylerFile = FileManager.extractFileFromJar(new JarFile(new File(jarPath)), dest, "resources/utils/astyle/bin/AStyle.exe");
-                    } catch (IOException ex) {
-                        Logger.getLogger(JalgorGM.class.getName()).log(Level.SEVERE, null, ex);
-                        jtaSalidaJalgor.setText(ex.getMessage());
-                    }
+                        String jarPath = currClassPath.substring("file:/".length(), currClassPath.indexOf("!")).replace("%20", " ");
 
-                    if (stylerFile != null) {
-                        styler = stylerFile.getAbsolutePath();
+                        FileManager.makeFolder(tmpdir + "Jalgor");
+                        String dest = tmpdir + "\\Jalgor";
+                        File stylerFile = null;
+                        try {
+                            stylerFile = FileManager.extractFileFromJar(new JarFile(new File(jarPath)), dest, "resources/utils/astyle/bin/AStyle.exe");
+                        } catch (IOException ex) {
+                            Logger.getLogger(JalgorGM.class.getName()).log(Level.SEVERE, null, ex);
+                            jtaSalidaJalgor.setText(ex.getMessage());
+                        }
+
+                        if (stylerFile != null) {
+                            styler = stylerFile.getAbsolutePath();
+                        }
                     }
                 }
 
